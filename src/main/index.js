@@ -17,9 +17,11 @@ let refreshIntervalId;
 let dataSync = new DataSync(auth.fetch);
 let userDataUrl;
 let chatsToJoin = [];
+let openChats = [];
 let interlocutorMessages = [];
-let semanticChat;
+let semanticChats = [];
 let openChat = false;
+let chatCounter = 0;
 
 /**
  *	This method is in charge of showing the popup to login or register
@@ -63,10 +65,18 @@ auth.trackSession(async session => {
 			$('#user-name').removeClass('hidden');
 			$('#user-name').text(name);
 		}
+		openChats = [];
+		const chats = await core.getChatsToOpen(userWebId);
+			chats.forEach(async chat => {
+			openChats.push(chat);
+				});
 
 		checkForNotifications();
 		// refresh every 5sec
 		refreshIntervalId = setInterval(checkForNotifications, 5000);
+		
+		
+		
 	} else {
 		//alert("you're not logged in");
 		$('#nav-login-btn').removeClass('hidden');
@@ -120,17 +130,6 @@ $('#start-new-chat-btn').click(async() => {
 	}
 });
 
-/**
- *	This method is in charge of setting up a new Conversation
- */
-async function setUpNewConversation() {
-	//Initialize conversation
-	setUpForEveryChatOption();
-
-	semanticChat = await core.setUpNewChat(userDataUrl, userWebId, interlocWebId, dataSync);
-
-	setUpChat();
-}
 
 /**
  *	This method is in charge of showing the user's invitations from friends to join a chat
@@ -211,7 +210,7 @@ function setUpForEveryChatOption() {
 /**
  *	This method is in charge of showing the open chat options
  */
-$('#open-btn').click(async() => {
+$('#openn-btn').click(async() => {
 	if (userWebId) {
 		afterChatOption();
 
@@ -268,7 +267,6 @@ $('#open-btn').click(async() => {
  * @returns {Promise<void>}
  */
 async function openExistingChat(chatUrl) {
-	setUpForEveryChatOption();
 
 	const loader = new Loader(auth.fetch);
 	semanticChat = await loader.loadFromUrl(chatUrl, userWebId, userDataUrl);
@@ -343,23 +341,6 @@ async function setUpChat() {
 
 }
 
-/**
- *	This method is in charge of sending the message and showing it in the text Area
- */
-$('#write-chat').click(async() => {
-	const username = $('#user-name').text();
-	const message = $("#message").val();
-	var dateFormat = require('date-fns');
-	var now = new Date();
-	const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "hh-mm-ss");
-
-	$("#messagesarea").val($("#messagesarea").val() + "\n" + username + " [" + time + "]> " + message);
-	await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
-
-	document.getElementById("message").value = ''; 
-
-});
-
 
 /**
  * This method checks if a new message has been made by the friend.
@@ -394,11 +375,12 @@ async function checkForNotifications() {
 		}
 
 		if (!newMessageFound) {
-			console.log("Buscando respuesta a invitación");
-			const response = await core.getResponseToInvitation(fileurl);
+			// console.log("Buscando respuesta a invitación");
+			// const response = await core.getResponseToInvitation(fileurl);
+			const response = null;
 			if (response) {
-				console.log("Procesando respuesta");
-				this.processResponseInNotification(response, fileurl);
+				// console.log("Procesando respuesta");
+				// this.processResponseInNotification(response, fileurl);
 			} else {
 				console.log("Buscar invitacion");
 				const convoToJoin = await core.getJoinRequest(fileurl, userWebId);
@@ -479,15 +461,102 @@ async function processResponseInNotification(response, fileurl) {
 	}
 }
 
-/**
- *	This method is in charge of deleting the user's inbox. WARNING. a little risky
- */
-$('#clear-inbox-btn').click(async() => {
-	const resources = await core.getAllResourcesInInbox(await core.getInboxUrl(userWebId));
-
-	resources.forEach(async r => {
-		if (await core.fileContainsChatInfo(r)) {
-			dataSync.deleteFileForUser(r);
-		}
+$('#open-btn').click(async() => {
+	
+	const selfPhoto = await core.getPhoto(userWebId);
+	$('#selfphoto').attr("src", selfPhoto);
+	
+	afterChatOption();
+	$('#chatui').removeClass('hidden');
+	$('#content').addClass('hidden')
+		
+	openChats.forEach(async chat => {
+			interlocWebId = chat.interlocutor;
+			const friendName = await core.getFormattedName(interlocWebId);
+			console.log(interlocWebId);
+			var friendPhoto = await core.getPhoto(interlocWebId);
+			if(!friendPhoto) {
+				friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+			}
+			
+			userDataUrl = chat.storeUrl;
+			
+			const loader = new Loader(auth.fetch);
+			var semanticChat = await loader.loadFromUrl(chat.chatUrl.split("#")[0], userWebId, userDataUrl);
+			semanticChat.interlocutorWebId = interlocWebId;
+			console.log(interlocWebId);
+			semanticChats.push(semanticChat);
+			
+			var lastMsg = semanticChat.getLastMessage().messagetext;
+			var lastHr = "";
+			if(!lastMsg) {
+				lastMsg = "Sin mensajes";
+			}
+			else {
+				lastHr = semanticChat.getHourOfMessage(semanticChat.getMessages().length-1);
+			}
+			
+			const newmsg = 0;
+			if (newmsg == 0) {
+				var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+			}
+			else {
+				var html = $("<div class='contact new-message-contact' id='" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + "Viejo" + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + chat.chatUrl + "'><p>" +"1" + "</p></div></div></div>");
+			}
+			$(".contact-list").prepend(html);
+			document.getElementById("chatwindow"+chatCounter).addEventListener ("click", loadMessagesToWindow, false);
+			chatCounter+=1;
 	});
+	
 });
+
+async function loadMessagesToWindow() {
+	var id = this.getAttribute("id").replace("chatwindow", "");
+	
+	$(".chat").html("");
+	var chat = semanticChats[Number(id)];
+	var friendPhoto = await core.getPhoto(chat.interlocutorWebId);
+	if(!friendPhoto){
+		friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+	}
+	$('#interlocutorphoto').attr("src", friendPhoto);
+	const friendName = await core.getFormattedName(chat.interlocutorWebId);
+	$("#interlocutorw-name").html("");
+	$("#interlocutorw-name").append(friendName);
+	
+	chat.getMessages().forEach(async(message) => {
+	
+	if (message.author === $('#user-name').text()) {
+				$(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" + 
+				message.time.substring(11, 16).replace("\-","\:") + "</div></div>");
+			}
+	else {
+				$(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" 
+				+ message.time.substring(11, 16).replace("\-","\:") + "</div></div>");
+	}
+			
+	});
+}
+
+document.onkeydown = checkKey;
+async function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '13' && $("#write-chat").val() != "") {
+        const username = $('#user-name').text();
+		const message = $("#write-chat").val();
+		var dateFormat = require('date-fns');
+		var now = new Date();
+		const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "hh-mm-ss");
+		$(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message + "</div><div class='time'>" + 
+				time.substring(11, 16).replace("\-","\:") + "</div></div>");
+		await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
+		$('#write-chat').val("");
+    }
+
+}
+
+
+
+

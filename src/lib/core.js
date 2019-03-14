@@ -35,7 +35,7 @@ class DeChatCore {
 	 */
 	async getFormattedName(webid) {
 		let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'name');
-
+		
 		if (!formattedName) {
 			formattedName = null;
 			const firstname = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'givenName');
@@ -63,6 +63,14 @@ class DeChatCore {
 		}
 
 		return formattedName;
+	}
+	
+	async getPhoto(webid) {
+		let photoUrl = await this.getObjectFromPredicateForResource(webid, 'http://www.w3.org/2006/vcard/ns#hasPhoto');
+		if(photoUrl)
+			return photoUrl.value;
+		else
+			return null;
 	}
 
 	/**

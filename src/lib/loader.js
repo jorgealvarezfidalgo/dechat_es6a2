@@ -33,7 +33,6 @@ class Loader {
 			userWebId
 			//interlocutorWebId
 		});
-		console.log("C");
 		const messages = await this._findMessage(chatUrl);
 		//console.log("friendWebId in loader.js is: " +interlocutorWebId);
 		//console.log(messages);

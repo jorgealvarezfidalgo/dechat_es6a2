@@ -55,6 +55,28 @@ class SemanticChat {
 	getMessages() {
 		return this.messages;
 	}
+	
+	getNumberOfMsgs() {
+		return this.numberOfMessages;
+	}
+	
+	getLastMessage() {
+		if(this.numberOfMessages>0) {
+			return this.messages[this.numberOfMessages-1];
+		}
+		else {
+			return {messagetext: null};
+		}
+	}
+	
+	getHourOfMessage(msg) {
+		if(this.numberOfMessages>0) {
+			return this.messages[msg].time.substring(11, 16).replace("\-","\:");
+		}
+		else {
+			return null;
+		}	
+	}
 
 
 }
