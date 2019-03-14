@@ -290,7 +290,7 @@ $('#open-btn').click(async () => {
         if (newmsg == 0) {
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + "Viejo" + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + chat.chatUrl + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -388,4 +388,22 @@ $('#close-contact-information').click(async () => {
 			$("#close-contact-information").hide();
 			$(".information >").remove();
 			$(".information").hide();
+});
+
+$('#show-contacts').click(async () => {
+	$(".contact-list").html("");
+	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
+	chatCounter = 0;
+
+    for await (const friend of data[userWebId].friends) {
+        let name = await core.getFormattedName(friend.value);
+		 var friendPhoto = await core.getPhoto(friend.value);
+        if (!friendPhoto) {
+            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        }
+
+        var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview'>" + "</p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+
+        $(".contact-list").prepend(html);
+	}
 });
