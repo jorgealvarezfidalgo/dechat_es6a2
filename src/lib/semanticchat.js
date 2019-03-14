@@ -8,6 +8,8 @@ class SemanticChat {
         this.chatBaseUrl = options.chatBaseUrl;
         this.messages = [];
         this.numberOfMessages = 0;
+		this.interlocutorName = options.interlocutorName;
+		this.photo = options.photo;
 
         // if move base url is a string create function that returns this string
         // else a function so we leave it

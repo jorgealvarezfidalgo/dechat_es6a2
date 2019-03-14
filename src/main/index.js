@@ -22,6 +22,7 @@ let interlocutorMessages = [];
 let semanticChats = [];
 let openChat = false;
 let chatCounter = 0;
+let currentChat;
 
 /**
  *	This method is in charge of showing the popup to login or register
@@ -72,8 +73,8 @@ auth.trackSession(async session => {
         });
 
         checkForNotifications();
-        // refresh every 5sec
-        refreshIntervalId = setInterval(checkForNotifications, 5000);
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
         //alert("you're not logged in");
         $('#nav-login-btn').removeClass('hidden');
@@ -214,56 +215,6 @@ $('.btn-cancel').click(() => {
 });
 
 /**
- *	This method is in charge of setting up a chat and hiding the buttons start, join and chat.
- */
-async function setUpChat() {
-    if (semanticChat) {
-        //console.log(semanticChat.getMessages());
-        semanticChat.getMessages().forEach(async (message) => {
-            $("#messagesarea").val($("#messagesarea").val() + "\n" + message.author + " [" + message.time + "]> " + message.messagetext);
-        });
-    }
-
-    $('#chat').removeClass('hidden');
-    $('#chat-loading').addClass('hidden');
-    $('#open-chats').addClass('hidden');
-    $('#open-chats-options').addClass('hidden');
-
-    const intName = await core.getFormattedName(interlocWebId);
-
-    $('#interlocutor-name').text(intName);
-
-    //const message = $("#message").val();
-    var i = 0;
-    //console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
-
-    while (i < interlocutorMessages.length) {
-        //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
-        var nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
-        console.log("nombre de authorUrl is:" + nameThroughUrl);
-        console.log("original interlocutorName is:" + intName);
-        if (nameThroughUrl === intName) {
-            $("#messagesarea").val($("#messagesarea").val() + "\n" + intName + " [" + interlocutorMessages[i].time + "]> " + interlocutorMessages[i].messageTx);
-            await core.storeMessage(userDataUrl, interlocutorMessages[i].author, userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messageTx, interlocWebId, dataSync, false);
-            dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
-            interlocutorMessages[i] = "D";
-            console.log("Matching names. All Correct");
-        }
-        i++;
-    }
-    i = interlocutorMessages.length;
-    while (i--) {
-        if (interlocutorMessages[i] == "D") {
-            interlocutorMessages.splice(i, 1);
-        }
-    }
-
-    openChat = true;
-
-}
-
-
-/**
  * This method checks if a new message has been made by the friend.
  * The necessarily data is stored and the UI is updated.
  * @returns {Promise<void>}
@@ -285,10 +236,8 @@ async function checkForNotifications() {
 
             newMessageFound = true;
             if (openChat) {
-                $("#messagesarea").val($("#messagesarea").val() + "\n" + message.author + " [" + message.time + "]> " + message.messageTx);
-                await core.storeMessage(userDataUrl, message.author, userWebId, message.time, message.messageTx, interlocWebId, dataSync, false);
+                await showAndStoreMessages();
             } else {
-                //If open there is no need to store them
                 interlocutorMessages.push(message);
             }
         }
@@ -302,70 +251,6 @@ async function checkForNotifications() {
             }
         }
     });
-}
-
-/**
- * This method processes a response to an invitation to join a chat.
- * @param response: the object representing the response.
- * @param fileurl: the url of the file containing the notification.
- * @returns {Promise<void>}
- */
-async function processResponseInNotification(response, fileurl) {
-    const rsvpResponse = await core.getObjectFromPredicateForResource(response.responseUrl, namespaces.schema + 'rsvpResponse');
-
-    let chatUrl = await core.getObjectFromPredicateForResource(response.invitationUrl, namespaces.schema + 'event');
-
-    if (chatUrl) {
-        chatUrl = chatUrl.value;
-
-        if (semanticChat && semanticChat.getUrl() === chatUrl) {
-            if (rsvpResponse.value === namespaces.schema + 'RsvpResponseYes') {
-                //$('#real-time-setup .modal-body ul').append('<li>Invitation accepted</li><li>Setting up direct connection</li>');
-                //webrtc.start();
-            }
-        } else {
-            let convoName = await core.getObjectFromPredicateForResource(chatUrl, namespaces.schema + 'name');
-
-            const loader = new Loader(auth.fetch);
-
-            const friendWebId = await loader.findWebIdOfInterlocutor(chatUrl, userWebId);
-            const friendsName = await core.getFormattedName(friendWebId);
-
-            //show response in UI
-            if (!convoName) {
-                convoName = chatUrl;
-            } else {
-                convoName = convoName.value;
-            }
-
-            let text;
-
-            if (rsvpResponse.value === namespaces.schema + 'RsvpResponseYes') {
-                text = `${friendsName} accepted your invitation to join "${convoName}"!`;
-            } else if (rsvpResponse.value === namespaces.schema + 'RsvpResponseNo') {
-                text = `${friendsName} refused your invitation to join ${convoName}...`;
-            }
-
-            if (!$('#invitation-response').is(':visible')) {
-                $('#invitation-response .modal-body').empty();
-            }
-
-            if ($('#invitation-response .modal-body').text() !== '') {
-                $('#invitation-response .modal-body').append('<br>');
-            }
-
-            $('#invitation-response .modal-body').append(text);
-            $('#invitation-response').modal('show');
-
-            dataSync.executeSPARQLUpdateForUser(await core.getStorageForChat(userWebId, chatUrl), `INSERT DATA {
-    <${response.invitationUrl}> <${namespaces.schema}result> <${response.responseUrl}>}
-  `);
-        }
-
-        dataSync.deleteFileForUser(fileurl);
-    } else {
-        console.log(`No chat url was found for response ${response.value}.`);
-    }
 }
 
 $('#open-btn').click(async () => {
@@ -389,6 +274,8 @@ $('#open-btn').click(async () => {
         const loader = new Loader(auth.fetch);
         var semanticChat = await loader.loadFromUrl(chat.chatUrl.split("#")[0], userWebId, userDataUrl);
         semanticChat.interlocutorWebId = chat.interlocutor;
+		semanticChat.interlocutorName = friendName;
+		semanticChat.photo = friendPhoto;
         semanticChats.push(semanticChat);
 
         var lastMsg = semanticChat.getLastMessage().messagetext;
@@ -417,26 +304,19 @@ async function loadMessagesToWindow() {
     var id = this.getAttribute("id").replace("chatwindow", "");
 
     $(".chat").html("");
-    var chat = semanticChats[Number(id)];
-    var friendPhoto = await core.getPhoto(chat.interlocutorWebId);
+    currentChat = semanticChats[Number(id)];
+    var friendPhoto = await core.getPhoto(currentChat.interlocutorWebId);
     if (!friendPhoto) {
         friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
     }
     $('#interlocutorphoto').attr("src", friendPhoto);
-    interlocWebId = chat.interlocutorWebId;
-    const friendName = await core.getFormattedName(chat.interlocutorWebId);
+    interlocWebId = currentChat.interlocutorWebId;
     $("#interlocutorw-name").html("");
-    $("#interlocutorw-name").append(friendName);
+    $("#interlocutorw-name").append(currentChat.interlocutorName);
 
-    chat.getMessages().forEach(async (message) => {
+    currentChat.getMessages().forEach(async (message) => {
 
-        if (message.author === $('#user-name').text()) {
-            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
-                message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
-        } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
-                message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
-        }
+        showMessage(message);
 
     });
 }
@@ -459,3 +339,53 @@ async function checkKey(e) {
     }
 
 }
+
+async function showAndStoreMessages() {
+	var i = 0;
+    //console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
+
+    while (i < interlocutorMessages.length) {
+        //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
+        var nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
+        console.log("nombre de authorUrl is:" + nameThroughUrl);
+        console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
+        if (nameThroughUrl === $('#interlocutorw-name').text()) {
+			showMessage(interlocutorMessages[i]);
+            await core.storeMessage(userDataUrl, interlocutorMessages[i].author, userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messageTx, interlocWebId, dataSync, false);
+            dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
+            interlocutorMessages[i] = "D";
+            console.log("Matching names. All Correct");
+        }
+        i++;
+    }
+    i = interlocutorMessages.length;
+    while (i--) {
+        if (interlocutorMessages[i] == "D") {
+            interlocutorMessages.splice(i, 1);
+        }
+    }
+}
+
+function showMessage(message) {
+	if (message.author === $('#user-name').text()) {
+            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
+                message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+        } else {
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
+                message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+        }
+}
+
+$('#show-contact-information').click(async () => {
+	$(".chat-head i").hide();
+			$(".information").css("display", "flex");
+			$("#close-contact-information").show();
+	$(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p></div></div>");
+});
+
+$('#close-contact-information').click(async () => {
+	$(".chat-head i").show();
+			$("#close-contact-information").hide();
+			$(".information >").remove();
+			$(".information").hide();
+});
