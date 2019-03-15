@@ -20,9 +20,11 @@ let chatsToJoin = [];
 let openChats = [];
 let interlocutorMessages = [];
 let semanticChats = [];
+let contactsWithChat = [];
 let openChat = false;
 let chatCounter = 0;
 let currentChat;
+let showingContacts = false;
 
 /**
  *	This method is in charge of showing the popup to login or register
@@ -115,6 +117,7 @@ $('#new-btn').click(async () => {
  *	This method is in charge of starting a new chat with the friend selected from the option menu
  */
 $('#start-new-chat-btn').click(async () => {
+	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
     const dataUrl = $('#data-url').val();
 
     if (await core.writePermission(dataUrl, dataSync)) {
@@ -277,6 +280,7 @@ $('#open-btn').click(async () => {
 		semanticChat.interlocutorName = friendName;
 		semanticChat.photo = friendPhoto;
         semanticChats.push(semanticChat);
+		contactsWithChat.splice(semanticChats.indexOf(semanticChat), 0, chat.interlocutor);
 
         var lastMsg = semanticChat.getLastMessage().messagetext;
         var lastHr = "";
@@ -302,9 +306,15 @@ $('#open-btn').click(async () => {
 
 async function loadMessagesToWindow() {
     var id = this.getAttribute("id").replace("chatwindow", "");
+	await loadMessages(Number(id));
+    
+}
 
-    $(".chat").html("");
-    currentChat = semanticChats[Number(id)];
+async function loadMessages(id) {
+	$(".chat").html("");
+    currentChat = semanticChats[id];
+	// console.log(semanticChats);
+	// console.log(currentChat);
     var friendPhoto = await core.getPhoto(currentChat.interlocutorWebId);
     if (!friendPhoto) {
         friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
@@ -394,6 +404,8 @@ $('#show-contacts').click(async () => {
 	$(".contact-list").html("");
 	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
 	chatCounter = 0;
+	
+	if(!showingContacts) {
 
     for await (const friend of data[userWebId].friends) {
         let name = await core.getFormattedName(friend.value);
@@ -402,8 +414,49 @@ $('#show-contacts').click(async () => {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
 
-        var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview'>" + "</p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+        var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview'>" + "</p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
         $(".contact-list").prepend(html);
+		document.getElementById("openchatwindow" + friend.value).addEventListener("click", openContact, false);
+		
+	}
+	showingContacts = true;
+	} else {
+		$(".contact-list").html("");
+		semanticChats.forEach(async chat => {
+
+			var lastMsg = chat.getLastMessage().messagetext;
+			var lastHr = "";
+			if (!lastMsg) {
+				lastMsg = "Sin mensajes";
+			} else {
+				lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
+			}
+
+			const newmsg = 0;
+			if (newmsg == 0) {
+				var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+			} else {
+				var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+			}
+			$(".contact-list").prepend(html);
+			document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
+			chatCounter += 1;
+    });
+		showingContacts = false;
 	}
 });
+
+async function openContact() {
+    $(".chat").html("");
+	var index = contactsWithChat.indexOf(this.getAttribute("id").replace("openchatwindow", ""));
+	// console.log(contactsWithChat);
+	// console.log(this.getAttribute("id").replace("openchatwindow", ""));
+	// console.log(index);
+	if(index != -1) {
+		loadMessages(index);
+	} else {
+		
+	}
+    
+}
