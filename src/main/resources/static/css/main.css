@@ -6,11 +6,21 @@ body {
 
 a {
   color: white!important;
+}
+
+a:hover {
+  
+}
+
+#navbarDropdown:hover {
   text-decoration: underline;
 }
 
+a i {
+  width: 10px;
+}
+
 .container {
-  background-color: darkorchid;
   padding-bottom: 20px;
 }
 

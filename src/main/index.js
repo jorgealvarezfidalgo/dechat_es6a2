@@ -1,6 +1,7 @@
 "use strict";
 
 const Core = require('../lib/core');
+const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
     default: data
@@ -339,7 +340,7 @@ $('#close-contact-information').click(async () => {
 $('#show-contacts').click(async () => {
 	$(".contact-list").html("");
 	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
-	chatCounter = 0;
+	
 	
 	if(!showingContacts) {
 
@@ -358,7 +359,14 @@ $('#show-contacts').click(async () => {
 	}
 	showingContacts = true;
 	} else {
-		$(".contact-list").html("");
+		await showChats();
+		showingContacts = false;
+	}
+});
+
+async function showChats() {
+	$(".contact-list").html("");
+		chatCounter = 0;
 		semanticChats.forEach(async chat => {
 
 			var lastMsg = chat.getLastMessage().messagetext;
@@ -378,10 +386,8 @@ $('#show-contacts').click(async () => {
 			$(".contact-list").prepend(html);
 			document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
 			chatCounter += 1;
-    });
-		showingContacts = false;
-	}
 });
+}
 
 async function openContact() {
     $(".chat").html("");
@@ -429,17 +435,52 @@ async function showInvitations() {
 	$(".contact-list").html("");
 	chatsToJoin.forEach(async chat => {
         var friendPhoto = await core.getPhoto(chat.friendWebId.id);
-		console.log(friendPhoto);
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
 		console.log(friendPhoto);
-		var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.friendWebId.id + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+		var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
-        document.getElementById("join" + chat.friendWebId).addEventListener("click", joinChat, false);   
+        document.getElementById("join" + chat.chatUrl).addEventListener("click", joinChat, false);   
            });
 }
 
 async function joinChat() {
+	var url = this.getAttribute("id").replace("join", "");
+	let i = 0;
+
+	while (i < chatsToJoin.length && chatsToJoin[i].chatUrl !== url) {
+		i++;
+	}
+
+	const chat = chatsToJoin[i];
+	chatsToJoin.splice(i, 1);
+
+
+	interlocWebId = chat.friendWebId.id;
+	await core.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
 	
+	var friendPhoto = await core.getPhoto(chat.friendWebId.id);
+        if (!friendPhoto) {
+            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        }
+		
+	var semanticChat = new SemanticChat({
+            url: url,
+            messageBaseUrl: userDataUrl,
+            userWebId,
+            interlocutorWebId: interlocWebId,
+			interlocutorName: chat.interlocutorName,
+			photo: friendPhoto
+        });
+	console.log(semanticChat);
+		
+	semanticChats.push(semanticChat);
+	var index = semanticChats.indexOf(semanticChat);
+	contactsWithChat.splice(index, 0, interlocWebId);
+	console.log(semanticChats);
+	console.log(contactsWithChat);
+	
+	await showChats();
+	await loadMessages(index);
 }
