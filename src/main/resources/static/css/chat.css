@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #dbdbdb;
+    background: purple;
 }
 
 i {
@@ -391,7 +391,6 @@ body::-webkit-scrollbar-thumb, .contact-list::-webkit-scrollbar-thumb, .chat::-w
 @media (min-width: 1200px) {
     .wrap {
         margin-bottom: 2vh;
-        margin-top: 25px;
         height: calc(98vh - 25px);
     }
 }

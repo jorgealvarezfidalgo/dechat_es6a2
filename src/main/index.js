@@ -90,81 +90,6 @@ auth.trackSession(async session => {
     }
 });
 
-
-/**
- *	This button is in charge of showing the create chat option
- */
-$('#new-btn').click(async () => {
-    if (userWebId) {
-        afterChatOption();
-        $('#new-chat-options').removeClass('hidden');
-        $('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
-
-        const $select = $('#contacts');
-
-        for await (const friend of data[userWebId].friends) {
-            let name = await core.getFormattedName(friend.value);
-
-            $select.append(`<option value="${friend}">${name}</option>`);
-        }
-    } else {
-        //alert("NOT logged in");
-        $('#login-required').modal('show');
-    }
-});
-
-/**
- *	This method is in charge of starting a new chat with the friend selected from the option menu
- */
-$('#start-new-chat-btn').click(async () => {
-	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
-    const dataUrl = $('#data-url').val();
-
-    if (await core.writePermission(dataUrl, dataSync)) {
-        $('#new-chat-options').addClass('hidden');
-        interlocWebId = $('#contacts').val();
-        userDataUrl = dataUrl;
-        setUpNewConversation();
-    } else {
-        $('#write-permission-url').text(dataUrl);
-        $('#write-permission').modal('show');
-    }
-});
-
-
-/**
- *	This method is in charge of showing the user's invitations from friends to join a chat
- */
-$('#join-btn').click(async () => {
-    if (userWebId) {
-        afterChatOption();
-        $('#join-chat-options').removeClass('hidden');
-        $('#join-data-url').prop('value', core.getDefaultDataUrl(userWebId));
-        $('#join-looking').addClass('hidden');
-
-        if (chatsToJoin.length > 0) {
-            $('#join-loading').addClass('hidden');
-            $('#join-form').removeClass('hidden');
-            const $select = $('#chat-urls');
-            $select.empty();
-
-            chatsToJoin.forEach(chat => {
-                let name = chat.name;
-
-                if (!name) {
-                    name = chat.chatUrl;
-                }
-
-                $select.append($(`<option value="${chat.chatUrl}">${name} ${chat.interlocutorName}</option>`));
-            });
-        } else {
-            $('#no-join').removeClass('hidden');
-        }
-    } else {
-        $('#login-required').modal('show');
-    }
-});
-
 /**
  *	This method is in charge of initiating the conversation between the user and the friend concerned
  */
@@ -200,23 +125,6 @@ $('#join-chat-btn').click(async () => {
     }
 });
 
-
-/**
- *	This method is in charge of getting back to the main menu and showing the start, join and open chat buttons
- */
-$('.btn-cancel').click(() => {
-    interlocWebId = null;
-    openChat = false;
-
-    $('#chat').addClass('hidden');
-    $('#new-chat-options').addClass('hidden');
-    $('#join-chat-options').addClass('hidden');
-    $('#open-chat-options').addClass('hidden');
-    $('#chat-options').removeClass('hidden');
-
-    $("#messagesarea").val("");
-});
-
 /**
  * This method checks if a new message has been made by the friend.
  * The necessarily data is stored and the UI is updated.
@@ -247,13 +155,17 @@ async function checkForNotifications() {
 
         if (!newMessageFound) {
             const convoToJoin = await core.getJoinRequest(fileurl, userWebId);
+			
             if (convoToJoin) {
+				$("#showinvs").show();
                 console.log("Procesando nuevo chat");
-                console.log(convoToJoin);
                 chatsToJoin.push(await core.processChatToJoin(convoToJoin, fileurl));
             }
         }
     });
+	if(chatsToJoin.length == 0) {
+		$("#showinvs").hide();
+	}
 }
 
 $('#open-btn').click(async () => {
@@ -301,8 +213,9 @@ $('#open-btn').click(async () => {
         chatCounter += 1;
     });
     openChat = true;
-	console.log(semanticChats);
-	console.log(contactsWithChat);
+	
+	
+	console.log(chatsToJoin);
 });
 
 async function loadMessagesToWindow() {
@@ -410,6 +323,9 @@ $('#show-contact-information').click(async () => {
 			$(".information").css("display", "flex");
 			$("#close-contact-information").show();
 	var note = await core.getNote(interlocWebId);
+	if(!note) {
+		note = "Nothing to see here";
+	}
 	$(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
 });
 
@@ -457,7 +373,7 @@ $('#show-contacts').click(async () => {
 			if (newmsg == 0) {
 				var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
 			} else {
-				var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+				var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
 			}
 			$(".contact-list").prepend(html);
 			document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -503,4 +419,27 @@ async function openContact() {
 		}
 	}
     
+}
+
+$('#showinvs').click(async () => {
+	await showInvitations();
+});
+
+async function showInvitations() {
+	$(".contact-list").html("");
+	chatsToJoin.forEach(async chat => {
+        var friendPhoto = await core.getPhoto(chat.friendWebId.id);
+		console.log(friendPhoto);
+        if (!friendPhoto) {
+            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        }
+		console.log(friendPhoto);
+		var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.friendWebId.id + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+        $(".contact-list").prepend(html);
+        document.getElementById("join" + chat.friendWebId).addEventListener("click", joinChat, false);   
+           });
+}
+
+async function joinChat() {
+	
 }
