@@ -292,16 +292,17 @@ $('#open-btn').click(async () => {
 
         const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
         chatCounter += 1;
     });
     openChat = true;
-
+	console.log(semanticChats);
+	console.log(contactsWithChat);
 });
 
 async function loadMessagesToWindow() {
@@ -346,6 +347,22 @@ async function checkKey(e) {
             time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
         $('#write-chat').val("");
+		var index = contactsWithChat.indexOf(interlocWebId);
+		$('#chatwindow'+index).remove();
+		
+		semanticChats[index].loadMessage({
+			messagetext: message,
+			url: null,
+			author: username,
+			time: time
+		});
+		
+		if(!showingContacts) {
+		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + message + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getMessages().length - 1); + "</p></div></div>";
+       
+        $(".contact-list").prepend(html);
+		document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+		}
     }
 
 }
@@ -449,14 +466,38 @@ $('#show-contacts').click(async () => {
 
 async function openContact() {
     $(".chat").html("");
-	var index = contactsWithChat.indexOf(this.getAttribute("id").replace("openchatwindow", ""));
+	var intWebId = this.getAttribute("id").replace("openchatwindow", "");
+	var index = contactsWithChat.indexOf(intWebId);
 	// console.log(contactsWithChat);
 	// console.log(this.getAttribute("id").replace("openchatwindow", ""));
 	// console.log(index);
 	if(index != -1) {
 		loadMessages(index);
 	} else {
-		
+		const dataUrl = core.getDefaultDataUrl(userWebId);
+
+		if (await core.writePermission(dataUrl, dataSync)) {
+			interlocWebId = intWebId;
+			userDataUrl = dataUrl;
+			var semanticChat = await core.setUpNewChat(userDataUrl, userWebId, interlocWebId, dataSync);
+			const friendName = await core.getFormattedName(interlocWebId);
+			var friendPhoto = await core.getPhoto(interlocWebId);
+			if (!friendPhoto) {
+				friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+			}
+
+			semanticChat.interlocutorName = friendName;
+			semanticChat.photo = friendPhoto;
+			semanticChats.push(semanticChat);
+			index = semanticChats.indexOf(semanticChat);
+			contactsWithChat.splice(index, 0, intWebId);
+			console.log(semanticChat);
+			console.log(contactsWithChat);
+			loadMessages(index);
+		} else {
+			$('#write-permission-url').text(dataUrl);
+			$('#write-permission').modal('show');
+		}
 	}
     
 }
