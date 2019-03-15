@@ -306,6 +306,8 @@ $('#open-btn').click(async () => {
 });
 
 async function loadMessagesToWindow() {
+	$(".information >").remove();
+	$(".information").hide();
     var id = this.getAttribute("id").replace("chatwindow", "");
 	await loadMessages(Number(id));
     
@@ -342,7 +344,7 @@ async function checkKey(e) {
         const message = $("#write-chat").val();
         var dateFormat = require('date-fns');
         var now = new Date();
-        const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "hh-mm-ss");
+        const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message + "</div><div class='time'>" +
             time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
@@ -407,7 +409,8 @@ $('#show-contact-information').click(async () => {
 	$(".chat-head i").hide();
 			$(".information").css("display", "flex");
 			$("#close-contact-information").show();
-	$(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p></div></div>");
+	var note = await core.getNote(interlocWebId);
+	$(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
 });
 
 $('#close-contact-information').click(async () => {

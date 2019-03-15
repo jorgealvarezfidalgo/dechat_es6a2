@@ -72,6 +72,14 @@ class DeChatCore {
         else
             return null;
     }
+	
+	async getNote(webid) {
+        let noteUrl = await this.getObjectFromPredicateForResource(webid, 'http://www.w3.org/2006/vcard/ns#note');
+        if (noteUrl)
+            return noteUrl.value;
+        else
+            return null;
+    }
 
     /**
      * This method returns the object of resource via a predicate.
