@@ -568,10 +568,6 @@ class DeChatCore {
 
     async joinExistingChat(invitationUrl, interlocutorWebId, userWebId, userDataUrl, dataSync, fileUrl) {
 
-        const response = await this.generateResponseToInvitation(userDataUrl, invitationUrl, userWebId, interlocutorWebId, "yes");
-
-        dataSync.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), response.notification);
-
         const chatUrl = await this.generateUniqueUrlForResource(userDataUrl);
 
         try {
@@ -584,34 +580,6 @@ class DeChatCore {
         }
 
         dataSync.deleteFileForUser(fileUrl);
-    }
-
-    async generateResponseToInvitation(baseUrl, invitationUrl, userWebId, interlocutorWebId, response) {
-        const rsvpUrl = await this.generateUniqueUrlForResource(baseUrl);
-        let responseUrl;
-
-        if (response === 'yes') {
-            responseUrl = namespaces.schema + 'RsvpResponseYes';
-        } else if (response === "no") {
-            responseUrl = namespaces.schema + 'RsvpResponseNo';
-        } else {
-            throw new Error(`The parameter "response" expects either "yes" or "no". Instead, "${response}" was provided.`);
-        }
-
-        const notification = `<${invitationUrl}> <${namespaces.schema}result> <${rsvpUrl}>.`;
-        const sparqlUpdate = `
-    <${rsvpUrl}> a <${namespaces.schema}RsvpAction>;
-      <${namespaces.schema}rsvpResponse> <${responseUrl}>;
-      <${namespaces.schema}agent> <${userWebId}>;
-      <${namespaces.schema}recipient> <${interlocutorWebId}>.
-      
-    <${invitationUrl}> <${namespaces.schema}result> <${rsvpUrl}>.
-  `;
-
-        return {
-            notification,
-            sparqlUpdate
-        };
     }
 
     async processChatToJoin(chat, fileurl) {
@@ -689,7 +657,7 @@ class DeChatCore {
                         messageFound = true;
                         result = result.toObject();
                         const messageUrl = result['?message'].value;
-                        const messageTx = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ");
+                        const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ");
                         const author = result['?username'].value.replace(/U\+0020/g, " ");
                         const time = result['?time'].value.split("/")[4];
                         const inboxUrl = fileurl;

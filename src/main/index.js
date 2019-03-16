@@ -294,7 +294,14 @@ async function showAndStoreMessages() {
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
 			showMessage(interlocutorMessages[i]);
-            await core.storeMessage(userDataUrl, interlocutorMessages[i].author, userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messageTx, interlocWebId, dataSync, false);
+            await core.storeMessage(userDataUrl, interlocutorMessages[i].author, userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
+			var index = contactsWithChat.indexOf(interlocWebId);
+			semanticChats[index].loadMessage({
+				messagetext: interlocutorMessages[i].messagetext,
+				url: null,
+				author: interlocutorMessages[i].author,
+				time: interlocutorMessages[i].time
+			});
             dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
             interlocutorMessages[i] = "D";
             console.log("Matching names. All Correct");
@@ -458,6 +465,7 @@ async function joinChat() {
 
 
 	interlocWebId = chat.friendWebId.id;
+	userDataUrl = await core.getDefaultDataUrl(userWebId);
 	await core.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
 	
 	var friendPhoto = await core.getPhoto(chat.friendWebId.id);
@@ -483,4 +491,5 @@ async function joinChat() {
 	
 	await showChats();
 	await loadMessages(index);
+	await showAndStoreMessages();
 }
