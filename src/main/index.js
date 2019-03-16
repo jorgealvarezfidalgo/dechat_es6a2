@@ -86,6 +86,8 @@ auth.trackSession(async session => {
         checkForNotifications();
 		
 		await startChat();
+		await sleep(5000);
+		await loadChats();
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -100,6 +102,10 @@ auth.trackSession(async session => {
         refreshIntervalId = null;
     }
 });
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * This method checks if a new message has been made by the friend.
@@ -165,31 +171,43 @@ async function startChat() {
         semanticChat.interlocutorWebId = chat.interlocutor;
 		semanticChat.interlocutorName = friendName;
 		semanticChat.photo = friendPhoto;
-        semanticChats.push(semanticChat);
-		contactsWithChat.splice(semanticChats.indexOf(semanticChat), 0, chat.interlocutor);
+				
+		semanticChats.push(semanticChat);
+    });
+    openChat = true;
+}
 
-        var lastMsg = semanticChat.getLastMessage().messagetext;
+async function loadChats() {
+	console.log(semanticChats);
+	semanticChats.sort(function (a,b) {  var x = a.getLastMessage().time; var y = b.getLastMessage().time;
+		console.log(x<y);
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));});
+	//await sleep(20000);
+
+	semanticChats.forEach(async chat => {
+		contactsWithChat.splice(semanticChats.indexOf(chat), 0, chat.interlocutorWebId);
+		
+		var lastMsg = chat.getLastMessage().messagetext;
         var lastHr = "";
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastHr = semanticChat.getHourOfMessage(semanticChat.getMessages().length - 1);
+            lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
         }
-
-        const newmsg = 0;
+		
+		const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + friendName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
         chatCounter += 1;
-    });
-    openChat = true;
+	});
 	
-	
-	console.log(chatsToJoin);
+	console.log(semanticChats);
+	console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
