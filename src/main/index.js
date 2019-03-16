@@ -82,12 +82,11 @@ auth.trackSession(async session => {
         chats.forEach(async chat => {
             openChats.push(chat);
         });
-
-        checkForNotifications();
 		
 		await startChat();
 		await sleep(5000);
 		await loadChats();
+		 checkForNotifications();
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -116,6 +115,7 @@ async function checkForNotifications() {
     //console.log('Checking for new notifications');
 
     const updates = await core.checkUserInboxForUpdates(await core.getInboxUrl(userWebId)); //HECHO
+	console.log(updates);
 
     updates.forEach(async (fileurl) => {
 
@@ -128,11 +128,25 @@ async function checkForNotifications() {
             console.log("Guardando mensajes");
 
             newMessageFound = true;
-            if (openChat) {
+		var nameThroughUrl = message.author.split("/").pop();
+        console.log("nombre de authorUrl is:" + nameThroughUrl);
+        console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
+		var authorUrl =  message.messageUrl.split("priv")[0] + "profile/card#me";
+        if (nameThroughUrl === $('#interlocutorw-name').text()) {
+				interlocutorMessages.push(message);
                 await showAndStoreMessages();
-            } else {
+            } else if (contactsWithChat.indexOf(authorUrl) != -1){
+				console.log("NEW MESSAGE - SITUATION B");
+				var index = contactsWithChat.indexOf(authorUrl);
+				$('#chatwindow'+index).remove();
+				var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + message.messagetext + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+				$(".contact-list").prepend(html);
+				document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 interlocutorMessages.push(message);
             }
+			else if(openChat) {
+				interlocutorMessages.push(message);
+			}
         }
 
         if (!newMessageFound) {
@@ -148,6 +162,8 @@ async function checkForNotifications() {
 	if(chatsToJoin.length == 0) {
 		$("#showinvs").hide();
 	}
+	// console.log(semanticChats);
+	// console.log(contactsWithChat);
 }
 
 async function startChat() {
@@ -206,21 +222,25 @@ async function loadChats() {
         chatCounter += 1;
 	});
 	
-	console.log(semanticChats);
-	console.log(contactsWithChat);
+	//console.log(semanticChats);
+	//console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
+	
 	$(".information >").remove();
 	$(".information").hide();
     var id = this.getAttribute("id").replace("chatwindow", "");
 	await loadMessages(Number(id));
-    
+	await showAndStoreMessages();
+    console.log(userDataUrl);
 }
 
 async function loadMessages(id) {
 	$(".chat").html("");
+	$("#nm" + id).remove();
     currentChat = semanticChats[id];
+	userDataUrl = currentChat.url;
 	// console.log(semanticChats);
 	// console.log(currentChat);
     var friendPhoto = await core.getPhoto(currentChat.interlocutorWebId);
@@ -285,16 +305,20 @@ async function showAndStoreMessages() {
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
 			showMessage(interlocutorMessages[i]);
-            await core.storeMessage(userDataUrl, interlocutorMessages[i].author, userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
+            await core.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
 			var index = contactsWithChat.indexOf(interlocWebId);
 			semanticChats[index].loadMessage({
 				messagetext: interlocutorMessages[i].messagetext,
 				url: null,
-				author: interlocutorMessages[i].author,
+				author: interlocutorMessages[i].author.split("/").pop(),
 				time: interlocutorMessages[i].time
 			});
             dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
-            interlocutorMessages[i] = "D";
+			$('#chatwindow'+index).remove();
+			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview'>" + interlocutorMessages[i].messagetext + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+			$(".contact-list").prepend(html);
+			document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+			interlocutorMessages[i] = "D";
             console.log("Matching names. All Correct");
         }
         i++;
