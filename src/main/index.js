@@ -41,6 +41,14 @@ $('.login-btn').click(() => {
  */
 $('#logout-btn').click(() => {
     auth.logout();
+	$(".contact-list").html("");
+	$(".chat").html("");
+	$("#showinvs").hide();
+	chatsToJoin = [];
+	openChats = [];
+	interlocutorMessages = [];
+	semanticChats = [];
+	contactsWithChat = [];
 });
 
 /**
@@ -76,6 +84,8 @@ auth.trackSession(async session => {
         });
 
         checkForNotifications();
+		
+		await startChat();
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -88,41 +98,6 @@ auth.trackSession(async session => {
         userWebId = null;
         clearInterval(refreshIntervalId);
         refreshIntervalId = null;
-    }
-});
-
-/**
- *	This method is in charge of initiating the conversation between the user and the friend concerned
- */
-$('#join-chat-btn').click(async () => {
-    if ($('#join-data-url').val() !== userWebId) {
-        userDataUrl = $('#join-data-url').val();
-
-        if (await core.writePermission(userDataUrl, dataSync)) {
-            $('#join-chat-options').addClass('hidden');
-            setUpForEveryChatOption();
-            const chatUrl = $('#chat-urls').val();
-
-            let i = 0;
-
-            while (i < chatsToJoin.length && chatsToJoin[i].chatUrl !== chatUrl) {
-                i++;
-            }
-
-            const chat = chatsToJoin[i];
-            // remove it from the array so it's no longer shown in the UI
-            chatsToJoin.splice(i, 1);
-
-
-            interlocWebId = chat.friendWebId.id;
-            await core.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
-            setUpChat();
-        } else {
-            $('#write-permission-url').text(userDataUrl);
-            $('#write-permission').modal('show');
-        }
-    } else {
-        console.warn('We are pretty sure you do not want to remove your WebID.');
     }
 });
 
@@ -169,14 +144,12 @@ async function checkForNotifications() {
 	}
 }
 
-$('#open-btn').click(async () => {
+async function startChat() {
 
     const selfPhoto = await core.getPhoto(userWebId);
     $('#selfphoto').attr("src", selfPhoto);
 
     afterChatOption();
-    $('#chatui').removeClass('hidden');
-    $('#content').addClass('hidden')
     openChats.forEach(async chat => {
         interlocWebId = chat.interlocutor;
         const friendName = await core.getFormattedName(chat.interlocutor);
@@ -217,7 +190,7 @@ $('#open-btn').click(async () => {
 	
 	
 	console.log(chatsToJoin);
-});
+}
 
 async function loadMessagesToWindow() {
 	$(".information >").remove();

@@ -663,7 +663,7 @@ class DeChatCore {
                         const inboxUrl = fileurl;
                         deferred.resolve({
                             inboxUrl,
-                            messageTx,
+                            messagetext,
                             messageUrl,
                             author,
                             time
