@@ -113,6 +113,10 @@ i {
     outline: none;
 }
 
+.h1, h1 {
+    margin-bottom: 5px;
+}
+
 .contact-list {
     background-color: #ffffff;
     width: 100%;
@@ -124,6 +128,15 @@ i {
     height: 70px;
     background-color: #ffffff;
     display: flex;
+}
+
+p[id^=lastMsg] img{
+	max-width: 100%;
+	width: 20px;
+	height: 20px;
+	margin: 0px;
+	vertical-align: top;
+	border-radius: 0%;
 }
 
 .contact img, .active-contact img, .new-message-contact img {
@@ -324,10 +337,6 @@ i {
     line-height: 120%;
     font-size: 0.9em;
 	color: black;
-}
-
-.content img {
-    width: 100%;
 }
 
 .time {

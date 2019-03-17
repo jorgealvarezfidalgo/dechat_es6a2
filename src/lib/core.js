@@ -602,7 +602,7 @@ class DeChatCore {
 
     async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, dataSync, toSend) {
 
-        const messageTx = message.replace(/ /g, "U+0020");
+        const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
         const psUsername = username.replace(/ /g, "U+0020");
 
         const messageUrl = await this.generateUniqueUrlForResource(userDataUrl);
@@ -657,7 +657,7 @@ class DeChatCore {
                         messageFound = true;
                         result = result.toObject();
                         const messageUrl = result['?message'].value;
-                        const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ");
+                        const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
                         const author = result['?username'].value.replace(/U\+0020/g, " ");
                         const time = result['?time'].value.split("/")[4];
                         const inboxUrl = fileurl;

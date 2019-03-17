@@ -70,7 +70,7 @@ class Loader {
                         var messageText = data['?msgtext'].value.split("/")[4];
                         var author = data['?username'].value.split("/")[4];
                         results.push({
-                            messagetext: messageText.replace(/U\+0020/g, " "),
+                            messagetext: messageText.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":"),
                             url: data['?message'].value,
                             author: author.replace(/U\+0020/g, " "),
                             time: data['?time'].value.split("/")[4]

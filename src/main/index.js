@@ -115,7 +115,7 @@ async function checkForNotifications() {
     //console.log('Checking for new notifications');
 
     const updates = await core.checkUserInboxForUpdates(await core.getInboxUrl(userWebId)); //HECHO
-	console.log(updates);
+	//console.log(updates);
 
     updates.forEach(async (fileurl) => {
 
@@ -139,7 +139,8 @@ async function checkForNotifications() {
 				console.log("NEW MESSAGE - SITUATION B");
 				var index = contactsWithChat.indexOf(authorUrl);
 				$('#chatwindow'+index).remove();
-				var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + message.messagetext + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+				var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+				var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
 				$(".contact-list").prepend(html);
 				document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 interlocutorMessages.push(message);
@@ -204,6 +205,7 @@ async function loadChats() {
 		contactsWithChat.splice(semanticChats.indexOf(chat), 0, chat.interlocutorWebId);
 		
 		var lastMsg = chat.getLastMessage().messagetext;
+		lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         var lastHr = "";
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
@@ -270,8 +272,6 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message + "</div><div class='time'>" +
-            time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
         $('#write-chat').val("");
 		var index = contactsWithChat.indexOf(interlocWebId);
@@ -284,8 +284,12 @@ async function checkKey(e) {
 			time: time
 		});
 		
+		const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+		
 		if(!showingContacts) {
-		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + message + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getMessages().length - 1); + "</p></div></div>";
+		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getMessages().length - 1); + "</p></div></div>";
        
         $(".contact-list").prepend(html);
 		document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
@@ -315,7 +319,8 @@ async function showAndStoreMessages() {
 			});
             dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
 			$('#chatwindow'+index).remove();
-			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview'>" + interlocutorMessages[i].messagetext + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+			const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
 			$(".contact-list").prepend(html);
 			document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
 			interlocutorMessages[i] = "D";
@@ -332,11 +337,12 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
+	const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
 	if (message.author === $('#user-name').text()) {
-            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + message.messagetext + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
 }
@@ -392,6 +398,7 @@ async function showChats() {
 		semanticChats.forEach(async chat => {
 
 			var lastMsg = chat.getLastMessage().messagetext;
+			lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
 			var lastHr = "";
 			if (!lastMsg) {
 				lastMsg = "Sin mensajes";
