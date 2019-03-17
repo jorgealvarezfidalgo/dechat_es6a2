@@ -26,8 +26,7 @@ class DeChatCore {
       format: winston.format.cli()
     });
     this.openChats = new OpenChatCore(fetch);
-  //  this.joinChats = new JoinChatCore(fetch);
-    //this.newChats = new NewChatCore(fetch);
+    this.messageCore = new MessageCore();
   }
 
   /**
@@ -562,7 +561,6 @@ class DeChatCore {
   }
 
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, dataSync, toSend) {
-
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
 
@@ -595,111 +593,15 @@ class DeChatCore {
   }
 
   async getNewMessage(fileurl, userWebId) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-    if (rdfjsSource) {
-      const engine = newEngine();
-      let messageFound = false;
-      const self = this;
-      engine.query(`SELECT * {
-				?message a <${namespaces.schema}Message>;
-					<${namespaces.schema}dateSent> ?time;
-					<${namespaces.schema}givenName> ?username;
-					<${namespaces.schema}text> ?msgtext.
-			}`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(function(result) {
-          result.bindingsStream.on('data', async function(result) {
-            //console.log(result);
-            messageFound = true;
-            result = result.toObject();
-            const messageUrl = result['?message'].value;
-            const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
-            const author = result['?username'].value.replace(/U\+0020/g, " ");
-            const time = result['?time'].value.split("/")[4];
-            const inboxUrl = fileurl;
-            deferred.resolve({
-              inboxUrl,
-              messagetext,
-              messageUrl,
-              author,
-              time
-            });
-          });
-
-          result.bindingsStream.on('end', function() {
-            if (!messageFound) {
-              deferred.resolve(null);
-            }
-          });
-        });
-    } else {
-      deferred.resolve(null);
-    }
-
-    return deferred.promise;
+    return this.messageCore.getNewMessage(fileurl, userWebId, this.fetch);
   }
 
   async fileContainsChatInfo(fileUrl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT * {
-    OPTIONAL { ?s a <${namespaces.schema}InviteAction>.}
-    OPTIONAL { ?s a <${namespaces.schema}Message> ?o; <${namespaces.schema}text> ?t.}
-  }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', data => {
-          console.log(result);
-          deferred.resolve(true);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(false);
-        });
-      });
-
-    return deferred.promise;
+    return this.messageCore.fileContainsChatInfo(fileUrl, this.fetch);
   }
 
   async getAllResourcesInInbox(inboxUrl) {
-    const deferred = Q.defer();
-    const resources = [];
-    const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT ?resource {
-      ?resource a <http://www.w3.org/ns/ldp#Resource>.
-    }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', data => {
-          data = data.toObject();
-
-          const resource = data['?resource'].value;
-          resources.push(resource);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(resources);
-        });
-      });
-
-    return deferred.promise;
+    return this.messageCore.getAllResourcesInInbox(inboxUrl, this.fetch);
   }
 }
 class OpenChatCore {
@@ -751,6 +653,118 @@ class OpenChatCore {
               //console.log(chatUrls);
               deferred.resolve(chatUrls);
             });
+          });
+        });
+    } else {
+      deferred.resolve(null);
+    }
+
+    return deferred.promise;
+  }
+}
+
+class MessageCore {
+  constructor() {}
+
+  async getAllResourcesInInbox(inboxUrl, fetch) {
+    const deferred = Q.defer();
+    const resources = [];
+    const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, fetch);
+    const engine = newEngine();
+
+    engine.query(`SELECT ?resource {
+        ?resource a <http://www.w3.org/ns/ldp#Resource>.
+      }`, {
+        sources: [{
+          type: 'rdfjsSource',
+          value: rdfjsSource
+        }]
+      })
+      .then(function(result) {
+        result.bindingsStream.on('data', data => {
+          data = data.toObject();
+
+          const resource = data['?resource'].value;
+          resources.push(resource);
+        });
+
+        result.bindingsStream.on('end', function() {
+          deferred.resolve(resources);
+        });
+      });
+
+    return deferred.promise;
+  }
+
+  async fileContainsChatInfo(fileUrl, fetch) {
+    const deferred = Q.defer();
+    const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, fetch);
+    const engine = newEngine();
+
+    engine.query(`SELECT * {
+      OPTIONAL { ?s a <${namespaces.schema}InviteAction>.}
+      OPTIONAL { ?s a <${namespaces.schema}Message> ?o; <${namespaces.schema}text> ?t.}
+    }`, {
+        sources: [{
+          type: 'rdfjsSource',
+          value: rdfjsSource
+        }]
+      })
+      .then(function(result) {
+        result.bindingsStream.on('data', data => {
+          console.log(result);
+          deferred.resolve(true);
+        });
+
+        result.bindingsStream.on('end', function() {
+          deferred.resolve(false);
+        });
+      });
+
+    return deferred.promise;
+  }
+
+  async getNewMessage(fileurl, userWebId, fetch) {
+    const deferred = Q.defer();
+    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, fetch);
+    if (rdfjsSource) {
+      const engine = newEngine();
+      let messageFound = false;
+      //const self = this;
+      engine.query(`SELECT * {
+  				?message a <${namespaces.schema}Message>;
+  					<${namespaces.schema}dateSent> ?time;
+  					<${namespaces.schema}givenName> ?username;
+  					<${namespaces.schema}text> ?msgtext.
+  			}`, {
+          sources: [{
+            type: 'rdfjsSource',
+            value: rdfjsSource
+          }]
+        })
+        .then(function(result) {
+          result.bindingsStream.on('data', async function(result) {
+            //console.log(result);
+            messageFound = true;
+            result = result.toObject();
+            const messageUrl = result['?message'].value;
+            const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
+            const author = result['?username'].value.replace(/U\+0020/g, " ");
+            const time = result['?time'].value.split("/")[4];
+            const inboxUrl = fileurl;
+            deferred.resolve({
+              inboxUrl,
+              messagetext,
+              messageUrl,
+              author,
+              time
+            });
+          });
+
+          result.bindingsStream.on('end', function() {
+            if (!messageFound) {
+              deferred.resolve(null);
+            }
           });
         });
     } else {
