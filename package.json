@@ -7,10 +7,13 @@
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "test": "jshint src/index.js",
+    "test": "nyc --reporter=html --reporter=text mocha",
+    
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+
     "build:web": "webpack --config webpack.config.js",
     "build": "ng build",
-    "test-with-coverage": "nyc --reporter text-lcov node_modules/.bin/_mocha --require @babel/register -R spec --timeout 100 && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage",
+
     "travisRepo": "./test/travisRepo.sh",
     "travis-deploy-once": "travis-deploy-once",
     "puml": "./node_modules/.bin/puml",
@@ -37,7 +40,8 @@
     "asciidoctor.js": "^1.5.9",
     "babel-plugin-istanbul": "^5.1.0",
     "chai": "^4.2.0",
-    "coveralls": "^3.0.2",
+    "codecov": "^3.2.0",
+    "coveralls": "^3.0.3",
     "eslint": "^5.x",
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
