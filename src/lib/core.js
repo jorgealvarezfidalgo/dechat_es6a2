@@ -72,7 +72,7 @@ class DeChatCore {
         else
             return null;
     }
-	
+
 	async getNote(webid) {
         let noteUrl = await this.getObjectFromPredicateForResource(webid, 'http://www.w3.org/2006/vcard/ns#note');
         if (noteUrl)
@@ -200,7 +200,7 @@ class DeChatCore {
         const invitation2 = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), userWebId, interlocutorWebId);
 
         try {
-            await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>; 
+            await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${interlocutorWebId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
@@ -498,8 +498,8 @@ class DeChatCore {
             engine.query(`SELECT * {
 		?invitation a <${namespaces.schema}InviteAction>;
 	<${namespaces.schema}agent> ?sender;
-	<${namespaces.schema}event> ?chaturl; 
-	<${namespaces.schema}recipient> ?interlocutor. 
+	<${namespaces.schema}event> ?chaturl;
+	<${namespaces.schema}recipient> ?interlocutor.
   }`, {
                     sources: [{
                         type: 'rdfjsSource',
@@ -571,7 +571,7 @@ class DeChatCore {
         const chatUrl = await this.generateUniqueUrlForResource(userDataUrl);
 
         try {
-            await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>; 
+            await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${interlocutorWebId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
@@ -740,6 +740,19 @@ class DeChatCore {
 
         return deferred.promise;
     }
-
+}
+class JoinChatCore {
+  constructor(fetch) {
+      this.inboxUrls = {};
+      this.fetch = fetch;
+      this.logger = winston.createLogger({
+          level: 'error',
+          transports: [
+              new winston.transports.Console(),
+          ],
+          format: winston.format.cli()
+      });
+  }
 }
 module.exports = DeChatCore;
+module.exports = JoinChatCore;
