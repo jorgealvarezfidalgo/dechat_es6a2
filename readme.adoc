@@ -8,6 +8,8 @@ image:https://api.codacy.com/project/badge/Grade/fc7dc1da60ee4e9fb67ccff78262579
 
 Jorge Álvarez Fidalgo & Othmane Bakhtaoui
 
+Developed on Notepad++
+
 == Getting started
 
 First of all, you have to install npm (see how to do it below):
@@ -130,15 +132,6 @@ To run tests execute:
 
 ----
 npm test
-----
-
-== Site documentation
-
-The https://github.com/Arquisoft/dechat_es6a/tree/master/pom.xml[pom.xml] file
- has also been configured to generate site project documentation. To do this, it is necessary to install https://maven.apache.org/[Maven], and then, run the following command:
-
-----
-mvn site
 ----
 
 
