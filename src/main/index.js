@@ -1,10 +1,10 @@
 "use strict";
 
-const BaseService = require('../lib/BaseService');
-const JoinService = require('../lib/JoinService');
-const MessageService = require('../lib/MessageService');
-const OpenService = require('../lib/OpenService');
-const CreateService = require('../lib/CreateService');
+const BaseService = require('../lib/Services/BaseService');
+const JoinService = require('../lib/Services/JoinService');
+const MessageService = require('../lib/Services/MessageService');
+const OpenService = require('../lib/Services/OpenService');
+const CreateService = require('../lib/Services/CreateService');
 const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
