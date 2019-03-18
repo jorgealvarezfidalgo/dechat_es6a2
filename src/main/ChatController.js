@@ -267,6 +267,7 @@ async function loadMessages(id) {
         showMessage(message);
 
     });
+	toScrollDown();
 }
 
 document.onkeydown = checkKey;
@@ -295,6 +296,8 @@ async function checkKey(e) {
 		const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
             time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+			
+		toScrollDown();
 		
 		if(!showingContacts) {
 		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getMessages().length - 1); + "</p></div></div>";
@@ -353,6 +356,7 @@ function showMessage(message) {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
+	toScrollDown();
 }
 
 $('#show-contact-information').click(async () => {
@@ -522,4 +526,9 @@ async function joinChat() {
 	await showChats();
 	await loadMessages(index);
 	await showAndStoreMessages();
+}
+
+function toScrollDown() {
+	var elem = document.getElementById('chatdiv');
+	elem.scrollTop = elem.scrollHeight;
 }
