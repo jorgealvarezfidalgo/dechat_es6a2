@@ -1,6 +1,7 @@
 "use strict";
 
 const Core = require('../lib/core');
+const JoinService = require('../lib/JoinService');
 const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
@@ -12,6 +13,7 @@ const Loader = require('../lib/loader');
 
 
 let core = new Core(auth.fetch);
+let joinService = new JoinService(auth.fetch);
 let userWebId;
 let interlocWebId;
 let refreshIntervalId;
@@ -151,12 +153,12 @@ async function checkForNotifications() {
         }
 
         if (!newMessageFound) {
-            const convoToJoin = await core.getJoinRequest(fileurl, userWebId);
+            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
 			
             if (convoToJoin) {
 				$("#showinvs").show();
                 console.log("Procesando nuevo chat");
-                chatsToJoin.push(await core.processChatToJoin(convoToJoin, fileurl));
+                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl));
             }
         }
     });
@@ -488,7 +490,7 @@ async function joinChat() {
 
 	interlocWebId = chat.friendWebId.id;
 	userDataUrl = await core.getDefaultDataUrl(userWebId);
-	await core.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
+	await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
 	
 	var friendPhoto = await core.getPhoto(chat.friendWebId.id);
         if (!friendPhoto) {
