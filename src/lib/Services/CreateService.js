@@ -12,6 +12,9 @@ const {
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const SemanticChat = require('../semanticchat');
 const BaseService = require('./BaseService');
+const Uploader = require('../Repositories/SolidUploaderRepository');
+
+let uploader = new Uploader(auth.fetch);
 
 let baseService = new BaseService(auth.fetch);
 
@@ -30,7 +33,7 @@ class CreateService {
   /**
    * This method creates a new chat
    */
-  async setUpNewChat(userDataUrl, userWebId, interlocutorWebId, dataSync) {
+  async setUpNewChat(userDataUrl, userWebId, interlocutorWebId) {
     const chatUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
     const semanticChat = new SemanticChat({
       url: chatUrl,
@@ -42,7 +45,7 @@ class CreateService {
     const invitation2 = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), userWebId, interlocutorWebId);
 
     try {
-      await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
+      await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${interlocutorWebId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
     } catch (e) {
@@ -51,16 +54,16 @@ class CreateService {
     }
 
     try {
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl.replace("/private/", "/public/"), `INSERT DATA {${invitation.sparqlUpdate}}`);
+      await uploader.executeSPARQLUpdateForUser(userDataUrl.replace("/private/", "/public/"), `INSERT DATA {${invitation.sparqlUpdate}}`);
 
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${invitation2.sparqlUpdate}}`);
+      await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${invitation2.sparqlUpdate}}`);
     } catch (e) {
       this.logger.error(`Could not save invitation for chat.`);
       this.logger.error(e);
     }
 
     try {
-      await dataSync.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), invitation.notification);
+      await uploader.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), invitation.notification);
     } catch (e) {
       this.logger.error(`Could not send invitation to interlocutor.`);
       this.logger.error(e);

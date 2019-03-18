@@ -11,6 +11,9 @@ const {
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
+const Uploader = require('../Repositories/SolidUploaderRepository');
+
+let uploader = new Uploader(auth.fetch);
 
 let baseService = new BaseService(auth.fetch);
 
@@ -36,7 +39,7 @@ class JoinChatService {
    * invitationUrl is the url of the invitation.
    * If no request was found, null is returned.
    */
-  async getJoinRequest(fileurl, userWebId, fetch, selfCore) {
+  async getJoinRequest(fileurl, userWebId, selfCore) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, fetch);
 
@@ -106,17 +109,17 @@ class JoinChatService {
   }
 
 
-  async joinExistingChat(urlChat, invitationUrl, interlocutorWebId, userWebId, userDataUrl, dataSync, fileUrl, logger) {
+  async joinExistingChat(urlChat, invitationUrl, interlocutorWebId, userWebId, userDataUrl, fileUrl, logger) {
     const chatUrl = urlChat;
     try {
-      await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
+      await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
     			<${namespaces.schema}recipient> <${interlocutorWebId}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
     } catch (e) {
       logger.error(`Could not add chat to WebId.`);
       logger.error(e);
     }
-    dataSync.deleteFileForUser(fileUrl);
+    uploader.deleteFileForUser(fileUrl);
   }
 
 

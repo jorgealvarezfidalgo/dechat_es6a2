@@ -1,6 +1,6 @@
 {
-  "name": "dechat_6a",
-  "version": "0.0.1",
+  "name": "dechat_6a2",
+  "version": "0.8.0",
   "description": "Decentralized, solid-based chat",
   "main": "src/index.js",
   "presets": [
@@ -19,13 +19,13 @@
   "bin": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Arquisoft/dechat_es6a"
+    "url": "git+https://github.com/Arquisoft/dechat_es6a2"
   },
   "author": "Jorge Fidalgo <UO258524@uniovi.es>",
   "bugs": {
-    "url": "https://github.com/Arquisoft/dechat_es6a/issues"
+    "url": "https://github.com/Arquisoft/dechat_es6a2/issues"
   },
-  "homepage": "https://github.com/Arquisoft/dechat_es6a/blob/master/readme.adoc",
+  "homepage": "https://github.com/Arquisoft/dechat_es6a2/blob/master/readme.adoc",
   "devDependencies": {
     "@11ty/eleventy": "^0.7.1",
     "@babel/cli": "^7.2.3",

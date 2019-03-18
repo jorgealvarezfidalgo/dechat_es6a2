@@ -10,6 +10,9 @@ const {
   format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
+const Loader = require('../Repositories/SolidLoaderRepository');
+
+let loader = new Loader(auth.fetch);
 
 
 class OpenService {
@@ -109,6 +112,10 @@ class OpenService {
       });
 
     return deferred.promise;
+  }
+  
+  async loadChatFromUrl(url, userWebId, userDataUrl) {
+	  return await loader.loadFromUrl(url, userWebId, userDataUrl);
   }
   
   

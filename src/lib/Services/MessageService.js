@@ -11,7 +11,9 @@ const {
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
+const Uploader = require('../Repositories/SolidUploaderRepository');
 
+let uploader = new Uploader(auth.fetch);
 let baseService = new BaseService(auth.fetch);
 
 class MessageService {
@@ -78,7 +80,7 @@ class MessageService {
     return deferred.promise;
   }
   
-  async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, dataSync, toSend) {
+  async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend) {
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
 
@@ -91,7 +93,7 @@ class MessageService {
 	  `;
     //<${namespaces.schema}dateCreated> <${time}>;
     try {
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
+      await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
       console.log("NO GUARDA");
       this.logger.error(`Could not save new message.`);
@@ -100,7 +102,7 @@ class MessageService {
 
     if (toSend) {
       try {
-        await dataSync.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), sparqlUpdate);
+        await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), sparqlUpdate);
       } catch (e) {
         this.logger.error(`Could not send message to interlocutor.`);
         console.log("Could not send");

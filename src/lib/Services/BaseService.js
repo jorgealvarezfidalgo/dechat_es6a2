@@ -10,6 +10,9 @@ const {
   format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
+const Uploader = require('../Repositories/SolidUploaderRepository');
+
+let uploader = new Uploader(auth.fetch);
 
 class BaseService {
 
@@ -133,8 +136,8 @@ class BaseService {
     return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
   }
 
-  async writePermission(url, dataSync) {
-    const response = await dataSync.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
+  async writePermission(url) {
+    const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
 
@@ -348,6 +351,10 @@ class BaseService {
       });
 
     return deferred.promise;
+  }
+  
+  deleteFileForUser(url) {
+	  uploader.deleteFileForUser(url);
   }
 
 }
