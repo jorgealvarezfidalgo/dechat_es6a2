@@ -279,15 +279,6 @@ class DeChatCore {
   }
 
   /**
-   * This method returns the chat to which a message belongs.
-   * @param moveUrl: the url of the move.
-   * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
-   */
-  async getChatOfMessage(moveUrl) {
-    return this.getObjectFromPredicateForResource(moveUrl, namespaces.schema + 'subEvent');
-  }
-
-  /**
    * This method returns the url of the file where to store the data of the chat.
    * @param fileurl: the url of the file in which to look for the storage details.
    * @param chatUrl: the url of the chat for which we want to the storage details.
@@ -366,19 +357,6 @@ class DeChatCore {
     }
 
     return deferred.promise;
-  }
-
-  /**
-   * This method checks a file and looks for the a join request.
-   * @param fileurl: the url of the file in which to look.
-   * @param userWebId: the WebId of the user looking for requests.
-   * @returns {Promise}: a promise that resolves with {interlocutorWebId: string, gchatrl: string, invitationUrl: string},
-   * where interlocutorWebId is the WebId of the player that initiated the request, gchatrl is the url of the gchat and
-   * invitationUrl is the url of the invitation.
-   * If no request was found, null is returned.
-   */
-  async getJoinRequest(fileurl, userWebId) {
-    return this.joinChats.getJoinRequest(fileurl, userWebId, this.fetch, this);
   }
 
   async getInterlocutor(fileurl, userWebId) {
@@ -479,49 +457,6 @@ class DeChatCore {
     return this.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
   }
 
-  async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, dataSync, toSend) {
-    const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
-    const psUsername = username.replace(/ /g, "U+0020");
-
-    const messageUrl = await this.generateUniqueUrlForResource(userDataUrl);
-    const sparqlUpdate = `
-		<${messageUrl}> a <${namespaces.schema}Message>;
-		  <${namespaces.schema}dateSent> <${time}>;
-		  <${namespaces.schema}givenName> <${psUsername}>;
-		  <${namespaces.schema}text> <${messageTx}>.
-	  `;
-    //<${namespaces.schema}dateCreated> <${time}>;
-    try {
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
-    } catch (e) {
-      console.log("NO GUARDA");
-      this.logger.error(`Could not save new message.`);
-      this.logger.error(e);
-    }
-
-    if (toSend) {
-      try {
-        await dataSync.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), sparqlUpdate);
-      } catch (e) {
-        this.logger.error(`Could not send message to interlocutor.`);
-        console.log("Could not send");
-        this.logger.error(e);
-      }
-    }
-
-  }
-
-  async getNewMessage(fileurl, userWebId) {
-    return this.messageCore.getNewMessage(fileurl, userWebId, this.fetch);
-  }
-
-  async fileContainsChatInfo(fileUrl) {
-    return this.messageCore.fileContainsChatInfo(fileUrl, this.fetch);
-  }
-
-  async getAllResourcesInInbox(inboxUrl) {
-    return this.messageCore.getAllResourcesInInbox(inboxUrl, this.fetch);
-  }
 }
 
 //__________________________ OPEN CHAT CORE_______________________//
@@ -581,13 +516,7 @@ class OpenChatCore {
 
     return deferred.promise;
   }
-}
-
-//__________________________ Message CORE_______________________//
-
-class MessageCore {
-  constructor() {}
-
+  
   async getAllResourcesInInbox(inboxUrl, fetch) {
     const deferred = Q.defer();
     const resources = [];
@@ -642,56 +571,6 @@ class MessageCore {
           deferred.resolve(false);
         });
       });
-
-    return deferred.promise;
-  }
-
-  async getNewMessage(fileurl, userWebId, fetch) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, fetch);
-    if (rdfjsSource) {
-      const engine = newEngine();
-      let messageFound = false;
-      //const self = this;
-      engine.query(`SELECT * {
-  				?message a <${namespaces.schema}Message>;
-  					<${namespaces.schema}dateSent> ?time;
-  					<${namespaces.schema}givenName> ?username;
-  					<${namespaces.schema}text> ?msgtext.
-  			}`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(function(result) {
-          result.bindingsStream.on('data', async function(result) {
-            //console.log(result);
-            messageFound = true;
-            result = result.toObject();
-            const messageUrl = result['?message'].value;
-            const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
-            const author = result['?username'].value.replace(/U\+0020/g, " ");
-            const time = result['?time'].value.split("/")[4];
-            const inboxUrl = fileurl;
-            deferred.resolve({
-              inboxUrl,
-              messagetext,
-              messageUrl,
-              author,
-              time
-            });
-          });
-
-          result.bindingsStream.on('end', function() {
-            if (!messageFound) {
-              deferred.resolve(null);
-            }
-          });
-        });
-    } else {
-      deferred.resolve(null);
-    }
 
     return deferred.promise;
   }

@@ -2,6 +2,7 @@
 
 const Core = require('../lib/core');
 const JoinService = require('../lib/JoinService');
+const MessageService = require('../lib/JoinService');
 const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
@@ -14,6 +15,7 @@ const Loader = require('../lib/loader');
 
 let core = new Core(auth.fetch);
 let joinService = new JoinService(auth.fetch);
+let messageService = new MessageService(auth.fetch);
 let userWebId;
 let interlocWebId;
 let refreshIntervalId;
@@ -125,7 +127,7 @@ async function checkForNotifications() {
 
         // check for new
         let newMessageFound = false;
-        let message = await core.getNewMessage(fileurl, userWebId, dataSync);
+        let message = await messageService.getNewMessage(fileurl, userWebId, dataSync);
         if (message) {
             console.log("Guardando mensajes");
 
@@ -274,7 +276,7 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        await core.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
+        await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
         $('#write-chat').val("");
 		var index = contactsWithChat.indexOf(interlocWebId);
 		$('#chatwindow'+index).remove();
@@ -311,7 +313,7 @@ async function showAndStoreMessages() {
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
 			showMessage(interlocutorMessages[i]);
-            await core.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
+            await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
 			var index = contactsWithChat.indexOf(interlocWebId);
 			semanticChats[index].loadMessage({
 				messagetext: interlocutorMessages[i].messagetext,
