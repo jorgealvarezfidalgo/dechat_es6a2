@@ -257,7 +257,7 @@ async function loadMessages(id) {
   // console.log(currentChat);
   var friendPhoto = await baseService.getPhoto(currentChat.interlocutorWebId);
   if (!friendPhoto) {
-    friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+    friendPhoto = "https: //www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
   }
   $('#interlocutorphoto').attr("src", friendPhoto);
   interlocWebId = currentChat.interlocutorWebId;
@@ -265,9 +265,7 @@ async function loadMessages(id) {
   $("#interlocutorw-name").append(currentChat.interlocutorName);
 
   currentChat.getMessages().forEach(async (message) => {
-
     showMessage(message);
-
   });
 }
 
