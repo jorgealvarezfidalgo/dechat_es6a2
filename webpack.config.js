@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/main/index.js',
+  entry: './src/main/ChatController.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'src/main/dist')
