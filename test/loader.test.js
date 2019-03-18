@@ -2,7 +2,7 @@
  * author: es6a2 group
  */
 const assert = require('assert');
-const Loader = require('./SolidLoaderRepository');
+const Loader = require('../src/lib/Repositories/SolidLoaderRepository');
 const auth = require('solid-auth-client');
 
 describe('Loader', function() {
