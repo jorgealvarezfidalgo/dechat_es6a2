@@ -21,7 +21,7 @@ let baseService = new BaseService(auth.fetch);
 class CreateService {
   constructor(fetch) {
     this.fetch = fetch;
-	this.logger = winston.createLogger({
+    this.logger = winston.createLogger({
       level: 'error',
       transports: [
         new winston.transports.Console(),
@@ -71,7 +71,7 @@ class CreateService {
 
     return semanticChat;
   }
-  
+
   async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {
     const invitationUrl = await baseService.generateUniqueUrlForResource(baseUrl);
     //console.log(invitationUrl);
@@ -88,7 +88,7 @@ class CreateService {
       sparqlUpdate
     };
   }
-  
-  
+
+
 }
 module.exports = CreateService;
