@@ -7,7 +7,7 @@
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha \"./test/*test.js\"",
+    "test": "nyc --reporter=html --reporter=text mocha \"./src/lib/Repositories/*test.js\"",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build:web": "webpack --config webpack.config.js",
     "build": "ng build",
