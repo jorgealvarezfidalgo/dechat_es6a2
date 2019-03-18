@@ -137,16 +137,6 @@ class DeChatCore {
   }
 
   /**
-   * This method returns all the chats that a user can continue, based on his WebId.
-   * @param webid: the WebId of the player.
-   * @returns {Promise}: a promise that resolves to an array with objects.
-   * Each object contains the url of the chat (chatUrl) and the url where the data of the chat is store (storeUrl).
-   */
-  async getChatsToOpen(webid) {
-    return this.openChats.getChatsToOpen(webid);
-  }
-
-  /**
    * This method creates a new chat
    */
   async setUpNewChat(userDataUrl, userWebId, interlocutorWebId, dataSync) {
@@ -278,87 +268,6 @@ class DeChatCore {
     return deferred.promise;
   }
 
-  /**
-   * This method returns the url of the file where to store the data of the chat.
-   * @param fileurl: the url of the file in which to look for the storage details.
-   * @param chatUrl: the url of the chat for which we want to the storage details.
-   * @returns {Promise<string|null>}: a promise that resolves with the url of the file or null if none is found.
-   */
-  async getStorageForChat(fileurl, chatUrl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT ?url {
-     <${chatUrl}> <${namespaces.schema}contributor> <${fileurl}>;
-        <${namespaces.storage}storeIn> ?url.
-  }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', async function(data) {
-          data = data.toObject();
-
-          deferred.resolve(data['?url'].value);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(null);
-        });
-      });
-
-    return deferred.promise;
-  }
-
-
-
-  /**
-   * This method returns the urls of the invitation and the ofriends response.
-   * @param fileurl: the url of the file in which to look for the response.
-   * @returns {Promise<object|null>}: a promise that resolves to {invitationUrl: string, responseUrl: string},
-   * where the invitationUrl is the url of the invitation and responseUrl the url of the response.
-   * If no response is found, the promise is resolved with null.
-   */
-  async getResponseToInvitation(fileurl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-
-    if (rdfjsSource) {
-      const engine = newEngine();
-
-      engine.query(`SELECT * {
-    ?invitation <${namespaces.schema}result> ?response.
-  }`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(function(result) {
-          result.bindingsStream.on('data', function(data) {
-            data = data.toObject();
-
-            deferred.resolve({
-              invitationUrl: data['?invitation'].value,
-              responseUrl: data['?response'].value,
-            });
-          });
-
-          result.bindingsStream.on('end', function() {
-            deferred.resolve(null);
-          });
-        });
-    } else {
-      deferred.resolve(null);
-      console.log("Alli?");
-    }
-
-    return deferred.promise;
-  }
-
   async getInterlocutor(fileurl, userWebId) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
@@ -440,14 +349,6 @@ class DeChatCore {
     return deferred.promise;
   }
 
-  async joinExistingChat(invitationUrl, interlocutorWebId, userWebId, userDataUrl, dataSync, fileUrl) {
-    this.joinChats.joinExistingChat(urlChat, invitationUrl, interlocutorWebId, userWebId, userDataUrl, dataSync, fileUrl, logger);
-  }
-
-  async processChatToJoin(chat, fileurl) {
-    return this.joinChats.processChatToJoin(chat, fileurl, this);
-  }
-
   /**
    * This method returns the chat of an invitation.
    * @param url: the url of the invitation.
@@ -455,66 +356,6 @@ class DeChatCore {
    */
   async getChatFromInvitation(url) {
     return this.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
-  }
-
-}
-
-//__________________________ OPEN CHAT CORE_______________________//
-class OpenChatCore {
-  constructor(fetch) {
-    this.fetch = fetch;
-  }
-
-  /**
-   * This method returns all the chats that a user can continue, based on his WebId.
-   * @param webid: the WebId of the player.
-   * @returns {Promise}: a promise that resolves to an array with objects.
-   * Each object contains the url of the chat (chatUrl) and the url where the data of the chat is store (storeUrl).
-   */
-  async getChatsToOpen(webid) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(webid, this.fetch);
-
-    if (rdfjsSource) {
-      const engine = newEngine();
-      const chatUrls = [];
-      const promises = [];
-
-      engine.query(`SELECT ?chat ?int ?url {
-  			 ?chat <${namespaces.schema}contributor> <${webid}>;
-  				<${namespaces.schema}recipient> ?int;
-  				<${namespaces.storage}storeIn> ?url.
-  		  }`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(result => {
-          result.bindingsStream.on('data', async (data) => {
-            const deferred = Q.defer();
-            promises.push(deferred.promise);
-            data = data.toObject();
-            chatUrls.push({
-              chatUrl: data['?chat'].value,
-              storeUrl: data['?url'].value,
-              interlocutor: data['?int'].value
-            });
-            deferred.resolve();
-          });
-
-          result.bindingsStream.on('end', function() {
-            Q.all(promises).then(() => {
-              //console.log(chatUrls);
-              deferred.resolve(chatUrls);
-            });
-          });
-        });
-    } else {
-      deferred.resolve(null);
-    }
-
-    return deferred.promise;
   }
   
   async getAllResourcesInInbox(inboxUrl, fetch) {
@@ -574,5 +415,7 @@ class OpenChatCore {
 
     return deferred.promise;
   }
+
 }
+
 module.exports = DeChatCore;

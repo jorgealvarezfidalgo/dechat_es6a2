@@ -11,7 +11,9 @@ const {
 const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
 
 class MessageService {
-  constructor() {}
+  constructor(fetch) {
+    this.fetch = fetch;
+  }
 
   
 

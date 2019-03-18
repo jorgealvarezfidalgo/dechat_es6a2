@@ -2,7 +2,8 @@
 
 const Core = require('../lib/core');
 const JoinService = require('../lib/JoinService');
-const MessageService = require('../lib/JoinService');
+const MessageService = require('../lib/MessageService');
+const OpenService = require('../lib/OpenService');
 const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
@@ -16,6 +17,7 @@ const Loader = require('../lib/loader');
 let core = new Core(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
+let openService = new OpenService(auth.fetch);
 let userWebId;
 let interlocWebId;
 let refreshIntervalId;
@@ -82,7 +84,7 @@ auth.trackSession(async session => {
             $('#user-name').text(name);
         }
         openChats = [];
-        const chats = await core.getChatsToOpen(userWebId);
+        const chats = await openService.getChatsToOpen(userWebId);
         chats.forEach(async chat => {
             openChats.push(chat);
         });

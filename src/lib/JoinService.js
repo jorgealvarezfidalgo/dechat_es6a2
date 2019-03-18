@@ -11,7 +11,9 @@ const {
 const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
 
 class JoinChatService {
-  constructor() {}
+  constructor(fetch) {
+    this.fetch = fetch;
+  }
 
 
   /**
