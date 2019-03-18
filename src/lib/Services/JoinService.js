@@ -9,7 +9,7 @@ const auth = require('solid-auth-client');
 const {
   format
 } = require('date-fns');
-const rdfjsSourceFromUrl = require('../rdfjssourcefactory').fromUrl;
+const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
 
 let baseService = new BaseService(auth.fetch);

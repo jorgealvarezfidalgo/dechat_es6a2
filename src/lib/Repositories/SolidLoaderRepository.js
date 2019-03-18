@@ -2,13 +2,13 @@ const N3 = require('n3');
 const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
 const Q = require('q');
 const streamify = require('streamify-array');
-const namespaces = require('./namespaces');
-const SemanticChat = require('./semanticchat');
+const namespaces = require('../namespaces');
+const SemanticChat = require('../semanticchat');
 
 /**
- * The Loader allows creating a Semantic Chess instance via information loaded from an url.
+ * The Loader allows creating a Semantic Chat instance via information loaded from an url.
  */
-class Loader {
+class SolidLoaderRepository {
 
     /**
      * This constructor creates an instance of Loader.
@@ -194,4 +194,4 @@ class Loader {
 
 }
 
-module.exports = Loader;
+module.exports = SolidLoaderRepository;

@@ -11,8 +11,8 @@ const {
     default: data
 } = require('@solid/query-ldflex');
 const namespaces = require('../lib/namespaces');
-const DataSync = require('../lib/datasync');
-const Loader = require('../lib/loader');
+const Uploader = require('../lib/Repositories/SolidUploaderRepository');
+const Loader = require('../lib/Repositories/SolidLoaderRepository');
 
 
 let baseService = new BaseService(auth.fetch);
@@ -23,7 +23,7 @@ let createService = new CreateService(auth.fetch);
 let userWebId;
 let interlocWebId;
 let refreshIntervalId;
-let dataSync = new DataSync(auth.fetch);
+let uploader = new Uploader(auth.fetch);
 let userDataUrl;
 let chatsToJoin = [];
 let openChats = [];
@@ -131,7 +131,7 @@ async function checkForNotifications() {
 
         // check for new
         let newMessageFound = false;
-        let message = await messageService.getNewMessage(fileurl, userWebId, dataSync);
+        let message = await messageService.getNewMessage(fileurl, userWebId, uploader);
         if (message) {
             console.log("Guardando mensajes");
 
@@ -280,7 +280,7 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, dataSync, true);
+        await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, uploader, true);
         $('#write-chat').val("");
 		var index = contactsWithChat.indexOf(interlocWebId);
 		$('#chatwindow'+index).remove();
@@ -317,7 +317,7 @@ async function showAndStoreMessages() {
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
 			showMessage(interlocutorMessages[i]);
-            await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, dataSync, false);
+            await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, uploader, false);
 			var index = contactsWithChat.indexOf(interlocWebId);
 			semanticChats[index].loadMessage({
 				messagetext: interlocutorMessages[i].messagetext,
@@ -325,7 +325,7 @@ async function showAndStoreMessages() {
 				author: interlocutorMessages[i].author.split("/").pop(),
 				time: interlocutorMessages[i].time
 			});
-            dataSync.deleteFileForUser(interlocutorMessages[i].inboxUrl);
+            uploader.deleteFileForUser(interlocutorMessages[i].inboxUrl);
 			$('#chatwindow'+index).remove();
 			const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
 			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
@@ -438,10 +438,10 @@ async function openContact() {
 	} else {
 		const dataUrl = baseService.getDefaultDataUrl(userWebId);
 
-		if (await baseService.writePermission(dataUrl, dataSync)) {
+		if (await baseService.writePermission(dataUrl, uploader)) {
 			interlocWebId = intWebId;
 			userDataUrl = dataUrl;
-			var semanticChat = await createService.setUpNewChat(userDataUrl, userWebId, interlocWebId, dataSync);
+			var semanticChat = await createService.setUpNewChat(userDataUrl, userWebId, interlocWebId, uploader);
 			const friendName = await baseService.getFormattedName(interlocWebId);
 			var friendPhoto = await baseService.getPhoto(interlocWebId);
 			if (!friendPhoto) {
@@ -496,7 +496,7 @@ async function joinChat() {
 
 	interlocWebId = chat.friendWebId.id;
 	userDataUrl = await baseService.getDefaultDataUrl(userWebId);
-	await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
+	await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, uploader, chat.fileUrl);
 	
 	var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
         if (!friendPhoto) {
