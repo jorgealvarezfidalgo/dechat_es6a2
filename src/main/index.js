@@ -1,9 +1,10 @@
 "use strict";
 
-const Core = require('../lib/core');
+const BaseService = require('../lib/BaseService');
 const JoinService = require('../lib/JoinService');
 const MessageService = require('../lib/MessageService');
 const OpenService = require('../lib/OpenService');
+const CreateService = require('../lib/CreateService');
 const SemanticChat = require('../lib/semanticchat');
 const auth = require('solid-auth-client');
 const {
@@ -14,10 +15,11 @@ const DataSync = require('../lib/datasync');
 const Loader = require('../lib/loader');
 
 
-let core = new Core(auth.fetch);
+let baseService = new BaseService(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
 let openService = new OpenService(auth.fetch);
+let createService = new CreateService(auth.fetch);
 let userWebId;
 let interlocWebId;
 let refreshIntervalId;
@@ -77,7 +79,7 @@ auth.trackSession(async session => {
         $('#login-required').modal('hide');
 
         userWebId = session.webId;
-        const name = await core.getFormattedName(userWebId);
+        const name = await baseService.getFormattedName(userWebId);
 
         if (name) {
             $('#user-name').removeClass('hidden');
@@ -120,7 +122,7 @@ function sleep(ms) {
 async function checkForNotifications() {
     //console.log('Checking for new notifications');
 
-    const updates = await core.checkUserInboxForUpdates(await core.getInboxUrl(userWebId)); //HECHO
+    const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
 	//console.log(updates);
 
     updates.forEach(async (fileurl) => {
@@ -175,14 +177,14 @@ async function checkForNotifications() {
 
 async function startChat() {
 
-    const selfPhoto = await core.getPhoto(userWebId);
+    const selfPhoto = await baseService.getPhoto(userWebId);
     $('#selfphoto').attr("src", selfPhoto);
 
     afterChatOption();
     openChats.forEach(async chat => {
         interlocWebId = chat.interlocutor;
-        const friendName = await core.getFormattedName(chat.interlocutor);
-        var friendPhoto = await core.getPhoto(chat.interlocutor);
+        const friendName = await baseService.getFormattedName(chat.interlocutor);
+        var friendPhoto = await baseService.getPhoto(chat.interlocutor);
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
@@ -251,7 +253,7 @@ async function loadMessages(id) {
 	userDataUrl = currentChat.url;
 	// console.log(semanticChats);
 	// console.log(currentChat);
-    var friendPhoto = await core.getPhoto(currentChat.interlocutorWebId);
+    var friendPhoto = await baseService.getPhoto(currentChat.interlocutorWebId);
     if (!friendPhoto) {
         friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
     }
@@ -357,7 +359,7 @@ $('#show-contact-information').click(async () => {
 	$(".chat-head i").hide();
 			$(".information").css("display", "flex");
 			$("#close-contact-information").show();
-	var note = await core.getNote(interlocWebId);
+	var note = await baseService.getNote(interlocWebId);
 	if(!note) {
 		note = "Nothing to see here";
 	}
@@ -373,14 +375,14 @@ $('#close-contact-information').click(async () => {
 
 $('#show-contacts').click(async () => {
 	$(".contact-list").html("");
-	$('#data-url').prop('value', core.getDefaultDataUrl(userWebId));
+	$('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
 	
 	
 	if(!showingContacts) {
 
     for await (const friend of data[userWebId].friends) {
-        let name = await core.getFormattedName(friend.value);
-		 var friendPhoto = await core.getPhoto(friend.value);
+        let name = await baseService.getFormattedName(friend.value);
+		 var friendPhoto = await baseService.getPhoto(friend.value);
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
@@ -434,14 +436,14 @@ async function openContact() {
 	if(index != -1) {
 		loadMessages(index);
 	} else {
-		const dataUrl = core.getDefaultDataUrl(userWebId);
+		const dataUrl = baseService.getDefaultDataUrl(userWebId);
 
-		if (await core.writePermission(dataUrl, dataSync)) {
+		if (await baseService.writePermission(dataUrl, dataSync)) {
 			interlocWebId = intWebId;
 			userDataUrl = dataUrl;
-			var semanticChat = await core.setUpNewChat(userDataUrl, userWebId, interlocWebId, dataSync);
-			const friendName = await core.getFormattedName(interlocWebId);
-			var friendPhoto = await core.getPhoto(interlocWebId);
+			var semanticChat = await createService.setUpNewChat(userDataUrl, userWebId, interlocWebId, dataSync);
+			const friendName = await baseService.getFormattedName(interlocWebId);
+			var friendPhoto = await baseService.getPhoto(interlocWebId);
 			if (!friendPhoto) {
 				friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
 			}
@@ -469,7 +471,7 @@ $('#showinvs').click(async () => {
 async function showInvitations() {
 	$(".contact-list").html("");
 	chatsToJoin.forEach(async chat => {
-        var friendPhoto = await core.getPhoto(chat.friendWebId.id);
+        var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
@@ -493,10 +495,10 @@ async function joinChat() {
 
 
 	interlocWebId = chat.friendWebId.id;
-	userDataUrl = await core.getDefaultDataUrl(userWebId);
+	userDataUrl = await baseService.getDefaultDataUrl(userWebId);
 	await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, dataSync, chat.fileUrl);
 	
-	var friendPhoto = await core.getPhoto(chat.friendWebId.id);
+	var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }

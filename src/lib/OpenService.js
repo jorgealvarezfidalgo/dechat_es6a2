@@ -14,6 +14,13 @@ const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
 class OpenService {
   constructor(fetch) {
     this.fetch = fetch;
+	this.logger = winston.createLogger({
+      level: 'error',
+      transports: [
+        new winston.transports.Console(),
+      ],
+      format: winston.format.cli()
+    });
   }
 
   /**

@@ -9,10 +9,20 @@ const {
   format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
+const BaseService = require('../lib/BaseService');
+
+let baseService = new BaseService(auth.fetch);
 
 class JoinChatService {
   constructor(fetch) {
     this.fetch = fetch;
+	this.logger = winston.createLogger({
+      level: 'error',
+      transports: [
+        new winston.transports.Console(),
+      ],
+      format: winston.format.cli()
+    });
   }
 
 
@@ -63,13 +73,13 @@ class JoinChatService {
               deferred.resolve(null);
             } else {
               //console.log(invitationUrl);
-              const recipient = await self.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'recipient');
+              const recipient = await baseService.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'recipient');
               //console.log("Recipient: " + recipient);
               if (!recipient || recipient.value !== userWebId) {
                 deferred.resolve(null);
               }
 
-              const friendWebId = await self.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'agent');
+              const friendWebId = await baseService.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'agent');
               //console.log("Agent: " + friendWebId);
 
               deferred.resolve({
@@ -109,12 +119,23 @@ class JoinChatService {
   }
 
 
-  async processChatToJoin(chat, fileurl, self) {
+  async processChatToJoin(chat, fileurl) {
     chat.fileUrl = fileurl;
     chat.name = "Chat de ";
-    chat.interlocutorName = await self.getFormattedName(chat.friendWebId.id);
+    chat.interlocutorName = await baseService.getFormattedName(chat.friendWebId.id);
     return chat;
   }
+  
+   /**
+   * This method returns the chat of an invitation.
+   * @param url: the url of the invitation.
+   * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
+   */
+  async getChatFromInvitation(url) {
+    return baseService.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
+}
+  
+  
 
 }
 module.exports = JoinChatService;

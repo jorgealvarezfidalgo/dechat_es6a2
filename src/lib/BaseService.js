@@ -9,10 +9,8 @@ const {
   format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
-const SemanticChat = require('./semanticchat');
-const Loader = require('./loader');
 
-class DeChatCore {
+class BaseService {
 
   constructor(fetch) {
     this.inboxUrls = {};
@@ -24,10 +22,13 @@ class DeChatCore {
         new winston.transports.Console(),
       ],
       format: winston.format.cli()
+    });this.logger = winston.createLogger({
+      level: 'error',
+      transports: [
+        new winston.transports.Console(),
+      ],
+      format: winston.format.cli()
     });
-    this.openChats = new OpenChatCore(fetch);
-    this.messageCore = new MessageCore();
-    this.joinChats = new JoinChatCore();
   }
 
   /**
@@ -136,47 +137,7 @@ class DeChatCore {
     return response.status === 200;
   }
 
-  /**
-   * This method creates a new chat
-   */
-  async setUpNewChat(userDataUrl, userWebId, interlocutorWebId, dataSync) {
-    const chatUrl = await this.generateUniqueUrlForResource(userDataUrl);
-    const semanticChat = new SemanticChat({
-      url: chatUrl,
-      messageBaseUrl: userDataUrl,
-      userWebId,
-      interlocutorWebId
-    });
-    const invitation = await this.generateInvitation(userDataUrl.replace("/private/", "/public/"), semanticChat.getUrl(), userWebId, interlocutorWebId);
-    const invitation2 = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), userWebId, interlocutorWebId);
-
-    try {
-      await dataSync.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
-			<${namespaces.schema}recipient> <${interlocutorWebId}>;
-			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
-    } catch (e) {
-      this.logger.error(`Could not add chat to WebId.`);
-      this.logger.error(e);
-    }
-
-    try {
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl.replace("/private/", "/public/"), `INSERT DATA {${invitation.sparqlUpdate}}`);
-
-      await dataSync.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${invitation2.sparqlUpdate}}`);
-    } catch (e) {
-      this.logger.error(`Could not save invitation for chat.`);
-      this.logger.error(e);
-    }
-
-    try {
-      await dataSync.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), invitation.notification);
-    } catch (e) {
-      this.logger.error(`Could not send invitation to interlocutor.`);
-      this.logger.error(e);
-    }
-
-    return semanticChat;
-  }
+ 
 
   async generateUniqueUrlForResource(baseurl) {
     let url = baseurl + '#' + uniqid();
@@ -199,23 +160,6 @@ class DeChatCore {
     }
   }
 
-  async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {
-    const invitationUrl = await this.generateUniqueUrlForResource(baseUrl);
-    //console.log(invitationUrl);
-    const notification = `<${invitationUrl}> a <${namespaces.schema}InviteAction>.`;
-    const sparqlUpdate = `
-    <${invitationUrl}> a <${namespaces.schema}InviteAction>;
-      <${namespaces.schema}event> <${chatUrl}>;
-      <${namespaces.schema}agent> <${userWebId}>;
-      <${namespaces.schema}recipient> <${interlocutorWebId}>.
-  `;
-
-    return {
-      notification,
-      sparqlUpdate
-    };
-  }
-
   async getInboxUrl(webId) {
     if (!this.inboxUrls[webId]) {
       this.inboxUrls[webId] = (await this.getObjectFromPredicateForResource(webId, namespaces.ldp + 'inbox')).value;
@@ -223,8 +167,6 @@ class DeChatCore {
 
     return this.inboxUrls[webId];
   }
-
-  //________________ J O I N _____________________//
 
   /**
    * This method check an inbox for new notifications.
@@ -348,15 +290,6 @@ class DeChatCore {
 
     return deferred.promise;
   }
-
-  /**
-   * This method returns the chat of an invitation.
-   * @param url: the url of the invitation.
-   * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
-   */
-  async getChatFromInvitation(url) {
-    return this.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
-  }
   
   async getAllResourcesInInbox(inboxUrl, fetch) {
     const deferred = Q.defer();
@@ -418,4 +351,4 @@ class DeChatCore {
 
 }
 
-module.exports = DeChatCore;
+module.exports = BaseService;

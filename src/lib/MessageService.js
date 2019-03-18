@@ -9,10 +9,20 @@ const {
   format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('./rdfjssourcefactory').fromUrl;
+const BaseService = require('../lib/BaseService');
+
+let baseService = new BaseService(auth.fetch);
 
 class MessageService {
   constructor(fetch) {
     this.fetch = fetch;
+	this.logger = winston.createLogger({
+      level: 'error',
+      transports: [
+        new winston.transports.Console(),
+      ],
+      format: winston.format.cli()
+    });
   }
 
   
@@ -71,7 +81,7 @@ class MessageService {
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
 
-    const messageUrl = await this.generateUniqueUrlForResource(userDataUrl);
+    const messageUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
     const sparqlUpdate = `
 		<${messageUrl}> a <${namespaces.schema}Message>;
 		  <${namespaces.schema}dateSent> <${time}>;
@@ -89,7 +99,7 @@ class MessageService {
 
     if (toSend) {
       try {
-        await dataSync.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), sparqlUpdate);
+        await dataSync.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), sparqlUpdate);
       } catch (e) {
         this.logger.error(`Could not send message to interlocutor.`);
         console.log("Could not send");
@@ -101,11 +111,10 @@ class MessageService {
   
    /**
    * This method returns the chat to which a message belongs.
-   * @param moveUrl: the url of the move.
    * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
    */
-  async getChatOfMessage(moveUrl) {
-    return this.getObjectFromPredicateForResource(moveUrl, namespaces.schema + 'subEvent');
+  async getChatOfMessage(msgUrl) {
+    return baseService.getObjectFromPredicateForResource(msgUrl, namespaces.schema + 'subEvent');
   }
 }
 module.exports = MessageService;
