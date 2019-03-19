@@ -136,7 +136,11 @@ async function checkForNotifications() {
 		var nameThroughUrl = message.author.split("/").pop();
         console.log("nombre de authorUrl is:" + nameThroughUrl);
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
+		console.log(message);
 		var authorUrl =  message.messageUrl.split("priv")[0] + "profile/card#me";
+		
+		console.log(authorUrl);
+		console.log(contactsWithChat);
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
 				interlocutorMessages.push(message);
                 await showAndStoreMessages();
@@ -331,7 +335,7 @@ async function showAndStoreMessages() {
             baseService.deleteFileForUser(interlocutorMessages[i].inboxUrl);
 			$('#chatwindow'+index).remove();
 			const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+			var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
 			$(".contact-list").prepend(html);
 			document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
 			interlocutorMessages[i] = "D";

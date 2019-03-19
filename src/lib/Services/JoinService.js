@@ -139,7 +139,5 @@ class JoinChatService {
     return baseService.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
 }
 
-
-
 }
 module.exports = JoinChatService;
