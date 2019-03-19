@@ -41,7 +41,7 @@ class JoinChatService {
    */
   async getJoinRequest(fileurl, userWebId, selfCore) {
     const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
 
     if (rdfjsSource) {
       const engine = newEngine();
@@ -129,7 +129,7 @@ class JoinChatService {
     chat.interlocutorName = await baseService.getFormattedName(chat.friendWebId.id);
     return chat;
   }
-  
+
    /**
    * This method returns the chat of an invitation.
    * @param url: the url of the invitation.
@@ -138,8 +138,8 @@ class JoinChatService {
   async getChatFromInvitation(url) {
     return baseService.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
 }
-  
-  
+
+
 
 }
 module.exports = JoinChatService;
