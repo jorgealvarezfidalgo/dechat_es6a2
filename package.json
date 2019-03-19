@@ -37,10 +37,13 @@
     "asciidoctor.js": "^1.5.9",
     "babel-plugin-istanbul": "^5.1.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "chromedriver": "^2.46.0",
     "codecov": "^3.2.0",
     "coveralls": "^3.0.3",
     "cucumber": "^5.1.0",
     "eslint": "^5.x",
+    "faker": "^4.1.0",
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
     "gulp-exec": "^3.0.2",
@@ -62,8 +65,10 @@
     "@comunica/actor-init-sparql-rdfjs": "1.4.2",
     "@solid/cli": "^0.1.0",
     "@solid/query-ldflex": "^1.1.1",
+    "codacy-coverage": "^3.4.0",
     "date-fns": "^2.0.0-alpha.25",
     "inquirer": "^6.2.0",
+    "istanbul": "^0.4.5",
     "n3": "^1.0.2",
     "prefix-ns": "^0.1.2",
     "q": "^1.5.1",
@@ -71,8 +76,6 @@
     "streamify-array": "^1.0.1",
     "uniqid": "^5.0.3",
     "uri-js": "^4.2.2",
-    "winston": "^3.1.0",
-    "codacy-coverage": "^3.4.0",
-    "istanbul": "^0.4.5"
+    "winston": "^3.1.0"
   }
 }
