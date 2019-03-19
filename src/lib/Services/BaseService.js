@@ -141,7 +141,7 @@ class BaseService {
     return response.status === 200;
   }
 
- 
+
 
   async generateUniqueUrlForResource(baseurl) {
     let url = baseurl + '#' + uniqid();
@@ -294,11 +294,11 @@ class BaseService {
 
     return deferred.promise;
   }
-  
-  async getAllResourcesInInbox(inboxUrl, fetch) {
+
+  async getAllResourcesInInbox(inboxUrl) {
     const deferred = Q.defer();
     const resources = [];
-    const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, this.fetch);
     const engine = newEngine();
 
     engine.query(`SELECT ?resource {
@@ -325,9 +325,9 @@ class BaseService {
     return deferred.promise;
   }
 
-  async fileContainsChatInfo(fileUrl, fetch) {
+  async fileContainsChatInfo(fileUrl) {
     const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, this.fetch);
     const engine = newEngine();
 
     engine.query(`SELECT * {
@@ -352,7 +352,7 @@ class BaseService {
 
     return deferred.promise;
   }
-  
+
   deleteFileForUser(url) {
 	  uploader.deleteFileForUser(url);
   }

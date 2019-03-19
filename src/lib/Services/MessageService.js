@@ -28,11 +28,11 @@ class MessageService {
     });
   }
 
-  
 
-  async getNewMessage(fileurl, userWebId, fetch) {
+
+  async getNewMessage(fileurl, userWebId) {
     const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
     if (rdfjsSource) {
       const engine = newEngine();
       let messageFound = false;
@@ -79,7 +79,7 @@ class MessageService {
 
     return deferred.promise;
   }
-  
+
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend) {
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
@@ -111,7 +111,7 @@ class MessageService {
     }
 
   }
-  
+
    /**
    * This method returns the chat to which a message belongs.
    * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
