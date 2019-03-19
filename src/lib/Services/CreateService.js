@@ -63,7 +63,7 @@ class CreateService {
     }
 
     try {
-      await uploader.sendToInterlocutorInbox(await this.getInboxUrl(interlocutorWebId), invitation.notification);
+      await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation.notification);
     } catch (e) {
       this.logger.error(`Could not send invitation to interlocutor.`);
       this.logger.error(e);
