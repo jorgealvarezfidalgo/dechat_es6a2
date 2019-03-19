@@ -550,8 +550,10 @@ function toScrollDown() {
 $('#create-group').click(async () => {
 	if(!showingContacts) {
 		$(".fa-search").addClass("hidden");
-		$(".input-search").attr("placeholder", "Group name");
+		$(".input-search").attr("placeholder", " Group name");
+		$(".creategroup").removeClass("hidden");
 	} else {
+		$(".creategroup").addClass("hidden");
 		$(".fa-search").removeClass("hidden");
 		$(".input-search").attr("placeholder", "Find a chat");
 	}
@@ -570,3 +572,22 @@ async function markContactForGroup() {
 		contactsForGroup.splice(index, 1);
 	}
 }
+
+$('#creategroup').click(async () => {
+	var contacts = "";
+	if($('.input-search').val() != "") {
+		if(contactsForGroup.length >= 2) {
+			contactsForGroup.forEach(async contact => {
+					contacts += contact +"\n";
+				});
+			alert("Create group\n"+contacts);
+		}
+		else {
+			alert("You need at least 2 contacts to start a group.");
+		}
+	}
+	else {
+		alert("Group has no name.");
+	}
+				
+});

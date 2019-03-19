@@ -93,6 +93,7 @@ i {
     border: 1px solid #eeeeee;
     border-radius: 5px;
     display: flex;
+	margin-left: 5px;
 }
 
 .search i {

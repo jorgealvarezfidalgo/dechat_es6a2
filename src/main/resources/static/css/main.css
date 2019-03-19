@@ -5,7 +5,9 @@ body {
 }
 
 a {
-  color: white!important;
+	padding: 10px 10px;
+	text-align: center;
+	display: inline-block;	
 }
 
 a:hover {
