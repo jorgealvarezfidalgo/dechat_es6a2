@@ -27,6 +27,7 @@ let openChats = [];
 let interlocutorMessages = [];
 let semanticChats = [];
 let contactsWithChat = [];
+let contactsForGroup = [];
 let openChat = false;
 let chatCounter = 0;
 let currentChat;
@@ -387,6 +388,10 @@ $('#close-contact-information').click(async () => {
 });
 
 $('#show-contacts').click(async () => {
+	await displayContacts(openContact);
+});
+
+async function displayContacts(func) {
 	$(".contact-list").html("");
 	$('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
 	
@@ -400,10 +405,10 @@ $('#show-contacts').click(async () => {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
 
-        var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview'>" + "</p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+        var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
         $(".contact-list").prepend(html);
-		document.getElementById("openchatwindow" + friend.value).addEventListener("click", openContact, false);
+		document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
 		
 	}
 	showingContacts = true;
@@ -411,7 +416,7 @@ $('#show-contacts').click(async () => {
 		await showChats();
 		showingContacts = false;
 	}
-});
+}
 
 async function showChats() {
 	$(".contact-list").html("");
@@ -543,5 +548,25 @@ function toScrollDown() {
 }
 
 $('#create-group').click(async () => {
-	
+	if(!showingContacts) {
+		$(".fa-search").addClass("hidden");
+		$(".input-search").attr("placeholder", "Group name");
+	} else {
+		$(".fa-search").removeClass("hidden");
+		$(".input-search").attr("placeholder", "Find a chat");
+	}
+	await displayContacts(markContactForGroup);
 });
+
+async function markContactForGroup() {
+	var intWebId = this.getAttribute("id").replace("openchatwindow", "");
+	var index = contactsForGroup.indexOf(intWebId);
+	if(index == -1) {
+		console.log('ctmsg'+intWebId.split("/")[2]);
+		$('#ctmsg'+intWebId.split("/")[2].split(".")[0]).html("Selected");
+		contactsForGroup.push(intWebId);
+	} else {
+		$('#ctmsg'+intWebId.split("/")[2].split(".")[0]).html("");
+		contactsForGroup.splice(index, 1);
+	}
+}
