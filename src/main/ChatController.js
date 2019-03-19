@@ -32,6 +32,10 @@ let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
 
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
 /**
  *	This method is in charge of showing the popup to login or register
  */
@@ -360,6 +364,7 @@ function showMessage(message) {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
+	$(".fa fa-bars fa-lg").removeClass('hidden');;
 	toScrollDown();
 }
 
@@ -536,3 +541,7 @@ function toScrollDown() {
 	var elem = document.getElementById('chatdiv');
 	elem.scrollTop = elem.scrollHeight;
 }
+
+$('#create-group').click(async () => {
+	
+});
