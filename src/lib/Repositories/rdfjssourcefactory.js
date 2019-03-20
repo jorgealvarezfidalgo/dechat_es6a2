@@ -69,6 +69,5 @@ function fromString(str) {
 }
 */
 module.exports = {
-    fromUrl,
-    fromString
+    fromUrl
 };
