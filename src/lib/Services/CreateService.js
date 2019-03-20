@@ -63,7 +63,7 @@ class CreateService {
 			photo: "main/resources/static/img/group.png"
         });
 
-        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName;
+        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName);
 
         return group;
     }

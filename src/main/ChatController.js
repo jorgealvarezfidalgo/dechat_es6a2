@@ -215,7 +215,6 @@ async function startChat() {
 async function loadChats() {
 	console.log(semanticChats);
 	semanticChats.sort(function (a,b) {  var x = a.getLastMessage().time; var y = b.getLastMessage().time;
-		console.log(x<y);
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));});
 	//await sleep(20000);
 
@@ -263,14 +262,14 @@ async function loadMessages(id) {
 	userDataUrl = currentChat.url;
 	// console.log(semanticChats);
 	// console.log(currentChat);
-    var friendPhoto = await baseService.getPhoto(currentChat.interlocutorWebId);
+    var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
         friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
     }
     $('#interlocutorphoto').attr("src", friendPhoto);
     interlocWebId = currentChat.interlocutorWebId;
     $("#interlocutorw-name").html("");
-    $("#interlocutorw-name").append(currentChat.interlocutorName);
+    $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
 
     currentChat.getMessages().forEach(async (message) => {
 
@@ -584,8 +583,15 @@ $('#creategroup').click(async () => {
 			console.log($('.input-search').val());
 			console.log(userDataUrl);
 			console.log(userWebId);
-			var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, $('.input-search').val());
+			var intWebId = $('.input-search').val();
+			var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId.replace(/ /g, "U+0020"));
 			console.log(group);
+			semanticChats.push(group);
+			var index = semanticChats.indexOf(group);
+			contactsWithChat.splice(index, 0, intWebId);
+			console.log(semanticChats);
+			console.log(contactsWithChat);
+			loadMessages(index);
 		}
 		else {
 			alert("You need at least 2 contacts to start a group.");
