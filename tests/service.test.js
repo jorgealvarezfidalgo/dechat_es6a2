@@ -42,4 +42,9 @@ describe('Services', function() {
     expectedUrl = await baseService.getInboxUrl(chat.userWebId);
     assert.equal(inboxUrls[chat.userWebId], expectedUrl, 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
   });
+
+  it('checking that there are 4 messages in my pod', async function() {
+      const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+      assert.equal(chat.getMessages().length,4, 'the number of messages is not correct : ' + chat.getMessages().length);
+  });
 });
