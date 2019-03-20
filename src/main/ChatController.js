@@ -195,14 +195,19 @@ async function startChat() {
     openChats.forEach(async chat => {
         interlocWebId = chat.interlocutor;
         const friendName = await baseService.getFormattedName(chat.interlocutor);
-        var friendPhoto = await baseService.getPhoto(chat.interlocutor);
+		var friendPhoto;
+		if(chat.interlocutor.includes("Group")) {
+			friendPhoto = "main/resources/static/img/group.png";
+		} else {
+			friendPhoto = await baseService.getPhoto(chat.interlocutor);
+		}
         if (!friendPhoto) {
             friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
         }
 
         userDataUrl = chat.storeUrl;
 
-        var semanticChat = await openService.loadChatFromUrl(chat.chatUrl.split("#")[0], userWebId, userDataUrl);
+        var semanticChat = await openService.loadChatFromUrl(chat.chatUrl.split("#")[0], userWebId, userDataUrl, chat.interlocutor);
         semanticChat.interlocutorWebId = chat.interlocutor;
 		semanticChat.interlocutorName = friendName;
 		semanticChat.photo = friendPhoto;
@@ -592,6 +597,11 @@ $('#creategroup').click(async () => {
 			console.log(semanticChats);
 			console.log(contactsWithChat);
 			loadMessages(index);
+			await showChats();
+			showingContacts = false;
+			$(".creategroup").addClass("hidden");
+			$(".fa-search").removeClass("hidden");
+			$(".input-search").attr("placeholder", "Find a chat");
 		}
 		else {
 			alert("You need at least 2 contacts to start a group.");

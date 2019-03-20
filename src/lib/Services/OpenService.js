@@ -114,8 +114,13 @@ class OpenService {
     return deferred.promise;
   }
   
-  async loadChatFromUrl(url, userWebId, userDataUrl) {
-	  return await loader.loadFromUrl(url, userWebId, userDataUrl);
+  async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
+	  if(interloc.includes("Group")) {
+		  return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
+	  } else {
+		  return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
+	  }
+	  
   }
   
   
