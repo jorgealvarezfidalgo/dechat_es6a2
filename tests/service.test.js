@@ -111,4 +111,21 @@ describe('Services', function () {
         assert.equal(newMessageFound, false, 'the user does not have pending invitations.');
         assert.equal(convoToJoin, null, 'the user does not have convos to join. ->' + convoToJoin);
     });
+
+    it('joining a new chat', async function () {
+        const chat = await loader.loadChatFromUrl('https://morningstar.solid.community/public/unittest_201903201127.ttl#jth2a2sl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/unittest_201903201127.ttl');
+        let newMessageFound = false;
+        let convoToJoin = false;
+        let message = await messageService.getNewMessage(chat.fileurl, chat.userWebId);
+        if (message) {
+            newMessageFound = true;
+        }
+        convoToJoin = await joinService.getJoinRequest(chat.fileurl, chat.userWebId, joinService);
+        const dataUrl = baseService.getDefaultDataUrl(chat.userWebId);
+        //this should do nothing
+        //await joinService.joinExistingChat(chat.invitationUrl, chat.interlocWebId, chat.userWebId, dataUrl, chat.fileUrl);
+
+        assert.equal(newMessageFound, false, 'the user does not have pending invitations.');
+        assert.equal(convoToJoin, null, 'the user does not have convos to join. ->' + convoToJoin);
+    });
 });
