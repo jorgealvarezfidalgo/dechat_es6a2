@@ -4,7 +4,7 @@ class Group extends SemanticChat {
 
     constructor(options) {
 		super(options);
-        this.members = [];
+        this.members = options.members;
 		this.numberOfMembers = 0;
 
     }

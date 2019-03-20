@@ -222,11 +222,11 @@ async function loadChats() {
 		contactsWithChat.splice(semanticChats.indexOf(chat), 0, chat.interlocutorWebId);
 		
 		var lastMsg = chat.getLastMessage().messagetext;
-		lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         var lastHr = "";
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
+			lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
         }
 		
@@ -424,11 +424,11 @@ async function showChats() {
 		semanticChats.forEach(async chat => {
 
 			var lastMsg = chat.getLastMessage().messagetext;
-			lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
 			var lastHr = "";
 			if (!lastMsg) {
 				lastMsg = "Sin mensajes";
 			} else {
+				lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
 				lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
 			}
 
@@ -574,13 +574,17 @@ async function markContactForGroup() {
 }
 
 $('#creategroup').click(async () => {
-	var contacts = "";
+	
 	if($('.input-search').val() != "") {
 		if(contactsForGroup.length >= 2) {
-			contactsForGroup.forEach(async contact => {
-					contacts += contact +"\n";
-				});
-			alert("Create group\n"+contacts);
+			const dataUrl = baseService.getDefaultDataUrl(userWebId);
+			userDataUrl = dataUrl;
+			console.log(contactsForGroup);
+			console.log($('.input-search').val());
+			console.log(userDataUrl);
+			console.log(userWebId);
+			var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, $('.input-search').val());
+			console.log(group);
 		}
 		else {
 			alert("You need at least 2 contacts to start a group.");
