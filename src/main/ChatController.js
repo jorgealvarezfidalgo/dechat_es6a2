@@ -370,8 +370,13 @@ function showMessage(message) {
             $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+			if(currentChat.interlocutorWebId.includes("Group")) {
+				$(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+			} else {
+				$(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+                message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+			}
         }
 	$(".fa fa-bars fa-lg").removeClass('hidden');;
 	toScrollDown();
@@ -381,11 +386,26 @@ $('#show-contact-information').click(async () => {
 	$(".chat-head i").hide();
 			$(".information").css("display", "flex");
 			$("#close-contact-information").show();
-	var note = await baseService.getNote(interlocWebId);
+	console.log(currentChat);
+	var note;
+	if(!interlocWebId.includes("Group"))
+		note = await baseService.getNote(interlocWebId);
 	if(!note) {
 		note = "Nothing to see here";
 	}
 	$(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
+	if(interlocWebId.includes("Group")) {
+		$(".information").append("<div id='listGroups'><h1>Participants:</h1></div>");
+				for (var i = 0; i < currentChat.members.length; i++) {
+					var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
+					if (!memberPhoto) {
+						memberPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+					}
+					var memberName = await baseService.getFormattedName(currentChat.members[i].id);
+					var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
+					$("#listGroups").append(html);
+				}
+	}
 });
 
 $('#close-contact-information').click(async () => {
