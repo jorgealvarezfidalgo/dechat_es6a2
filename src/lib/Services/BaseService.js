@@ -42,6 +42,8 @@ class BaseService {
    * null if no name details were found.
    */
   async getFormattedName(webid) {
+	if(webid.includes("Group"))
+		return webid.split("Group/").pop().replace(/U\+0020/g, " ");
     let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'name');
 
     if (!formattedName) {

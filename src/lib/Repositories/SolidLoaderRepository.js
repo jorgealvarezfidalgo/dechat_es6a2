@@ -4,6 +4,7 @@ const Q = require('q');
 const streamify = require('streamify-array');
 const namespaces = require('../namespaces');
 const SemanticChat = require('../semanticchat');
+const Group = require('../Group');
 
 /**
  * The Loader allows creating a Semantic Chat instance via information loaded from an url.
@@ -18,25 +19,38 @@ class SolidLoaderRepository {
         this.engine = newEngine();
         this.fetch = fetch;
     }
-
-    /**
-     * This method loads the messages from the url passed through the parameter
-     */
-    async loadFromUrl(chatUrl, userWebId, chatBaseUrl) {
-
-        //const interlocutorWebId = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
-        //console.log(interlocutorWebId);
-
+	
+	async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
         const chat = new SemanticChat({
             url: chatUrl,
             chatBaseUrl,
             userWebId
-            //interlocutorWebId
         });
+        return await this.loadFromUrl(chat, chatUrl);
+    }
+	
+	async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
+		
+		console.log("Interlocutor group");
+		var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
+
+        const chat = new Group({
+            url: chatUrl,
+            chatBaseUrl,
+            userWebId,
+			members: ids
+        });
+		
+		console.log(chat);
+        return await this.loadFromUrl(chat, chatUrl);;
+    }
+
+    /**
+     * This method loads the messages from the url passed through the parameter
+     */
+    async loadFromUrl(chat, chatUrl) {
+
         const messages = await this._findMessage(chatUrl);
-        //console.log("friendWebId in loader.js is: " +interlocutorWebId);
-        //console.log(messages);
-        //console.log(messages.length);
 
         for (var i = 0, len = messages.length; i < len; i++) {
             chat.loadMessage(messages[i]);
@@ -91,35 +105,31 @@ class SolidLoaderRepository {
      */
     async findWebIdOfInterlocutor(chatUrl, userWebId) {
         const deferred = Q.defer();
-
+		let results = [];
         const rdfjsSource = await this._getRDFjsSourceFromUrl(chatUrl);
-        console.log(chatUrl);
-        console.log(userWebId);
 
         this.engine.query(`SELECT * {
-			?rurl <${namespaces.schema}agent> ?webid.`, {
-                sources: [{
+      ?invitation a <${namespaces.schema}InviteAction>;
+			<${namespaces.schema}event> ?url;
+			<${namespaces.schema}agent> ?agent;
+			<${namespaces.schema}recipient> ?recipient.
+    }`, {                sources: [{
                     type: 'rdfjsSource',
                     value: rdfjsSource
                 }]
             })
-            .then(function(result) {
-                console.log(result);
-                result.bindingsStream.on('data', function(data) {
-                    console.log("SI");
-                    const id = data.toObject()['?webid'].value;
-
-                    if (id !== userWebId) {
-                        deferred.resolve(id);
+			.then(function(result) {
+                result.bindingsStream.on('data', data => {
+                    data = data.toObject();
+                    if (data['?recipient']) {
+                        results.push(data['?recipient']);
                     }
                 });
 
                 result.bindingsStream.on('end', function() {
-                    console.log("NO");
-                    deferred.resolve(null);
+                    deferred.resolve(results);
                 });
             });
-        console.log(deferred.promise);
         return deferred.promise;
     }
 

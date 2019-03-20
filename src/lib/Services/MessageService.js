@@ -80,7 +80,7 @@ class MessageService {
     return deferred.promise;
   }
 
-  async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend) {
+  async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
 
@@ -95,19 +95,27 @@ class MessageService {
     try {
       await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
-      console.log("NO GUARDA");
       this.logger.error(`Could not save new message.`);
       this.logger.error(e);
     }
+	
+	
 
     if (toSend) {
-      try {
-        await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), sparqlUpdate);
-      } catch (e) {
-        this.logger.error(`Could not send message to interlocutor.`);
-        console.log("Could not send");
-        this.logger.error(e);
-      }
+		var ids = [];
+		if(members)
+			ids = members;
+		else
+			ids.push(interlocutorWebId);
+		console.log(ids);
+		ids.forEach(async id => {
+		  try {
+			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
+		  } catch (e) {
+			this.logger.error(`Could not send message to interlocutor.`);
+			console.log("Could not send");
+			this.logger.error(e);
+		}});
     }
 
   }

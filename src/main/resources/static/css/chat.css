@@ -386,6 +386,11 @@ p[id^=lastMsg] img{
     outline: none;
 }
 
+.h4, h4 {
+    font-size: 12px;
+    font-weight: bold;
+}
+
 /* ------ SCROLLBAR ------ */
 
 body::-webkit-scrollbar, .contact-list::-webkit-scrollbar, .chat::-webkit-scrollbar, .information::-webkit-scrollbar {
