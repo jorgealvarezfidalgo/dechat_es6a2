@@ -191,6 +191,7 @@ async function startChat() {
     $('#selfphoto').attr("src", selfPhoto);
 
     afterChatOption();
+	console.log(openChats);
     openChats.forEach(async chat => {
         interlocWebId = chat.interlocutor;
         const friendName = await baseService.getFormattedName(chat.interlocutor);

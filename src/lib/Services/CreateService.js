@@ -46,7 +46,7 @@ class CreateService {
         var ids = [];
         ids.push(interlocutorWebId);
 
-        setUpNew(chatUrl, userDataUrl, userWebId, ids, semanticChat);
+        setUpNew(chatUrl, userDataUrl, userWebId, ids, semanticChat, ids[0]);
 
         return semanticChat;
     }
@@ -63,14 +63,13 @@ class CreateService {
 			photo: "main/resources/static/img/group.png"
         });
 
-        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group);
+        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName;
 
         return group;
     }
 
-    async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
+    async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat, firstId) {
 		
-		var firstId = interlocutorWebIds[0];
 		try {
                     await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${firstId}>;
