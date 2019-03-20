@@ -43,12 +43,7 @@ function fromUrl(url, fetch) {
 
     return deferred.promise;
 }
-
-/**
- * This method returns an RDFJSSource of a String
- * @param {string} str: 
- * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
- */
+/*
 function fromString(str) {
     const deferred = Q.defer();
     const store = N3.Store();
@@ -72,8 +67,7 @@ function fromString(str) {
 
     return deferred.promise;
 }
-
+*/
 module.exports = {
-    fromUrl,
-    fromString
+    fromUrl
 };

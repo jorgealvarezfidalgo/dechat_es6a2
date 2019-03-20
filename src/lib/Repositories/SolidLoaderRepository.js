@@ -19,7 +19,7 @@ class SolidLoaderRepository {
         this.engine = newEngine();
         this.fetch = fetch;
     }
-	
+
 	async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
         const chat = new SemanticChat({
             url: chatUrl,
@@ -28,9 +28,9 @@ class SolidLoaderRepository {
         });
         return await this.loadFromUrl(chat, chatUrl);
     }
-	
+
 	async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
-		
+
 		console.log("Interlocutor group");
 		var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
 
@@ -40,9 +40,9 @@ class SolidLoaderRepository {
             userWebId,
 			members: ids
         });
-		
+
 		console.log(chat);
-        return await this.loadFromUrl(chat, chatUrl);;
+        return await this.loadFromUrl(chat, chatUrl);
     }
 
     /**
@@ -70,7 +70,7 @@ class SolidLoaderRepository {
         this.engine.query(`SELECT * {
 		?message a <${namespaces.schema}Message>;
 		<${namespaces.schema}dateSent> ?time;
-		<${namespaces.schema}givenName> ?username;				
+		<${namespaces.schema}givenName> ?username;
 		<${namespaces.schema}text> ?msgtext. }`, {
                 sources: [{
                     type: 'rdfjsSource',

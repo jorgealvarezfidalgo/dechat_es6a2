@@ -8,9 +8,9 @@ class SemanticChat {
         this.chatBaseUrl = options.chatBaseUrl;
         this.messages = [];
         this.numberOfMessages = 0;
-		this.interlocutorName = options.interlocutorName;
-		this.photo = options.photo;
-		this.lastHr = options.lastHr;
+        this.interlocutorName = options.interlocutorName;
+        this.photo = options.photo;
+        this.lastHr = options.lastHr;
 
     }
 
