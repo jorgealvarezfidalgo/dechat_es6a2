@@ -11,40 +11,49 @@ const openService = new OpenService(auth.fetch);
 const baseService = new BaseService(auth.fetch);
 const loader = new Loader(auth.fetch);
 
-describe('Services', function() {
+describe('Services', function () {
 
-  it('checking the picture and name are correct', async function() {
-    const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+    it('checking the picture and name are correct', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-    const selfPhoto = await baseService.getPhoto(chat.userWebId);
-    assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+        const selfPhoto = await baseService.getPhoto(chat.userWebId);
+        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
 
-    const name = await baseService.getFormattedName(chat.userWebId);
-    assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+        const name = await baseService.getFormattedName(chat.userWebId);
+        assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
 
-  });
+    });
 
-  it('checking the number of messages is 23', async function() {
-    const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
-    //opening messages
-    const chats = await openService.getChatsToOpen(chat.userWebId);
-    //the user for the moment have 23 messages
-    assert.equal(chats.length, 23, 'the number of messages is not correct : ' + chats.length);
-  });
+    it('checking the number of messages is 23', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+        //opening messages
+        const chats = await openService.getChatsToOpen(chat.userWebId);
+        //the user for the moment have 23 messages
+        assert.equal(chats.length, 23, 'the number of messages is not correct : ' + chats.length);
+    });
 
-  it('checking the inboxUrl', async function() {
-    const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+    it('checking the inboxUrl', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-    const inboxUrls = [];
-    inboxUrls[chat.userWebId] = (await baseService.getObjectFromPredicateForResource(chat.userWebId, namespaces.ldp + 'inbox')).value;
-    assert.equal(inboxUrls[chat.userWebId], 'https://othbak.solid.community/inbox/', 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
+        const inboxUrls = [];
+        inboxUrls[chat.userWebId] = (await baseService.getObjectFromPredicateForResource(chat.userWebId, namespaces.ldp + 'inbox')).value;
+        assert.equal(inboxUrls[chat.userWebId], 'https://othbak.solid.community/inbox/', 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
 
-    expectedUrl = await baseService.getInboxUrl(chat.userWebId);
-    assert.equal(inboxUrls[chat.userWebId], expectedUrl, 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
-  });
+        expectedUrl = await baseService.getInboxUrl(chat.userWebId);
+        assert.equal(inboxUrls[chat.userWebId], expectedUrl, 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
+    });
 
-  it('checking that there are 4 messages in my pod', async function() {
-      const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
-      assert.equal(chat.getMessages().length,4, 'the number of messages is not correct : ' + chat.getMessages().length);
-  });
+    it('checking that there are 4 messages in my pod', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+        assert.equal(chat.getMessages().length, 4, 'the number of messages is not correct : ' + chat.getMessages().length);
+        assert.equal(chat.getMessages()[0].messagetext, 'unit', 'the text message is not correct : ' + chat.getMessages()[0].messagetext);
+        assert.equal(chat.getMessages()[1].messagetext, 'test', 'the text message is not correct : ' + chat.getMessages()[1].messagetext);
+    });
+
+      it('checking writing permissions', async function () {
+          const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+          const dataUrl = baseService.getDefaultDataUrl(chat.userWebId);
+          assert.equal(await baseService.writePermission(dataUrl), false, 'we do not have writing permission for the moment ');
+      });
+
 });
