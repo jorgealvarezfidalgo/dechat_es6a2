@@ -8,11 +8,16 @@ const auth = require('solid-auth-client');
 
 describe('Loader', function() {
   it('loading chat and interlocutor', async function() {
-    openService.getChatsToOpen(userWebId);
+    const openService = new OpenService(auth.fetch);
+
     const loader = new Loader(auth.fetch);
-    let openService = new OpenService(auth.fetch);
-    const chat = await loader.loadFromUrl('https://morningstar.solid.community/public/dechat_201903160752.ttl#jtbuliv7', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903160752.ttl');
-    assert.equal(chat.getUrl(), 'https://morningstar.solid.community/public/dechat_201903160752.ttl#jtbuliv7', 'The url of the chat is not correct.' + chat.getUrl());
-    assert.equal(chat.userWebId, 'https://morningstar.solid.community/profile/card#me', 'The WebId of the user is not correct : ' + chat.userWebId);
+    const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+
+    assert.equal(chat.url, 'https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'The url of the chat is not correct.' + chat.url);
+    assert.equal(chat.userWebId, 'https://othbak.solid.community/profile/card#me', 'The WebId of the user is not correct : ' + chat.userWebId);
+
+    //opening messages
+    openService.getChatsToOpen(chat.userWebId);
+
   });
 });
