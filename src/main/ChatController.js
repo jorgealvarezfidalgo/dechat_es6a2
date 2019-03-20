@@ -232,7 +232,8 @@ async function loadChats() {
             lastMsg = "Sin mensajes";
         } else {
 			lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
+			console.log(chat.getNumberOfMsgs() - 1);	
+            lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 		
 		const newmsg = 0;
@@ -266,7 +267,6 @@ async function loadMessages(id) {
     currentChat = semanticChats[id];
 	userDataUrl = currentChat.url;
 	// console.log(semanticChats);
-	// console.log(currentChat);
     var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
         friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
@@ -295,7 +295,10 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true);
+		if(currentChat.interlocutorWebId.includes("Group"))
+			await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, currentChat.members);
+		else
+			await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
         $('#write-chat').val("");
 		var index = contactsWithChat.indexOf(interlocWebId);
 		$('#chatwindow'+index).remove();
@@ -314,7 +317,7 @@ async function checkKey(e) {
 		toScrollDown();
 		
 		if(!showingContacts) {
-		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getMessages().length - 1); + "</p></div></div>";
+		var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index +"'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1); + "</p></div></div>";
        
         $(".contact-list").prepend(html);
 		document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);

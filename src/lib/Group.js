@@ -19,8 +19,7 @@ class Group extends SemanticChat {
 		this.members = membs;
 	}
 
-
-    getMessages() {
+    getMembers() {
         return this.members;
     }
 
