@@ -19,25 +19,22 @@ const createService = new CreateService(auth.fetch);
 
 const loader = new Loader(auth.fetch);
 
-describe('Services', function () {
+describe('Services tests', function () {
 
     it('checking the picture and name are correct', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-        const selfPhoto = await baseService.getPhoto(chat.userWebId);
-        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+        assert.equal(await baseService.getPhoto(chat.userWebId), null, 'The user does not have a photo ');
 
-        const name = await baseService.getFormattedName(chat.userWebId);
-        assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+        assert.equal(await baseService.getFormattedName(chat.userWebId) , 'Othmane Bakhtaoui', 'The user name is not correct');
 
     });
 
     it('checking the number of messages is 23', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
         //opening messages
-        const chats = await openService.getChatsToOpen(chat.userWebId);
         //the user for the moment have 23 messages
-        assert.equal(chats.length, 23, 'the number of messages is not correct : ' + chats.length);
+        assert.equal( (await openService.getChatsToOpen(chat.userWebId)).length, 23, 'the number of messages is not correct : ' + (await openService.getChatsToOpen(chat.userWebId)).length);
     });
 
     it('checking the inboxUrl', async function () {
@@ -47,8 +44,7 @@ describe('Services', function () {
         inboxUrls[chat.userWebId] = (await baseService.getObjectFromPredicateForResource(chat.userWebId, namespaces.ldp + 'inbox')).value;
         assert.equal(inboxUrls[chat.userWebId], 'https://othbak.solid.community/inbox/', 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
 
-        expectedUrl = await baseService.getInboxUrl(chat.userWebId);
-        assert.equal(inboxUrls[chat.userWebId], expectedUrl, 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
+        assert.equal( await baseService.getInboxUrl(chat.userWebId), inboxUrls[chat.userWebId], 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
     });
 
     it('checking that there are 4 messages in my pod', async function () {
@@ -61,7 +57,7 @@ describe('Services', function () {
     it('checking writing permissions', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
         const dataUrl = baseService.getDefaultDataUrl(chat.userWebId);
-        assert.equal(await baseService.writePermission(dataUrl), false, 'we do not have writing permission for the moment ');
+        assert.equal(await baseService.writePermission( baseService.getDefaultDataUrl(chat.userWebId)), false, 'we do not have writing permission for the moment ');
     });
 
     it('creating individual semantic chat', async function () {
@@ -71,7 +67,7 @@ describe('Services', function () {
         const friendName = await baseService.getFormattedName('https://morningstar.solid.community/profile/card#me');
 
         //simulating a new chat
-        assert.equal(friendName, 'Luci', 'The user name is not correct : ->' + friendName);
+        assert.equal(await baseService.getFormattedName('https://morningstar.solid.community/profile/card#me'), 'Luci', 'The user name is not correct : ->' + friendName);
         assert.equal(semanticChat.userWebId, 'https://othbak.solid.community/profile/card#me', 'The user web id is not correct : ->' + semanticChat.userWebId);
         assert.equal(semanticChat.getMessages().length, 0, 'we do not have messages yet : ' + semanticChat.getMessages().length);
         assert.equal(semanticChat.interlocutorWebId, 'https://morningstar.solid.community/profile/card#me', 'Thefriend web id is not correct : ->' + semanticChat.userWebId);
