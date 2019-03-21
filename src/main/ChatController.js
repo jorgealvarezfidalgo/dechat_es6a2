@@ -204,7 +204,7 @@ async function startChat() {
         const friendName = await baseService.getFormattedName(chat.interlocutor);
         var friendPhoto;
         if (chat.interlocutor.includes("Group")) {
-            friendPhoto = "main/resources/static/img/group.png";
+            friendPhoto = "main/resources/static/img/group.jpg";
         } else {
             friendPhoto = await baseService.getPhoto(chat.interlocutor);
         }
@@ -306,6 +306,7 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+		console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
             await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
@@ -628,11 +629,12 @@ $('#creategroup').click(async () => {
             console.log(userDataUrl);
             console.log(userWebId);
             var intWebId = $('.input-search').val();
-            var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId.replace(/ /g, "U+0020"));
+			console.log(intWebId);
+            var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
             console.log(group);
             semanticChats.push(group);
             var index = semanticChats.indexOf(group);
-            contactsWithChat.splice(index, 0, intWebId);
+            contactsWithChat.splice(index, 0, "Group/" + intWebId);
             console.log(semanticChats);
             console.log(contactsWithChat);
             loadMessages(index);
@@ -648,4 +650,9 @@ $('#creategroup').click(async () => {
         alert("Group has no name.");
     }
 
+});
+
+process.on('uncaughtException', function(err){
+    console.error(err.stack);
+    process.exit();
 });

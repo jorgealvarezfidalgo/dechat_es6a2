@@ -83,11 +83,11 @@ class JoinChatService {
             chat.friendIds.splice(0, 1);
             chatJoined = new Group({
                 url: fileurl,
-                messageBaseUrl: userDataUrl,
+                chatBaseUrl: userDataUrl,
                 userWebId,
                 members: chat.friendIds,
                 interlocutorName: name,
-                photo: "main/resources/static/img/group.png"
+                photo: "main/resources/static/img/group.jpg"
             });
         } else {
             chatJoined = new SemanticChat({

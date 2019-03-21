@@ -52,23 +52,28 @@ class CreateService {
     }
 
     async setUpNewGroup(userDataUrl, userWebId, interlocutorWebIds, friendName) {
-
+		
         const chatUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
         const group = new Group({
             url: chatUrl,
-            messageBaseUrl: userDataUrl,
+            chatBaseUrl: userDataUrl,
             userWebId,
             members: interlocutorWebIds,
             interlocutorName: friendName,
-            photo: "main/resources/static/img/group.png"
+			interlocutorWebId: "Group/" + friendName,
+            photo: "main/resources/static/img/group.jpg"
         });
+		
+		console.log(group);
 
-        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName);
+        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName.replace(/ /g, "U+0020"));
 
         return group;
     }
 
     async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat, firstId) {
+		
+		console.log("Setting up new");
 
         try {
             await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
@@ -80,23 +85,32 @@ class CreateService {
         }
 
         var id = userWebId;
-
+		console.log(id);
 
 
         interlocutorWebIds.forEach(async interlocutorWebId => {
 
             if (interlocutorWebIds.length > 1) {
-                id = "Group/" + semanticChat.interlocutorName + "----" + userWebId;
+				console.log("Procesando");
+                id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
                     if (interlocWebId != interlocutorWebId)
                         id += "----" + interlocWebId;
                 });
+				
             }
-
+			console.log(id);
 
             console.log("Invitando: " + interlocutorWebId);
             const invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId);
             console.log(invitation);
+			try {
+            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+        } catch (e) {
+			console.log("?");
+            logger.error(`Could not add chat to WebId.`);
+            logger.error(e);
+        }
             try {
                 await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation);
             } catch (e) {

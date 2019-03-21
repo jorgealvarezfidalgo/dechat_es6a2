@@ -91,7 +91,6 @@ class MessageService {
 		  <${namespaces.schema}givenName> <${psUsername}>;
 		  <${namespaces.schema}text> <${messageTx}>.
 	  `;
-    //<${namespaces.schema}dateCreated> <${time}>;
     try {
       await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
