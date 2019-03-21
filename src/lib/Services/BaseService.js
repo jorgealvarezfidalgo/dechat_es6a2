@@ -142,8 +142,10 @@ class BaseService {
     const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
-
-
+  
+  getDefaultFriendPhoto() {
+	  return "main/resources/static/img/friend_default.jpg";
+  }
 
   async generateUniqueUrlForResource(baseurl) {
     let url = baseurl + '#' + uniqid();
@@ -216,7 +218,7 @@ class BaseService {
     return deferred.promise;
   }
 
-  async getInterlocutor(fileurl, userWebId) {
+  async getInvitation(fileurl) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
     //console.log(fileurl);
@@ -244,8 +246,12 @@ class BaseService {
             invitationFound = true;
             result = result.toObject();
 
-            deferred.resolve(
-              result['?interlocutor'].value
+            deferred.resolve({
+              interlocutor: result['?interlocutor'].value,
+			  url: result['?invitation'].value,
+			  agent: result['?sender'].value,
+			  ievent: result['?chaturl'].value
+			}
             );
           });
 
