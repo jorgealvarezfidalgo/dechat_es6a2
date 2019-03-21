@@ -33,7 +33,7 @@ let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -44,6 +44,8 @@ $('.login-btn').click(() => {
     auth.popupLogin({
         popupUri: 'https://solid.github.io/solid-auth-client/dist/popup.html'
     });
+
+    $(".loading").removeClass('hidden');
 });
 
 /**
@@ -59,6 +61,8 @@ $('#logout-btn').click(() => {
     interlocutorMessages = [];
     semanticChats = [];
     contactsWithChat = [];
+    $(".wrap").addClass('hidden');
+    $(".mustlogin").removeClass('hidden');
 });
 
 /**
@@ -79,6 +83,8 @@ auth.trackSession(async session => {
         $('#user-menu').removeClass('hidden');
         $('#nav-login-btn').addClass('hidden');
         $('#login-required').modal('hide');
+        $(".mustlogin").addClass('hidden');
+        $(".loading").removeClass('hidden');
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -97,8 +103,8 @@ auth.trackSession(async session => {
         await sleep(8000);
         await loadChats();
         checkForNotifications();
-		$(".wrap").removeClass('hidden');
-		$(".loading").addClass('hidden');
+        $(".wrap").removeClass('hidden');
+        $(".loading").addClass('hidden');
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -166,12 +172,12 @@ async function checkForNotifications() {
         }
 
         if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId, joinService);
+            const convoToJoin = await joinService.getJoinRequest(fileurl);
 
             if (convoToJoin) {
                 $("#showinvs").show();
                 console.log("Procesando nuevo chat");
-                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl));
+                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
             }
         }
     });
@@ -220,7 +226,7 @@ async function startChat() {
 
 async function loadChats() {
     console.log(semanticChats);
-    semanticChats.sort(function (a, b) {
+    semanticChats.sort(function(a, b) {
         var x = a.getLastMessage().time;
         var y = b.getLastMessage().time;
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -322,8 +328,8 @@ async function checkKey(e) {
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
-            +"</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1); +
+            "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
@@ -384,8 +390,7 @@ function showMessage(message) {
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
-    $(".fa fa-bars fa-lg").removeClass('hidden');
-    ;
+    $(".fa fa-bars fa-lg").removeClass('hidden');;
     toScrollDown();
 }
 
@@ -524,14 +529,17 @@ $('#showinvs').click(async () => {
 async function showInvitations() {
     $(".contact-list").html("");
     chatsToJoin.forEach(async chat => {
-        var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
-        if (!friendPhoto) {
-            friendPhoto = baseService.getDefaultFriendPhoto();
-        }
-        console.log(friendPhoto);
-        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+        var friendPhoto = chat.photo;
+	
+		if (!friendPhoto) {
+			friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
+			if(!friendPhoto)
+				friendPhoto = baseService.getDefaultFriendPhoto();
+		}
+	
+        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
-        document.getElementById("join" + chat.chatUrl).addEventListener("click", joinChat, false);
+        document.getElementById("join" + chat.url).addEventListener("click", joinChat, false);
     });
 }
 
@@ -546,27 +554,23 @@ async function joinChat() {
     const chat = chatsToJoin[i];
     chatsToJoin.splice(i, 1);
 
-
-    interlocWebId = chat.friendWebId.id;
     userDataUrl = await baseService.getDefaultDataUrl(userWebId);
-    await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, chat.fileUrl);
+    await joinService.joinExistingChat(chat.url, chat.interlocutorWebId, userWebId, userDataUrl);
 
-    var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
+    var friendPhoto = chat.photo;
+	
     if (!friendPhoto) {
-        friendPhoto = baseService.getDefaultFriendPhoto();
+		friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
+		if(!friendPhoto)
+			friendPhoto = baseService.getDefaultFriendPhoto();
     }
+	
+	chat.photo = friendPhoto;
+	
+	console.log("Chat to join should have loaded");
+	console.log(chat);
 
-    var semanticChat = new SemanticChat({
-        url: url,
-        messageBaseUrl: userDataUrl,
-        userWebId,
-        interlocutorWebId: interlocWebId,
-        interlocutorName: chat.interlocutorName,
-        photo: friendPhoto
-    });
-    console.log(semanticChat);
-
-    semanticChats.push(semanticChat);
+    semanticChats.push(chat);
     var index = semanticChats.indexOf(semanticChat);
     contactsWithChat.splice(index, 0, interlocWebId);
     console.log(semanticChats);

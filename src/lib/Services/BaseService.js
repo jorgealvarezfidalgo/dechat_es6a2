@@ -218,7 +218,7 @@ class BaseService {
     return deferred.promise;
   }
 
-  async getInterlocutor(fileurl, userWebId) {
+  async getInvitation(fileurl) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
     //console.log(fileurl);
@@ -246,8 +246,12 @@ class BaseService {
             invitationFound = true;
             result = result.toObject();
 
-            deferred.resolve(
-              result['?interlocutor'].value
+            deferred.resolve({
+              interlocutor: result['?interlocutor'].value,
+			  url: result['?invitation'].value,
+			  agent: result['?sender'].value,
+			  ievent: result['?chaturl'].value
+			}
             );
           });
 
