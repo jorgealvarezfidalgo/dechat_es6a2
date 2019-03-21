@@ -11,6 +11,7 @@ const {
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
+const CreateService = require('./CreateService');
 const Uploader = require('../Repositories/SolidUploaderRepository');
 const SemanticChat = require('../semanticchat');
 const Group = require('../Group');
@@ -18,6 +19,7 @@ const Group = require('../Group');
 let uploader = new Uploader(auth.fetch);
 
 let baseService = new BaseService(auth.fetch);
+let createService = new CreateService(auth.fetch);
 
 class JoinChatService {
     constructor(fetch) {
@@ -32,16 +34,42 @@ class JoinChatService {
     }
 
 
-    async joinExistingChat(urlChat, invitationUrl, interlocutorWebId, userWebId, userDataUrl, logger) {
-        const chatUrl = urlChat;
-        try {
-            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
-    			<${namespaces.schema}recipient> <${interlocutorWebId}>;
-    			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
+    async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
+		var recipient = interlocutorWebId;
+		var participants = [];
+		console.log("A");
+		if(interlocutorWebId.includes("Group")) {
+			recipient = userWebId.split("card")[0] + "Group/" + name;
+			participants = members;
+		} else {
+			participants.push(recipient);
+		}
+		console.log("B");
+		participants.forEach(async mem => {
+
+            console.log("Guardando en POD B a: " + mem);
+            const invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
+            console.log(invitation);
+			try {
+            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
         } catch (e) {
+			console.log("?");
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
         }
+        });
+		console.log(recipient);
+        try {
+            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
+    			<${namespaces.schema}recipient> <${recipient}>;
+    			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
+        } catch (e) {
+			console.log("?");
+            logger.error(`Could not add chat to WebId.`);
+            logger.error(e);
+        }
+		
+		
 
     }
 
@@ -76,7 +104,7 @@ class JoinChatService {
         return chatJoined;
     }
 
-    async getJoinRequestB(fileurl) {
+    async getJoinRequest(fileurl) {
 		console.log(fileurl);
 		var chat = await baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;

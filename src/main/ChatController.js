@@ -547,15 +547,18 @@ async function joinChat() {
     var url = this.getAttribute("id").replace("join", "");
     let i = 0;
 
-    while (i < chatsToJoin.length && chatsToJoin[i].chatUrl !== url) {
+    while (i < chatsToJoin.length && chatsToJoin[i].url !== url) {
         i++;
     }
 
     const chat = chatsToJoin[i];
     chatsToJoin.splice(i, 1);
-
+	console.log("C");
     userDataUrl = await baseService.getDefaultDataUrl(userWebId);
-    await joinService.joinExistingChat(chat.url, chat.interlocutorWebId, userWebId, userDataUrl);
+	console.log(userDataUrl);
+	chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
+	console.log("E");
+    await joinService.joinExistingChat(userDataUrl, chat.interlocutorWebId, userWebId, chat.url, chat.interlocutorName, chat.members);
 
     var friendPhoto = chat.photo;
 	
@@ -564,15 +567,17 @@ async function joinChat() {
 		if(!friendPhoto)
 			friendPhoto = baseService.getDefaultFriendPhoto();
     }
-	
 	chat.photo = friendPhoto;
 	
 	console.log("Chat to join should have loaded");
 	console.log(chat);
 
     semanticChats.push(chat);
-    var index = semanticChats.indexOf(semanticChat);
-    contactsWithChat.splice(index, 0, interlocWebId);
+    var index = semanticChats.indexOf(chat);
+	if(chat.members)
+		contactsWithChat.splice(index, 0, chat.interlocutorName);
+	else
+		contactsWithChat.splice(index, 0, chat.interlocutorWebId);
     console.log(semanticChats);
     console.log(contactsWithChat);
 
