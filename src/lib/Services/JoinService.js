@@ -39,7 +39,7 @@ class JoinChatService {
 		var participants = [];
 		console.log("A");
 		if(interlocutorWebId.includes("Group")) {
-			recipient = userWebId.split("card")[0] + "Group/" + name;
+			recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
 			participants = members;
 		} else {
 			participants.push(recipient);
@@ -86,7 +86,8 @@ class JoinChatService {
                 chatBaseUrl: userDataUrl,
                 userWebId,
                 members: chat.friendIds,
-                interlocutorName: name,
+                interlocutorName: name.replace(/U\+0020/g, " "),
+				interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
                 photo: "main/resources/static/img/group.jpg"
             });
         } else {
@@ -114,7 +115,7 @@ class JoinChatService {
         const ids = chat.agent;
 		console.log("IDS:" + ids);
 		const friendIds = ids.split("----"); 
-        //uploader.deleteFileForUser(fileUrl);
+        uploader.deleteFileForUser(fileurl);
 
         return {
             friendIds,

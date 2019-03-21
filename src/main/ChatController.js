@@ -178,6 +178,7 @@ async function checkForNotifications() {
                 $("#showinvs").show();
                 console.log("Procesando nuevo chat");
                 chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
+				alert("New invitations. They shall be dismissed if not accepted on this session.");
             }
         }
     });
@@ -312,7 +313,7 @@ async function checkKey(e) {
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
         $('#write-chat').val("");
-        var index = contactsWithChat.indexOf(interlocWebId);
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
         $('#chatwindow' + index).remove();
 
         semanticChats[index].loadMessage({
@@ -558,7 +559,7 @@ async function joinChat() {
     userDataUrl = await baseService.getDefaultDataUrl(userWebId);
 	console.log(userDataUrl);
 	chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
-	console.log("E");
+	console.log(chat.interlocutorWebId);
     await joinService.joinExistingChat(userDataUrl, chat.interlocutorWebId, userWebId, chat.url, chat.interlocutorName, chat.members);
 
     var friendPhoto = chat.photo;

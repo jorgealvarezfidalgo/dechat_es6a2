@@ -225,7 +225,6 @@ class BaseService {
           }]
         })
         .then(function(result) {
-          console.log(result);
           result.bindingsStream.on('data', async function(result) {
 
             invitationFound = true;
