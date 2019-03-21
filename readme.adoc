@@ -107,16 +107,10 @@ To run the application, you have to install http-server:
 And then execute the following command:
 
 ----
- npm run build:web
+ run
 ----
 
-Lastly, run the command:
-
-----
-http-server
-----
-
-It will shows some IP addresses where the application will be available.
+It will show some IP addresses where the application will be available.
 
 == Testing
 
