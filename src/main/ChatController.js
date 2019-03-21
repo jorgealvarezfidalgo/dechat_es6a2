@@ -94,9 +94,11 @@ auth.trackSession(async session => {
         });
 
         await startChat();
-        await sleep(5000);
+        await sleep(8000);
         await loadChats();
         checkForNotifications();
+		$(".wrap").removeClass('hidden');
+		$(".loading").addClass('hidden');
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -201,7 +203,7 @@ async function startChat() {
             friendPhoto = await baseService.getPhoto(chat.interlocutor);
         }
         if (!friendPhoto) {
-            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+            friendPhoto = baseService.getDefaultFriendPhoto();
         }
 
         userDataUrl = chat.storeUrl;
@@ -271,7 +273,7 @@ async function loadMessages(id) {
     // console.log(semanticChats);
     var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
-        friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        friendPhoto = baseService.getDefaultFriendPhoto();
     }
     $('#interlocutorphoto').attr("src", friendPhoto);
     interlocWebId = currentChat.interlocutorWebId;
@@ -404,7 +406,7 @@ $('#show-contact-information').click(async () => {
         for (var i = 0; i < currentChat.members.length; i++) {
             var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
             if (!memberPhoto) {
-                memberPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                memberPhoto = baseService.getDefaultFriendPhoto();
             }
             var memberName = await baseService.getFormattedName(currentChat.members[i].id);
             var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
@@ -435,7 +437,7 @@ async function displayContacts(func) {
             let name = await baseService.getFormattedName(friend.value);
             var friendPhoto = await baseService.getPhoto(friend.value);
             if (!friendPhoto) {
-                friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
@@ -496,7 +498,7 @@ async function openContact() {
             const friendName = await baseService.getFormattedName(interlocWebId);
             var friendPhoto = await baseService.getPhoto(interlocWebId);
             if (!friendPhoto) {
-                friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
             semanticChat.interlocutorName = friendName;
@@ -524,7 +526,7 @@ async function showInvitations() {
     chatsToJoin.forEach(async chat => {
         var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
         if (!friendPhoto) {
-            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+            friendPhoto = baseService.getDefaultFriendPhoto();
         }
         console.log(friendPhoto);
         var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
@@ -551,7 +553,7 @@ async function joinChat() {
 
     var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
     if (!friendPhoto) {
-        friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        friendPhoto = baseService.getDefaultFriendPhoto();
     }
 
     var semanticChat = new SemanticChat({

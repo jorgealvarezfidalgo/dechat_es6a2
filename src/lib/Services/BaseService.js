@@ -142,8 +142,10 @@ class BaseService {
     const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
-
-
+  
+  getDefaultFriendPhoto() {
+	  return "main/resources/static/img/friend_default.jpg";
+  }
 
   async generateUniqueUrlForResource(baseurl) {
     let url = baseurl + '#' + uniqid();
