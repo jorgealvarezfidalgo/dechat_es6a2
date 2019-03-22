@@ -188,8 +188,9 @@ async function checkForNotifications() {
             if (convoToJoin) {
                 $("#showinvs").show();
                 console.log("Procesando nuevo chat");
+                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
                 chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
-				alert("New invitations. They shall be dismissed if not accepted on this session.");
+				        alert("New invitations. They shall be dismissed if not accepted on this session.");
             }
         }
     });
