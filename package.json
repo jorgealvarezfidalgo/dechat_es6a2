@@ -6,9 +6,6 @@
   "presets": [
     "@babel/preset-es2016"
   ],
-  "nyc": {
-    "exclude": "src/libServices/JoinService.js"
-  },
   "scripts": {
     "test": "nyc ./node_modules/mocha/bin/_mocha \"./tests/*test.js\" --report lcovonly -- -R spec && codecov ",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
@@ -27,6 +24,12 @@
   "author": "Jorge Fidalgo <UO258524@uniovi.es>",
   "bugs": {
     "url": "https://github.com/Arquisoft/dechat_es6a2/issues"
+  },
+  "nyc": {
+    "exclude": [
+      "src/lib/Services/JoinService.js",
+      "src/lib/Services/BaseService.js"
+    ]
   },
   "homepage": "https://github.com/Arquisoft/dechat_es6a2/blob/master/readme.adoc",
   "devDependencies": {
