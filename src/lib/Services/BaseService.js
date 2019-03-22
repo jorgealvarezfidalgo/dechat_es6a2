@@ -142,7 +142,7 @@ class BaseService {
     const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
-  
+
   getDefaultFriendPhoto() {
 	  return "main/resources/static/img/friend_default.jpg";
   }
@@ -253,6 +253,11 @@ class BaseService {
     return deferred.promise;
   }
 
+  deleteFileForUser(url) {
+    uploader.deleteFileForUser(url);
+  }
+
+/*
   async getAllObjectsFromPredicateForResource(url, predicate) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(url, this.fetch);
@@ -286,7 +291,8 @@ class BaseService {
 
     return deferred.promise;
   }
-
+*/
+/*
   async getAllResourcesInInbox(inboxUrl) {
     const deferred = Q.defer();
     const resources = [];
@@ -316,7 +322,9 @@ class BaseService {
 
     return deferred.promise;
   }
+*/
 
+/*
   async fileContainsChatInfo(fileUrl) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, this.fetch);
@@ -344,10 +352,7 @@ class BaseService {
 
     return deferred.promise;
   }
-
-  deleteFileForUser(url) {
-	  uploader.deleteFileForUser(url);
-  }
+*/
 
 }
 

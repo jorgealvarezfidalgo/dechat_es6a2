@@ -82,9 +82,9 @@ describe('Services', function () {
         assert.equal(semanticChat.interlocutorWebId, 'https://morningstar.solid.community/profile/card#me', 'Thefriend web id is not correct : ->' + semanticChat.userWebId);
 
         //getting interlocutor
-        let interlocutor = baseService.getInterlocutor(semanticChat.fileurl, 'https://othbak.solid.community/profile/card#me')
+        //let interlocutor = baseService.getInterlocutor(semanticChat.fileurl, 'https://othbak.solid.community/profile/card#me')
         //the same user because he sent the message
-        assert.equal(interlocutor.length, null , 'The interlocutor is not correct : ->' + interlocutor.length);
+        //assert.equal(interlocutor.length, null , 'The interlocutor is not correct : ->' + interlocutor.length);
 
 
     });
@@ -106,43 +106,55 @@ describe('Services', function () {
 
     });
 
-    it('joining a new chat', async function () {
-        const chat = await loader.loadChatFromUrl('https://morningstar.solid.community/public/unittest_201903201127.ttl#jth2a2sl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/unittest_201903201127.ttl');
-        let newMessageFound = false;
-        let convoToJoin = false;
-        let message = await messageService.getNewMessage(chat.fileurl, chat.userWebId);
-        if (message) {
-            newMessageFound = true;
-        }
-        convoToJoin = await joinService.getJoinRequest(chat.fileurl, chat.userWebId, joinService);
-        const dataUrl = baseService.getDefaultDataUrl(chat.userWebId);
-        //this should do nothing
-        //await joinService.joinExistingChat(chat.invitationUrl, chat.interlocWebId, chat.userWebId, dataUrl, chat.fileUrl);
+    it('base Service tests', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-        assert.equal(newMessageFound, false, 'the user does not have pending invitations.');
-        assert.equal(convoToJoin, null, 'the user does not have convos to join. ->' + convoToJoin);
+        const selfPhoto = await baseService.getPhoto(chat.userWebId);
+        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+
+        const name = await baseService.getFormattedName(chat.userWebId);
+        assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+
+        const note =   await baseService.getNote(chat.userWebId);
+        assert.equal(note, null, 'we do not have a note yet.');
+
+        const defaultPic = await baseService.getDefaultFriendPhoto();
+        assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
+
+        const userDataUrl = await baseService.getDefaultDataUrl(chat.userWebId);
+        chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
+        //everytime should be different
+        assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
+
+        //checking user updates
+        const updates = null;
+        try{
+          updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(chat.userWebId));
+        }
+        catch(err){
+        }
+        assert.equal(updates, null, 'there are no updates in this profile');
+
+        //invite is not null
+        const invite = baseService.getInvitation(chat.fileurl);
+        assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
+
+        //deleting used chat.url
+        baseService.deleteFileForUser(chat.url);
     });
 
-    it('joining a new chat', async function () {
-        const chat = await loader.loadChatFromUrl('https://morningstar.solid.community/public/unittest_201903201127.ttl#jth2a2sl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/unittest_201903201127.ttl');
-        let newMessageFound = false;
-        let convoToJoin = false;
-        let message = await messageService.getNewMessage(chat.fileurl, chat.userWebId);
-        if (message) {
-            newMessageFound = true;
-        }
+    it('Message Service tests', async function () {
+        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-        convoToJoin = await joinService.getJoinRequest(chat.fileurl, chat.userWebId, joinService);
-        const dataUrl = baseService.getDefaultDataUrl(chat.userWebId);
-        //this should do nothing
-        //await joinService.joinExistingChat(chat.invitationUrl, chat.interlocWebId, chat.userWebId, dataUrl, chat.fileUrl);
+        let message = await messageService.getNewMessage(chat.chatUrl, chat.userWebId);
+        //no messages found
+        assert.equal(message, null, 'there should not be any new messages: ->' + message);
 
-        assert.equal(newMessageFound, false, 'the user does not have pending invitations.');
-        assert.equal(convoToJoin, null, 'the user does not have convos to join. ->' + convoToJoin);
-        assert.equal(messageService.getChatOfMessage(message).messageText,null, 'the user does not have pending invitations');
-        const username = await baseService.getFormattedName('https://othbak.solid.community/profile/card#me');
+        //const msg = messageService.getChatOfMessage("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2coox");
+        //assert.equal(msg.messageText, null, 'there should be a text: ->' + msg);
 
-        //simulating a store message test and should return error
-        messageService.storeMessage(chat.fileurl, username, 'https://othbak.solid.community/profile/card#me', '11:20', 'hello', 'https://morningstar.solid.community/profile/card#me', 'hello', null);
+        messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
+
     });
+
 });
