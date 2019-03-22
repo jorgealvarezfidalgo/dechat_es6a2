@@ -73,7 +73,7 @@ class JoinChatService {
 
     }
 
-
+  /* istanbul ignore next */
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
 		console.log("Info to join:");
 		console.log(chat);
@@ -105,6 +105,7 @@ class JoinChatService {
         return chatJoined;
     }
 
+    /* istanbul ignore next */
     async getJoinRequest(fileurl) {
 		console.log(fileurl);
 		var chat = await baseService.getInvitation(fileurl);
