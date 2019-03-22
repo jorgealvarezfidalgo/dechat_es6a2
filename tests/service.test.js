@@ -54,6 +54,14 @@ describe('Services', function () {
         expectedUrl = await baseService.getInboxUrl(chat.userWebId);
         assert.equal(inboxUrls[chat.userWebId], expectedUrl, 'the inbox url is not correct : ' + inboxUrls[chat.userWebId]);
 
+        //checking user updates
+        const updates = null;
+        try {
+            updates = await baseService.checkUserInboxForUpdates(inboxUrls[chat.userWebId]);
+        } catch (err) {
+        }
+        assert.equal(updates, null, 'there are no updates in this profile');
+
     });
 
     it('checking that there are 4 messages in my pod', async function () {
@@ -120,14 +128,6 @@ describe('Services', function () {
         //everytime should be different
         assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
 
-        //checking user updates
-        const updates = null;
-        try {
-            updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(chat.userWebId));
-        } catch (err) {
-        }
-        assert.equal(updates, null, 'there are no updates in this profile');
-
         //invite is not null
         const invite = baseService.getInvitation(chat.fileurl);
         assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
@@ -169,5 +169,18 @@ describe('Services', function () {
               //the user for the moment have 4 messages
               assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
           });
+
+
+                  it('Join service test', async function () {
+
+                    const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
+                    assert.equal(userDataUrl, "https://morningstar.solid.community/private/dechat_201903231229.ttl", 'the user data Url is not correct : ' + userDataUrl);
+
+                          await joinService.joinExistingChat(userDataUrl, "https://othbak.solid.community/profile/card#me", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903221145.ttl#jtknkfrd", "Othmane Bakhtaoui", undefined);
+
+                          //if no error then it's all good
+
+                  });
+
 
 });
