@@ -172,19 +172,6 @@ describe('Services', function () {
             assert.equal(chats.length, 1, 'the number of messages is not correct : ' + chats.length);
         });
 
-        it('Join service test', async function () {
 
-            //Testing join chats
-                const chat = await joinService.processChatToJoin("https://morningstar.solid.community/inbox/ee3ae700-4bcc-11e9-9f8a-1581f03d3349", "https://morningstar.solid.community/inbox/63198340-4cec-11e9-8607-6d8fa7b44941", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903190808.ttl");
-
-              const  userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
-              chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
-
-                await joinService.joinExistingChat(userDataUrl, "https://othbak.solid.community/profile/card#me", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903221145.ttl#jtknkfrd", "Othmane Bakhtaoui", undefined);
-
-                assert.equal(convoToJoin, true, 'the number of messages is not correct : ' + convoToJoin);
-
-
-        });
 
 });
