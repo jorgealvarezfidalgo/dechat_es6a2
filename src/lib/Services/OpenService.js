@@ -79,37 +79,6 @@ class OpenService {
     return deferred.promise;
   }
 
-  /*
-  async getStorageForChat(fileurl, chatUrl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT ?url {
-     <${chatUrl}> <${namespaces.schema}contributor> <${fileurl}>;
-        <${namespaces.storage}storeIn> ?url.
-  }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', async function(data) {
-          data = data.toObject();
-
-          deferred.resolve(data['?url'].value);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(null);
-        });
-      });
-
-    return deferred.promise;
-  }
-  */
-
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
 	  if(interloc.includes("Group")) {
 		  return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);

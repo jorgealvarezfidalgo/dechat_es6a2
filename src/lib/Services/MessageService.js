@@ -33,7 +33,7 @@ class MessageService {
   async getNewMessage(fileurl, userWebId) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-    /* istanbul ignore if */
+
     if (rdfjsSource) {
       const engine = newEngine();
       let messageFound = false;
@@ -110,7 +110,7 @@ class MessageService {
 		console.log(ids);
 		if(ids.length < 2)
 			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
-      /* istanbul ignore next */
+      
 		else {
 		    ids.forEach(async id => {
   		  try {

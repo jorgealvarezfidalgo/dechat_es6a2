@@ -30,7 +30,7 @@ describe('Services', function () {
         const name = await baseService.getFormattedName(chat.userWebId);
         assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
 
-        const note =   await baseService.getNote(chat.userWebId);
+        const note = await baseService.getNote(chat.userWebId);
         assert.equal(note, null, 'we do not have a note yet.');
 
 
@@ -109,23 +109,22 @@ describe('Services', function () {
         const name = await baseService.getFormattedName(chat.userWebId);
         assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
 
-        const note =   await baseService.getNote(chat.userWebId);
+        const note = await baseService.getNote(chat.userWebId);
         assert.equal(note, null, 'we do not have a note yet.');
 
         const defaultPic = await baseService.getDefaultFriendPhoto();
         assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
 
         const userDataUrl = await baseService.getDefaultDataUrl(chat.userWebId);
-        chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
+        chat.url = await baseService.generateUniqueUrlForResource(userDataUrl);
         //everytime should be different
         assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
 
         //checking user updates
         const updates = null;
-        try{
-          updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(chat.userWebId));
-        }
-        catch(err){
+        try {
+            updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(chat.userWebId));
+        } catch (err) {
         }
         assert.equal(updates, null, 'there are no updates in this profile');
 
@@ -152,6 +151,38 @@ describe('Services', function () {
 
         //group chat
         const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
-    });
 
+
+        it('Message Service tests', async function () {
+            const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+
+            let message = await messageService.getNewMessage(chat.chatUrl, chat.userWebId);
+            //no messages found
+            assert.equal(message, null, 'there should not be any new messages: ->' + message);
+
+            const msg = messageService.getChatOfMessage(message);
+
+            assert.equal(msg.author, null, 'it should be null : ->' + msg);
+
+            messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
+        });
+
+        it('Group chat tests', async function () {
+            //group chat
+            const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
+
+            const selfPhoto = await baseService.getPhoto(group.userWebId);
+            assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+
+            const name = await baseService.getFormattedName(chat.userWebId);
+            assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
+
+            assert.equal(groupChat.members[1], 'Decker', 'The member name is not correct : ->' + groupChat.members[1]);
+
+            const chats = await openService.getChatsToOpen(groupChat.userWebId);
+            //the user for the moment have 1 group messages
+            assert.equal(chats.length, 1, 'the number of messages is not correct : ' + chats.length);
+
+        });
+    });
 });
