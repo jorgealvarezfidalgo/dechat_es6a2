@@ -82,27 +82,36 @@ class CreateService {
         } catch (e) {
             this.logger.error(`Could not add chat to WebId.`);
             this.logger.error(e);
-        }
-
-        var id = userWebId;
-		console.log(id);
-
-
-        interlocutorWebIds.forEach(async interlocutorWebId => {
+        }     
+		await this.storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat);
+    }
+	
+	async storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
+		var id = userWebId;
+		console.log(id); 
+			interlocutorWebIds.forEach(async interlocutorWebId => {
 
             if (interlocutorWebIds.length > 1) {
 				console.log("Procesando");
                 id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
-                    if (interlocWebId != interlocutorWebId)
-                        id += "----" + interlocWebId;
+                    if (interlocWebId != interlocutorWebId){
+						if(interlocWebId.id)
+							id += "----" + interlocWebId.id;
+						else
+							id += "----" + interlocWebId;
+					}
                 });
 				
             }
 			console.log(id);
 
             console.log("Invitando: " + interlocutorWebId);
-            const invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId);
+            var invitation;
+			if(interlocutorWebId.id)
+				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId.id);
+			else
+				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId);
             console.log(invitation);
 			try {
             await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
@@ -112,13 +121,16 @@ class CreateService {
             logger.error(e);
         }
             try {
-                await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation);
+				if(interlocutorWebId.id)
+				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId.id), invitation);
+			else
+				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation);            
             } catch (e) {
                 this.logger.error(`Could not send invitation to interlocutor.`);
                 this.logger.error(e);
             }
         });
-    }
+		}
 
 
     async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {
