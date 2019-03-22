@@ -10,7 +10,7 @@ Jorge Álvarez Fidalgo & Othmane Bakhtaoui
 
 Developed on Notepad++
 
-= You can give it a try at https://arquisoft.github.io/dechat_es6a2/ (WIP)
+=== You can give it a try at https://arquisoft.github.io/dechat_es6a2/ (WIP)
 == Getting started
 
 First of all, you have to install npm (see how to do it below):
