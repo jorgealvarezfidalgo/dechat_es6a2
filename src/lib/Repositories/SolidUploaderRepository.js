@@ -13,18 +13,6 @@ class SolidUploaderRepository {
     }
 
     /**
-     * This method creates an empty file for the given url. It overwrites existing files.
-     * @param url: the url of the empty file
-     * @returns {Promise}: the promise from auth.fetch().
-     */
-    createEmptyFileForUser(url) {
-        return this.fetch(url, {
-            method: 'PUT',
-            body: ''
-        });
-    }
-
-    /**
      * This method deletes a file.
      * @param url: the url of the file that needs to be deleted.
      * @returns {Promise}: the promise from auth.fetch().
