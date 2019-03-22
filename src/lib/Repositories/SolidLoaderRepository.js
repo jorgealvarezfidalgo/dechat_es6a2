@@ -38,7 +38,7 @@ class SolidLoaderRepository {
             url: chatUrl,
             chatBaseUrl,
             userWebId,
-			members: ids
+			      members: ids
         });
 
 		console.log(chat);

@@ -45,7 +45,7 @@ class BaseService {
 	if(webid.includes("Group"))
 		return webid.split("Group/").pop().replace(/U\+0020/g, " ");
     let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'name');
-
+  /* istanbul ignore if */
     if (!formattedName) {
       formattedName = null;
       const firstname = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'givenName');
@@ -135,7 +135,7 @@ class BaseService {
     const parsedWebId = URI.parse(webId);
     const today = format(new Date(), 'yyyyMMddhhmm');
 
-    return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
+    return `${parsedWebId.scheme}://${parsedWebId.host}/public/dechat_${today}.ttl`;
   }
 
   async writePermission(url) {
@@ -167,6 +167,7 @@ class BaseService {
    * @returns {Promise}: a promise that resolves with an array containing the urls of all new notifications since the last time
    * this method was called.
    */
+   /* istanbul ignore next */
   async checkUserInboxForUpdates(inboxUrl) {
     const deferred = Q.defer();
     const newResources = [];
@@ -224,6 +225,8 @@ class BaseService {
             value: rdfjsSource
           }]
         })
+        /* istanbul ignore next */
+        //this can not be tested
         .then(function(result) {
           result.bindingsStream.on('data', async function(result) {
 
