@@ -142,28 +142,15 @@ class BaseService {
     const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
-
-
+  
+  getDefaultFriendPhoto() {
+	  return "main/resources/static/img/friend_default.jpg";
+  }
 
   async generateUniqueUrlForResource(baseurl) {
     let url = baseurl + '#' + uniqid();
 
-    try {
-      let d = this.getObjectFromPredicateForResource(url, namespaces.rdf + 'type');
-
-      // We assume that if this url doesn't have a type, the url is unused.
-      // Ok, this is not the most fail-safe thing.
-      // TODO: check if there are any triples at all.
-      while (d) {
-        url = baseurl + '#' + uniqid();
-        d = await this.getObjectFromPredicateForResource(url, namespaces.rdf + 'type');
-      }
-    } catch (e) {
-      // this means that response of data[url] returns a 404
-      // TODO might be called when you have no access, should check
-    } finally {
       return url;
-    }
   }
 
   async getInboxUrl(webId) {
@@ -216,7 +203,7 @@ class BaseService {
     return deferred.promise;
   }
 
-  async getInterlocutor(fileurl, userWebId) {
+  async getInvitation(fileurl) {
     const deferred = Q.defer();
     const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
     //console.log(fileurl);
@@ -238,14 +225,17 @@ class BaseService {
           }]
         })
         .then(function(result) {
-          console.log(result);
           result.bindingsStream.on('data', async function(result) {
 
             invitationFound = true;
             result = result.toObject();
 
-            deferred.resolve(
-              result['?interlocutor'].value
+            deferred.resolve({
+              interlocutor: result['?interlocutor'].value,
+			  url: result['?invitation'].value,
+			  agent: result['?sender'].value,
+			  ievent: result['?chaturl'].value
+			}
             );
           });
 

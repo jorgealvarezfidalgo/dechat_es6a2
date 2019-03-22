@@ -4,7 +4,6 @@ class Group extends SemanticChat {
 
     constructor(options) {
         super(options);
-        console.log(options);
         this.members = options.members;
         this.numberOfMembers = 0;
     }

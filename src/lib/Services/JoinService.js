@@ -7,137 +7,123 @@ const winston = require('winston');
 const URI = require('uri-js');
 const auth = require('solid-auth-client');
 const {
-  format
+    format
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
+const CreateService = require('./CreateService');
 const Uploader = require('../Repositories/SolidUploaderRepository');
+const SemanticChat = require('../semanticchat');
+const Group = require('../Group');
 
 let uploader = new Uploader(auth.fetch);
 
 let baseService = new BaseService(auth.fetch);
+let createService = new CreateService(auth.fetch);
 
 class JoinChatService {
-  constructor(fetch) {
-    this.fetch = fetch;
-	this.logger = winston.createLogger({
-      level: 'error',
-      transports: [
-        new winston.transports.Console(),
-      ],
-      format: winston.format.cli()
-    });
-  }
-
-
-  /**
-   * This method checks a file and looks for the a join request.
-   * @param fileurl: the url of the file in which to look.
-   * @param userWebId: the WebId of the user looking for requests.
-   * @returns {Promise}: a promise that resolves with {interlocutorWebId: string, gchatrl: string, invitationUrl: string},
-   * where interlocutorWebId is the WebId of the player that initiated the request, gchatrl is the url of the gchat and
-   * invitationUrl is the url of the invitation.
-   * If no request was found, null is returned.
-   */
-  async getJoinRequest(fileurl, userWebId, selfCore) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-
-    if (rdfjsSource) {
-      const engine = newEngine();
-      let invitationFound = false;
-      const self = selfCore;
-
-      engine.query(`SELECT ?invitation {
-      ?invitation a <${namespaces.schema}InviteAction>.
-    }`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(function(result) {
-          result.bindingsStream.on('data', async function(result) {
-
-            invitationFound = true;
-            result = result.toObject();
-            //console.log(result);
-            const invitationUrl = result['?invitation'].value;
-            let chatUrl = invitationUrl.split("#")[0];
-            if (!chatUrl) {
-              chatUrl = await self.getChatFromInvitation(invitationUrl);
-
-              if (chatUrl) {
-                self.logger.info('chat: found by using Comunica directly, but not when using LDflex. Caching issue (reported).');
-              }
-            }
-            //console.log(chatUrl);
-
-            if (!chatUrl) {
-              deferred.resolve(null);
-            } else {
-              //console.log(invitationUrl);
-              const recipient = await baseService.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'recipient');
-              //console.log("Recipient: " + recipient);
-              if (!recipient || recipient.value !== userWebId) {
-                deferred.resolve(null);
-              }
-
-              const friendWebId = await baseService.getObjectFromPredicateForResource(invitationUrl, namespaces.schema + 'agent');
-              //console.log("Agent: " + friendWebId);
-
-              deferred.resolve({
-                friendWebId,
-                chatUrl,
-                invitationUrl
-              });
-            }
-          });
-
-          result.bindingsStream.on('end', function() {
-            if (!invitationFound) {
-              console.log("NO");
-              deferred.resolve(null);
-            }
-          });
+    constructor(fetch) {
+        this.fetch = fetch;
+        this.logger = winston.createLogger({
+            level: 'error',
+            transports: [
+                new winston.transports.Console(),
+            ],
+            format: winston.format.cli()
         });
-    } else {
-      deferred.resolve(null);
     }
 
-    return deferred.promise;
-  }
 
+    async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
+		var recipient = interlocutorWebId;
+		var participants = [];
+		console.log("A");
+		if(interlocutorWebId.includes("Group")) {
+			recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
+			participants = members;
+		} else {
+			participants.push(recipient);
+		}
+		console.log("B");
+		participants.forEach(async mem => {
 
-  async joinExistingChat(urlChat, invitationUrl, interlocutorWebId, userWebId, userDataUrl, fileUrl, logger) {
-    const chatUrl = urlChat;
-    try {
-      await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
-    			<${namespaces.schema}recipient> <${interlocutorWebId}>;
+            console.log("Guardando en POD B a: " + mem);
+            const invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
+            console.log(invitation);
+			try {
+            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+        } catch (e) {
+			console.log("?");
+            logger.error(`Could not add chat to WebId.`);
+            logger.error(e);
+        }
+        });
+		console.log(recipient);
+        try {
+            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
+    			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
-    } catch (e) {
-      logger.error(`Could not add chat to WebId.`);
-      logger.error(e);
+        } catch (e) {
+			console.log("?");
+            logger.error(`Could not add chat to WebId.`);
+            logger.error(e);
+        }
+		
+		
+
     }
-    uploader.deleteFileForUser(fileUrl);
-  }
 
 
-  async processChatToJoin(chat, fileurl) {
-    chat.fileUrl = fileurl;
-    chat.name = "Chat de ";
-    chat.interlocutorName = await baseService.getFormattedName(chat.friendWebId.id);
-    return chat;
-  }
+    async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
+		console.log("Info to join:");
+		console.log(chat);
+        var chatJoined;
+        if (chat.friendIds[0].includes("Group")) {
+            var name = chat.friendIds[0].split("/").pop();
+            chat.friendIds.splice(0, 1);
+            chatJoined = new Group({
+                url: fileurl,
+                chatBaseUrl: userDataUrl,
+                userWebId,
+                members: chat.friendIds,
+                interlocutorName: name.replace(/U\+0020/g, " "),
+				interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
+                photo: "main/resources/static/img/group.jpg"
+            });
+        } else {
+            chatJoined = new SemanticChat({
+                url: fileurl,
+                messageBaseUrl: userDataUrl,
+                userWebId,
+                interlocutorWebId: chat.friendIds[0],
+                interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
+            });
+        }
+		console.log("Chat processed");
+		console.log(chatJoined);
 
-   /**
-   * This method returns the chat of an invitation.
-   * @param url: the url of the invitation.
-   * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
-   */
-  async getChatFromInvitation(url) {
-    return baseService.getObjectFromPredicateForResource(url, namespaces.schema + 'event');
-}
+        return chatJoined;
+    }
+
+    async getJoinRequest(fileurl) {
+		console.log(fileurl);
+		var chat = await baseService.getInvitation(fileurl);
+        var chatUrl = chat.ievent;
+		console.log(chatUrl);
+        const recipient = chat.interlocutor;
+		console.log(recipient);
+        const ids = chat.agent;
+		console.log("IDS:" + ids);
+		const friendIds = ids.split("----"); 
+        uploader.deleteFileForUser(fileurl);
+
+        return {
+            friendIds,
+            chatUrl,
+            invitationUrl: fileurl,
+			recipient
+        };
+    }
 
 }
 module.exports = JoinChatService;

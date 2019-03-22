@@ -1,8 +1,8 @@
-= dechat_es6a
+= dechat_es6a2
 
 image:https://travis-ci.org/Arquisoft/dechat_es6a2.svg?branch=master["Build Status", link="https://travis-ci.org/Arquisoft/dechat_es6a2"]
 image:https://codecov.io/gh/Arquisoft/dechat_es6a2/branch/master/graph/badge.svg["Codecov",link="https://codecov.io/gh/Arquisoft/dechat_es6a2"]
-image:https://api.codacy.com/project/badge/Grade/fc7dc1da60ee4e9fb67ccff782625794["Codacy code quality", link="https://www.codacy.com/app/jelabra/dechat_es6a?utm_source=github.com&utm_medium=referral&utm_content=Arquisoft/dechat_es6a&utm_campaign=Badge_Grade"]
+image:https://api.codacy.com/project/badge/Grade/fc7dc1da60ee4e9fb67ccff782625794["Codacy code quality", link="https://www.codacy.com/app/jelabra/dechat_es6a2?utm_source=github.com&utm_medium=referral&utm_content=Arquisoft/dechat_es6a2&utm_campaign=Badge_Grade"]
 
 == Authors
 
@@ -10,6 +10,7 @@ Jorge Álvarez Fidalgo & Othmane Bakhtaoui
 
 Developed on Notepad++
 
+=== You can give it a try at https://arquisoft.github.io/dechat_es6a2/ (WIP)
 == Getting started
 
 First of all, you have to install npm (see how to do it below):
@@ -107,16 +108,10 @@ To run the application, you have to install http-server:
 And then execute the following command:
 
 ----
- npm run build:web
+ run
 ----
 
-Lastly, run the command:
-
-----
-http-server
-----
-
-It will shows some IP addresses where the application will be available.
+It will show some IP addresses where the application will be available.
 
 == Testing
 

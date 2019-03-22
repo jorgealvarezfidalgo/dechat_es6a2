@@ -33,7 +33,7 @@ let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
 
-$(document).ready(function () {
+$(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -44,6 +44,8 @@ $('.login-btn').click(() => {
     auth.popupLogin({
         popupUri: 'https://solid.github.io/solid-auth-client/dist/popup.html'
     });
+
+    $(".loading").removeClass('hidden');
 });
 
 /**
@@ -59,6 +61,11 @@ $('#logout-btn').click(() => {
     interlocutorMessages = [];
     semanticChats = [];
     contactsWithChat = [];
+	contactsForGroup = [];
+    $(".wrap").addClass('hidden');
+    $(".mustlogin").removeClass('hidden');
+	$('#interlocutorw-name').text("");
+	$('#interlocutorphoto').attr("src", "");
 });
 
 /**
@@ -79,6 +86,8 @@ auth.trackSession(async session => {
         $('#user-menu').removeClass('hidden');
         $('#nav-login-btn').addClass('hidden');
         $('#login-required').modal('hide');
+        $(".mustlogin").addClass('hidden');
+        $(".loading").removeClass('hidden');
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -94,9 +103,11 @@ auth.trackSession(async session => {
         });
 
         await startChat();
-        await sleep(5000);
+        await sleep(8000);
         await loadChats();
         checkForNotifications();
+        $(".wrap").removeClass('hidden');
+        $(".loading").addClass('hidden');
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
@@ -138,11 +149,19 @@ async function checkForNotifications() {
             console.log("Guardando mensajes");
 
             newMessageFound = true;
-            var nameThroughUrl = message.author.split("/").pop();
+            var nameThroughUrl;
+			 var authorUrl;
+			if(!message.author.includes("Group")) {
+				nameThroughUrl = message.author.split("/").pop();
+				authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
+			}
+			else {
+				nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
+				authorUrl = message.author.replace("inbox","profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+			}
             console.log("nombre de authorUrl is:" + nameThroughUrl);
             console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
             console.log(message);
-            var authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
 
             console.log(authorUrl);
             console.log(contactsWithChat);
@@ -164,12 +183,13 @@ async function checkForNotifications() {
         }
 
         if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId, joinService);
+            const convoToJoin = await joinService.getJoinRequest(fileurl);
 
             if (convoToJoin) {
                 $("#showinvs").show();
                 console.log("Procesando nuevo chat");
-                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl));
+                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
+				alert("New invitations. They shall be dismissed if not accepted on this session.");
             }
         }
     });
@@ -196,12 +216,12 @@ async function startChat() {
         const friendName = await baseService.getFormattedName(chat.interlocutor);
         var friendPhoto;
         if (chat.interlocutor.includes("Group")) {
-            friendPhoto = "main/resources/static/img/group.png";
+            friendPhoto = "main/resources/static/img/group.jpg";
         } else {
             friendPhoto = await baseService.getPhoto(chat.interlocutor);
         }
         if (!friendPhoto) {
-            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+            friendPhoto = baseService.getDefaultFriendPhoto();
         }
 
         userDataUrl = chat.storeUrl;
@@ -218,7 +238,7 @@ async function startChat() {
 
 async function loadChats() {
     console.log(semanticChats);
-    semanticChats.sort(function (a, b) {
+    semanticChats.sort(function(a, b) {
         var x = a.getLastMessage().time;
         var y = b.getLastMessage().time;
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -271,7 +291,7 @@ async function loadMessages(id) {
     // console.log(semanticChats);
     var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
-        friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+        friendPhoto = baseService.getDefaultFriendPhoto();
     }
     $('#interlocutorphoto').attr("src", friendPhoto);
     interlocWebId = currentChat.interlocutorWebId;
@@ -298,12 +318,13 @@ async function checkKey(e) {
         var dateFormat = require('date-fns');
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+		console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
-            await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, currentChat.members);
+            await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
         $('#write-chat').val("");
-        var index = contactsWithChat.indexOf(interlocWebId);
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
         $('#chatwindow' + index).remove();
 
         semanticChats[index].loadMessage({
@@ -320,8 +341,8 @@ async function checkKey(e) {
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
-            +"</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1); +
+            "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
@@ -336,7 +357,11 @@ async function showAndStoreMessages() {
 
     while (i < interlocutorMessages.length) {
         //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
-        var nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
+        var nameThroughUrl;
+			if(!interlocutorMessages[i].author.includes("Group"))
+				nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
+			else
+				nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
         console.log("nombre de authorUrl is:" + nameThroughUrl);
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
@@ -370,20 +395,19 @@ async function showAndStoreMessages() {
 
 function showMessage(message) {
     const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-    if (message.author === $('#user-name').text()) {
+    if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $('#user-name').text()) {
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
     } else {
         if (currentChat.interlocutorWebId.includes("Group")) {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ")+ "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
-    $(".fa fa-bars fa-lg").removeClass('hidden');
-    ;
+    $(".fa fa-bars fa-lg").removeClass('hidden');;
     toScrollDown();
 }
 
@@ -404,12 +428,14 @@ $('#show-contact-information').click(async () => {
         for (var i = 0; i < currentChat.members.length; i++) {
             var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
             if (!memberPhoto) {
-                memberPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                memberPhoto = baseService.getDefaultFriendPhoto();
             }
             var memberName = await baseService.getFormattedName(currentChat.members[i].id);
             var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
             $("#listGroups").append(html);
+			
         }
+		$(".information").append("<div class='wrap-addtogroup'><div class='addtogroup'><input type='text' class='input-group' placeholder='Invite a friend'><a type='button' id='add-group' style='cursor: pointer;'>Add</a></div></div>");
     }
 });
 
@@ -427,7 +453,15 @@ $('#show-contacts').click(async () => {
 async function displayContacts(func) {
     $(".contact-list").html("");
     $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
-
+	if (!showingContacts) {
+        $(".fa-search").addClass("hidden");
+        $(".input-search").attr("placeholder", " New contact -username in Solid Community-");
+        $(".addcontact").removeClass("hidden");
+    } else {
+        $(".addcontact").addClass("hidden");
+        $(".fa-search").removeClass("hidden");
+        $(".input-search").attr("placeholder", "Find a chat");
+    }
 
     if (!showingContacts) {
 
@@ -435,7 +469,7 @@ async function displayContacts(func) {
             let name = await baseService.getFormattedName(friend.value);
             var friendPhoto = await baseService.getPhoto(friend.value);
             if (!friendPhoto) {
-                friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
@@ -496,7 +530,7 @@ async function openContact() {
             const friendName = await baseService.getFormattedName(interlocWebId);
             var friendPhoto = await baseService.getPhoto(interlocWebId);
             if (!friendPhoto) {
-                friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+                friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
             semanticChat.interlocutorName = friendName;
@@ -522,14 +556,17 @@ $('#showinvs').click(async () => {
 async function showInvitations() {
     $(".contact-list").html("");
     chatsToJoin.forEach(async chat => {
-        var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
-        if (!friendPhoto) {
-            friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
-        }
-        console.log(friendPhoto);
-        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.chatUrl + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+        var friendPhoto = chat.photo;
+	
+		if (!friendPhoto) {
+			friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
+			if(!friendPhoto)
+				friendPhoto = baseService.getDefaultFriendPhoto();
+		}
+	
+        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
-        document.getElementById("join" + chat.chatUrl).addEventListener("click", joinChat, false);
+        document.getElementById("join" + chat.url).addEventListener("click", joinChat, false);
     });
 }
 
@@ -537,36 +574,34 @@ async function joinChat() {
     var url = this.getAttribute("id").replace("join", "");
     let i = 0;
 
-    while (i < chatsToJoin.length && chatsToJoin[i].chatUrl !== url) {
+    while (i < chatsToJoin.length && chatsToJoin[i].url !== url) {
         i++;
     }
 
     const chat = chatsToJoin[i];
     chatsToJoin.splice(i, 1);
-
-
-    interlocWebId = chat.friendWebId.id;
     userDataUrl = await baseService.getDefaultDataUrl(userWebId);
-    await joinService.joinExistingChat(chat.invitationUrl, interlocWebId, userWebId, userDataUrl, chat.fileUrl);
+	chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
+    await joinService.joinExistingChat(userDataUrl, chat.interlocutorWebId, userWebId, chat.url, chat.interlocutorName, chat.members);
 
-    var friendPhoto = await baseService.getPhoto(chat.friendWebId.id);
+    var friendPhoto = chat.photo;
+	
     if (!friendPhoto) {
-        friendPhoto = "https://www.biografiasyvidas.com/biografia/b/fotos/bernardo_de_claraval.jpg";
+		friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
+		if(!friendPhoto)
+			friendPhoto = baseService.getDefaultFriendPhoto();
     }
+	chat.photo = friendPhoto;
+	
+	console.log("Chat to join should have loaded");
+	console.log(chat);
 
-    var semanticChat = new SemanticChat({
-        url: url,
-        messageBaseUrl: userDataUrl,
-        userWebId,
-        interlocutorWebId: interlocWebId,
-        interlocutorName: chat.interlocutorName,
-        photo: friendPhoto
-    });
-    console.log(semanticChat);
-
-    semanticChats.push(semanticChat);
-    var index = semanticChats.indexOf(semanticChat);
-    contactsWithChat.splice(index, 0, interlocWebId);
+    semanticChats.push(chat);
+    var index = semanticChats.indexOf(chat);
+	if(chat.members)
+		contactsWithChat.splice(index, 0, chat.interlocutorName);
+	else
+		contactsWithChat.splice(index, 0, chat.interlocutorWebId);
     console.log(semanticChats);
     console.log(contactsWithChat);
 
@@ -617,11 +652,12 @@ $('#creategroup').click(async () => {
             console.log(userDataUrl);
             console.log(userWebId);
             var intWebId = $('.input-search').val();
-            var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId.replace(/ /g, "U+0020"));
+			console.log(intWebId);
+            var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
             console.log(group);
             semanticChats.push(group);
             var index = semanticChats.indexOf(group);
-            contactsWithChat.splice(index, 0, intWebId);
+            contactsWithChat.splice(index, 0, "Group/" + intWebId);
             console.log(semanticChats);
             console.log(contactsWithChat);
             loadMessages(index);
@@ -630,6 +666,7 @@ $('#creategroup').click(async () => {
             $(".creategroup").addClass("hidden");
             $(".fa-search").removeClass("hidden");
             $(".input-search").attr("placeholder", "Find a chat");
+			contactsForGroup = [];
         } else {
             alert("You need at least 2 contacts to start a group.");
         }
@@ -638,3 +675,56 @@ $('#creategroup').click(async () => {
     }
 
 });
+
+$('#addcontact').click(async () => {
+
+    if ($('.input-search').val() != "") {
+			var contact = "https://" + $('.input-search').val().toLowerCase() + ".solid.community/profile/card#me";
+			if(baseService.writePermission(contact)) {
+            let name = await baseService.getFormattedName(contact);
+            var friendPhoto = await baseService.getPhoto(contact);
+            if (!friendPhoto) {
+                friendPhoto = baseService.getDefaultFriendPhoto();
+            }
+
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+
+            $(".contact-list").prepend(html);
+            document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
+			} else {
+				alert("No user found with web id "+contact);
+			}
+    } else {
+        alert("No username specified.");
+    }
+
+});
+
+$(document).on('click', '#add-group', async function() { 
+console.log($('.input-group').val());
+    if ($('.input-group').val() != "") {
+			var contact = "https://" + $('.input-group').val().toLowerCase() + ".solid.community/profile/card#me";
+			console.log(contact);
+			if(baseService.writePermission(contact)) {
+				console.log("CURRENT CHAT:");
+				console.log(currentChat);
+				//Esto invita de nuevo a los miembros...
+				//Pero si le pasamos como miembro al nuevo no genera la info debida
+				//Hay que modificarlo ligeramente
+				await createService.storeAndSendInvitations(userDataUrl, userWebId, currentChat.members, currentChat);
+            let memberName = await baseService.getFormattedName(contact);
+            var memberPhoto = await baseService.getPhoto(contact);
+            if (!memberPhoto) {
+                memberPhoto = baseService.getDefaultFriendPhoto();
+            }
+
+            var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
+            $("#listGroups").append(html);
+			} else {
+				alert("No user found with web id "+contact);
+			}
+    } else {
+        alert("No username specified.");
+    } });
+
+

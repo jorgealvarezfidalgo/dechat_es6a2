@@ -91,7 +91,6 @@ class MessageService {
 		  <${namespaces.schema}givenName> <${psUsername}>;
 		  <${namespaces.schema}text> <${messageTx}>.
 	  `;
-    //<${namespaces.schema}dateCreated> <${time}>;
     try {
       await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
@@ -108,14 +107,21 @@ class MessageService {
 		else
 			ids.push(interlocutorWebId);
 		console.log(ids);
+		if(ids.length < 2)
+			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
+		else {
+			
 		ids.forEach(async id => {
 		  try {
-			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
+				if(id.value)
+					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id.value), sparqlUpdate);
+				else
+					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
 		  } catch (e) {
 			this.logger.error(`Could not send message to interlocutor.`);
-			console.log("Could not send");
 			this.logger.error(e);
 		}});
+		}
     }
 
   }

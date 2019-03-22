@@ -52,62 +52,90 @@ class CreateService {
     }
 
     async setUpNewGroup(userDataUrl, userWebId, interlocutorWebIds, friendName) {
-
+		
         const chatUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
         const group = new Group({
             url: chatUrl,
-            messageBaseUrl: userDataUrl,
+            chatBaseUrl: userDataUrl,
             userWebId,
             members: interlocutorWebIds,
             interlocutorName: friendName,
-            photo: "main/resources/static/img/group.png"
+			interlocutorWebId: "Group/" + friendName,
+            photo: "main/resources/static/img/group.jpg"
         });
+		
+		console.log(group);
 
-        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName);
+        await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName.replace(/ /g, "U+0020"));
 
         return group;
     }
 
     async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat, firstId) {
+		
+		console.log("Setting up new");
 
         try {
             await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${firstId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
-            console.log("NO-A");
             this.logger.error(`Could not add chat to WebId.`);
             this.logger.error(e);
-        }
+        }     
+		await this.storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat);
+    }
+	
+	async storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
+		var id = userWebId;
+		console.log(id); 
+			interlocutorWebIds.forEach(async interlocutorWebId => {
 
-        interlocutorWebIds.forEach(async interlocutorWebId => {
-            console.log("Registrando: " + interlocutorWebId);
-            const invitation = await this.generateInvitation(userDataUrl.replace("/private/", "/public/"), semanticChat.getUrl(), userWebId, interlocutorWebId);
-            const invitation2 = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), userWebId, interlocutorWebId);
-
-            try {
-                await uploader.executeSPARQLUpdateForUser(userDataUrl.replace("/private/", "/public/"), `INSERT DATA {${invitation.sparqlUpdate}}`);
-
-                await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${invitation2.sparqlUpdate}}`);
-            } catch (e) {
-                console.log("NO-B");
-                this.logger.error(`Could not save invitation for chat.`);
-                this.logger.error(e);
+            if (interlocutorWebIds.length > 1) {
+				console.log("Procesando");
+                id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
+                interlocutorWebIds.forEach(async interlocWebId => {
+                    if (interlocWebId != interlocutorWebId){
+						if(interlocWebId.id)
+							id += "----" + interlocWebId.id;
+						else
+							id += "----" + interlocWebId;
+					}
+                });
+				
             }
+			console.log(id);
 
+            console.log("Invitando: " + interlocutorWebId);
+            var invitation;
+			if(interlocutorWebId.id)
+				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId.id);
+			else
+				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId);
+            console.log(invitation);
+			try {
+            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+        } catch (e) {
+			console.log("?");
+            logger.error(`Could not add chat to WebId.`);
+            logger.error(e);
+        }
             try {
-                await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation.notification);
+				if(interlocutorWebId.id)
+				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId.id), invitation);
+			else
+				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation);            
             } catch (e) {
                 this.logger.error(`Could not send invitation to interlocutor.`);
                 this.logger.error(e);
             }
         });
-    }
+		}
+
 
     async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {
         const invitationUrl = await baseService.generateUniqueUrlForResource(baseUrl);
         //console.log(invitationUrl);
-        const notification = `<${invitationUrl}> a <${namespaces.schema}InviteAction>.`;
         const sparqlUpdate = `
     <${invitationUrl}> a <${namespaces.schema}InviteAction>;
       <${namespaces.schema}event> <${chatUrl}>;
@@ -115,10 +143,7 @@ class CreateService {
       <${namespaces.schema}recipient> <${interlocutorWebId}>.
   `;
 
-        return {
-            notification,
-            sparqlUpdate
-        };
+        return sparqlUpdate;
     }
 
 

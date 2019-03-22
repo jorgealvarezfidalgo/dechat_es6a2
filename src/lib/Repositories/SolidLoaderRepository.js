@@ -82,7 +82,7 @@ class SolidLoaderRepository {
                     data = data.toObject();
                     if (data['?msgtext']) {
                         var messageText = data['?msgtext'].value.split("/")[4];
-                        var author = data['?username'].value.split("/")[4];
+                        var author = data['?username'].value.split("/").pop();
                         results.push({
                             messagetext: messageText.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":"),
                             url: data['?message'].value,
