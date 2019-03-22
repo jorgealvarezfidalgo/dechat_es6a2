@@ -146,11 +146,19 @@ async function checkForNotifications() {
             console.log("Guardando mensajes");
 
             newMessageFound = true;
-            var nameThroughUrl = message.author.split("/").pop();
+            var nameThroughUrl;
+			 var authorUrl;
+			if(!message.author.includes("Group")) {
+				nameThroughUrl = message.author.split("/").pop();
+				authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
+			}
+			else {
+				nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
+				authorUrl = message.author.replace("inbox","profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+			}
             console.log("nombre de authorUrl is:" + nameThroughUrl);
             console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
             console.log(message);
-            var authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
 
             console.log(authorUrl);
             console.log(contactsWithChat);
@@ -309,7 +317,7 @@ async function checkKey(e) {
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
 		console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
-            await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, currentChat.members);
+            await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
         $('#write-chat').val("");
@@ -346,7 +354,11 @@ async function showAndStoreMessages() {
 
     while (i < interlocutorMessages.length) {
         //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
-        var nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
+        var nameThroughUrl;
+			if(!interlocutorMessages[i].author.includes("Group"))
+				nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
+			else
+				nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
         console.log("nombre de authorUrl is:" + nameThroughUrl);
         console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
         if (nameThroughUrl === $('#interlocutorw-name').text()) {
@@ -555,11 +567,8 @@ async function joinChat() {
 
     const chat = chatsToJoin[i];
     chatsToJoin.splice(i, 1);
-	console.log("C");
     userDataUrl = await baseService.getDefaultDataUrl(userWebId);
-	console.log(userDataUrl);
 	chat.url =  await baseService.generateUniqueUrlForResource(userDataUrl);
-	console.log(chat.interlocutorWebId);
     await joinService.joinExistingChat(userDataUrl, chat.interlocutorWebId, userWebId, chat.url, chat.interlocutorName, chat.members);
 
     var friendPhoto = chat.photo;
