@@ -63,6 +63,8 @@ $('#logout-btn').click(() => {
     contactsWithChat = [];
     $(".wrap").addClass('hidden');
     $(".mustlogin").removeClass('hidden');
+	$('#interlocutorw-name').text("");
+	$('#interlocutorphoto').attr("src", "");
 });
 
 /**
@@ -392,12 +394,12 @@ async function showAndStoreMessages() {
 
 function showMessage(message) {
     const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-    if (message.author === $('#user-name').text()) {
+    if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $('#user-name').text()) {
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
     } else {
         if (currentChat.interlocutorWebId.includes("Group")) {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ")+ "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
