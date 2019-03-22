@@ -61,6 +61,7 @@ $('#logout-btn').click(() => {
     interlocutorMessages = [];
     semanticChats = [];
     contactsWithChat = [];
+	contactsForGroup = [];
     $(".wrap").addClass('hidden');
     $(".mustlogin").removeClass('hidden');
 	$('#interlocutorw-name').text("");
@@ -450,7 +451,15 @@ $('#show-contacts').click(async () => {
 async function displayContacts(func) {
     $(".contact-list").html("");
     $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
-
+	if (!showingContacts) {
+        $(".fa-search").addClass("hidden");
+        $(".input-search").attr("placeholder", " New contact -username in Solid Community-");
+        $(".addcontact").removeClass("hidden");
+    } else {
+        $(".addcontact").addClass("hidden");
+        $(".fa-search").removeClass("hidden");
+        $(".input-search").attr("placeholder", "Find a chat");
+    }
 
     if (!showingContacts) {
 
@@ -655,6 +664,7 @@ $('#creategroup').click(async () => {
             $(".creategroup").addClass("hidden");
             $(".fa-search").removeClass("hidden");
             $(".input-search").attr("placeholder", "Find a chat");
+			contactsForGroup = [];
         } else {
             alert("You need at least 2 contacts to start a group.");
         }
@@ -664,7 +674,26 @@ $('#creategroup').click(async () => {
 
 });
 
-process.on('uncaughtException', function(err){
-    console.error(err.stack);
-    process.exit();
+$('#addcontact').click(async () => {
+
+    if ($('.input-search').val() != "") {
+			var contact = "https://" + $('.input-search').val().toLowerCase() + ".solid.community/profile/card#me";
+			if(baseService.writePermission(contact)) {
+            let name = await baseService.getFormattedName(contact);
+            var friendPhoto = await baseService.getPhoto(contact);
+            if (!friendPhoto) {
+                friendPhoto = baseService.getDefaultFriendPhoto();
+            }
+
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+
+            $(".contact-list").prepend(html);
+            document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
+			} else {
+				alert("No user found with web id "+contact);
+			}
+    } else {
+        alert("No username specified.");
+    }
+
 });
