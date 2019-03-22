@@ -81,12 +81,6 @@ describe('Services', function () {
         assert.equal(semanticChat.getMessages().length, 0, 'we do not have messages yet : ' + semanticChat.getMessages().length);
         assert.equal(semanticChat.interlocutorWebId, 'https://morningstar.solid.community/profile/card#me', 'Thefriend web id is not correct : ->' + semanticChat.userWebId);
 
-        //getting interlocutor
-        //let interlocutor = baseService.getInterlocutor(semanticChat.fileurl, 'https://othbak.solid.community/profile/card#me')
-        //the same user because he sent the message
-        //assert.equal(interlocutor.length, null , 'The interlocutor is not correct : ->' + interlocutor.length);
-
-
     });
 
     it('creating group semantic chat', async function () {
@@ -150,8 +144,9 @@ describe('Services', function () {
         //no messages found
         assert.equal(message, null, 'there should not be any new messages: ->' + message);
 
-        //const msg = messageService.getChatOfMessage("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2coox");
-        //assert.equal(msg.messageText, null, 'there should be a text: ->' + msg);
+        const msg = messageService.getChatOfMessage(message);
+
+        assert.equal(msg.author, null, 'it should be null : ->' + msg);
 
         messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
 
