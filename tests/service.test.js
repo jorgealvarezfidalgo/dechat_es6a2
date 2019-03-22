@@ -155,23 +155,19 @@ describe('Services', function () {
           });
 
 
-        it('Group chat tests', async function () {
-            //group chat
-            const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
+          it('Group chat tests', async function () {
+              //group chat
+              const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
 
-            const selfPhoto = await baseService.getPhoto(groupChat.userWebId);
-            assert.equal(selfPhoto, null, 'The user does not have a photo : ' + groupChat.userWebId + ' ->' + selfPhoto);
+              const selfPhoto = await baseService.getPhoto(groupChat.userWebId);
+              assert.equal(selfPhoto, null, 'The user does not have a photo : ' + groupChat.userWebId + ' ->' + selfPhoto);
 
-            const name = await baseService.getFormattedName(groupChat.userWebId);
-            assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
+              const name = await baseService.getFormattedName(groupChat.userWebId);
+              assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
 
-            assert.equal(groupChat.members[1], 'Decker', 'The member name is not correct : ->' + groupChat.members[1]);
-
-            const chats = await openService.getChatsToOpen(groupChat.userWebId);
-            //the user for the moment have 1 group messages
-            assert.equal(chats.length, 1, 'the number of messages is not correct : ' + chats.length);
-        });
-
-
+              const chats = await openService.getChatsToOpen(groupChat.userWebId);
+              //the user for the moment have 4 messages
+              assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
+          });
 
 });
