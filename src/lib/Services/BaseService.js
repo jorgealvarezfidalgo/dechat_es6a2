@@ -225,8 +225,8 @@ class BaseService {
             value: rdfjsSource
           }]
         })
+        //this cannot be tested
         /* istanbul ignore next */
-        //this can not be tested
         .then(function(result) {
           result.bindingsStream.on('data', async function(result) {
 
