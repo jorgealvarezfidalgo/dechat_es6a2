@@ -14,7 +14,7 @@
             "name": "I search Google for \"itunes vote cards app\"",
             "result": {
               "status": "passed",
-              "duration": 6790868525
+              "duration": 6490459833
             },
             "line": 8,
             "match": {
@@ -27,7 +27,7 @@
             "name": "I should see \"Vote Cards\" in the result",
             "result": {
               "status": "passed",
-              "duration": 134328364
+              "duration": 136419825
             },
             "line": 9,
             "match": {
@@ -39,7 +39,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 2355213739
+              "duration": 2354001687
             },
             "hidden": true,
             "match": {
@@ -62,7 +62,7 @@
             "name": "I enter \"1+1\" in input",
             "result": {
               "status": "passed",
-              "duration": 6205967814
+              "duration": 5831151074
             },
             "line": 12,
             "match": {
@@ -75,7 +75,7 @@
             "name": "I get \"2\" in the result",
             "result": {
               "status": "passed",
-              "duration": 55377492
+              "duration": 50328593
             },
             "line": 13,
             "match": {
@@ -87,7 +87,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 2352849684
+              "duration": 2349153084
             },
             "hidden": true,
             "match": {
