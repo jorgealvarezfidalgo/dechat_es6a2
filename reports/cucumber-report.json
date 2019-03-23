@@ -1,0 +1,109 @@
+[
+  {
+    "description": "    I should be able to go to a website\n    and check its search functionality",
+    "elements": [
+      {
+        "id": "google-search-testing;google-search-for-voter-cards-app",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Google search for voter cards app",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I search Google for \"itunes vote cards app\"",
+            "result": {
+              "status": "passed",
+              "duration": 5734668118
+            },
+            "line": 8,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:4"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should see \"Vote Cards\" in the result",
+            "result": {
+              "status": "passed",
+              "duration": 139310498
+            },
+            "line": 9,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "After ",
+            "result": {
+              "status": "passed",
+              "duration": 2350619951
+            },
+            "hidden": true,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\node_modules\\selenium-cucumber-js\\runtime\\world.js:250"
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "id": "google-search-testing;i-evaluate-search-for-sum-of-1+1",
+        "keyword": "Scenario",
+        "line": 11,
+        "name": "I evaluate search for sum of 1+1",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I enter \"1+1\" in input",
+            "result": {
+              "status": "passed",
+              "duration": 5308733845
+            },
+            "line": 12,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:13"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I get \"2\" in the result",
+            "result": {
+              "status": "passed",
+              "duration": 62122394
+            },
+            "line": 13,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:19"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "After ",
+            "result": {
+              "status": "passed",
+              "duration": 2358371078
+            },
+            "hidden": true,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\node_modules\\selenium-cucumber-js\\runtime\\world.js:250"
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "google-search-testing",
+    "keyword": "Feature",
+    "line": 3,
+    "name": "Google Search Testing",
+    "tags": [],
+    "uri": "D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature"
+  }
+]
