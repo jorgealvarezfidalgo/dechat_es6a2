@@ -79,7 +79,7 @@ describe('Services', function () {
 
     it('checking that there are 4 messages in my pod', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
-        assert.equal(chat.getMessages().length, 4, 'the number of messages is not correct : ' + chat.getMessages().length);
+        assert.equal(chat.getMessages().length, 9, 'the number of messages is not correct : ' + chat.getMessages().length);
         assert.equal(chat.getMessages()[0].messagetext, 'unit', 'the text message is not correct : ' + chat.getMessages()[0].messagetext);
         assert.equal(chat.getMessages()[1].messagetext, 'test', 'the text message is not correct : ' + chat.getMessages()[1].messagetext);
     });
