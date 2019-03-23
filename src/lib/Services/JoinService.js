@@ -35,48 +35,46 @@ class JoinChatService {
 
 
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
-		var recipient = interlocutorWebId;
-		var participants = [];
-		console.log("A");
-		if(interlocutorWebId.includes("Group")) {
-			recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
-			participants = members;
-		} else {
-			participants.push(recipient);
-		}
-		console.log("B");
-		participants.forEach(async mem => {
+        var recipient = interlocutorWebId;
+        var participants = [];
+        console.log("A");
+        if (interlocutorWebId.includes("Group")) {
+            recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
+            participants = members;
+        } else {
+            participants.push(recipient);
+        }
+        console.log("B");
+        participants.forEach(async mem => {
 
             console.log("Guardando en POD B a: " + mem);
             const invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             console.log(invitation);
-			try {
-            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
-        } catch (e) {
-			console.log("?");
-            logger.error(`Could not add chat to WebId.`);
-            logger.error(e);
-        }
+            try {
+                await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+            } catch (e) {
+                console.log("?");
+                logger.error(`Could not add chat to WebId.`);
+                logger.error(e);
+            }
         });
-		console.log(recipient);
+        console.log(recipient);
         try {
             await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
-			console.log("?");
+            console.log("?");
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
         }
 
 
-
     }
 
-  /* istanbul ignore next */
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
-		console.log("Info to join:");
-		console.log(chat);
+        console.log("Info to join:");
+        console.log(chat);
         var chatJoined;
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
@@ -87,7 +85,7 @@ class JoinChatService {
                 userWebId,
                 members: chat.friendIds,
                 interlocutorName: name.replace(/U\+0020/g, " "),
-				interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
+                interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
                 photo: "main/resources/static/img/group.jpg"
             });
         } else {
@@ -99,32 +97,32 @@ class JoinChatService {
                 interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
             });
         }
-		console.log("Chat processed");
-		console.log(chatJoined);
+        console.log("Chat processed");
+        console.log(chatJoined);
 
         return chatJoined;
     }
 
-    /* istanbul ignore next */
     async getJoinRequest(fileurl) {
-		console.log(fileurl);
-		var chat = await baseService.getInvitation(fileurl);
+        console.log(fileurl);
+        var chat = await baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
-		console.log(chatUrl);
+        console.log(chatUrl);
         const recipient = chat.interlocutor;
-		console.log(recipient);
+        console.log(recipient);
         const ids = chat.agent;
-		console.log("IDS:" + ids);
-		const friendIds = ids.split("----");
+        console.log("IDS:" + ids);
+        const friendIds = ids.split("----");
         uploader.deleteFileForUser(fileurl);
 
         return {
             friendIds,
             chatUrl,
             invitationUrl: fileurl,
-			recipient
+            recipient
         };
     }
 
 }
+
 module.exports = JoinChatService;

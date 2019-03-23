@@ -21,7 +21,7 @@ const loader = new Loader(auth.fetch);
 
 describe('Services', function () {
 
-    it('checking the picture and name are correct', async function () {
+    it('checking the picture and name are correct using loader', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
         const selfPhoto = await baseService.getPhoto(chat.userWebId);
@@ -32,8 +32,20 @@ describe('Services', function () {
 
         const note = await baseService.getNote(chat.userWebId);
         assert.equal(note, null, 'we do not have a note yet.');
+    });
 
 
+    it('Simple chat tests using openService.js', async function () {
+        const chat = await openService.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+
+        const selfPhoto = await baseService.getPhoto(chat.userWebId);
+        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+
+        const name = await baseService.getFormattedName(chat.userWebId);
+        assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+
+        const note = await baseService.getNote(chat.userWebId);
+        assert.equal(note, null, 'we do not have a note yet.');
     });
 
     it('checking the number of messages is 23', async function () {
@@ -149,13 +161,9 @@ describe('Services', function () {
 
         messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
 
-        //group chat
-        const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
-
     });
 
-
-    it('Group chat tests', async function () {
+    it('Group chat tests using loader', async function () {
         //group chat
         const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
 
@@ -170,16 +178,13 @@ describe('Services', function () {
         assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
     });
 
-
     it('Join service test', async function () {
-
         const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
         //cannot be tested as it changes the time
         assert.notEqual(userDataUrl, "https://morningstar.solid.community/private/dechat_201903231229.ttl", 'the user data Url is not correct : ' + userDataUrl);
 
         await joinService.joinExistingChat(userDataUrl, "https://othbak.solid.community/profile/card#me", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903221145.ttl#jtknkfrd", "Othmane Bakhtaoui", undefined);
         //if no error then it's all good
-
         //the other cases cannot be tested as the file urls are private and cannot be accessed.
     });
 
