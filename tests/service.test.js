@@ -34,6 +34,16 @@ describe('Services', function () {
         assert.equal(note, null, 'we do not have a note yet.');
     });
 
+    it('checking the picture and name are correct using loader with a user with no name', async function () {
+        const chat = await loader.loadChatFromUrl('https://decker.solid.community/public/dechat_201903110956.ttl#jt4tuya4', 'https://decker.solid.community/profile/card#me', 'https://decker.solid.community/public/dechat_201903110956.ttl');
+
+        const selfPhoto = await baseService.getPhoto(chat.userWebId);
+        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+
+        const name = await baseService.getFormattedName(chat.userWebId);
+        assert.equal(name, 'Decker', 'The user name is not correct : ->' + name);
+    });
+
 
     it('Simple chat tests using openService.js', async function () {
         const userDataUrl = await baseService.getDefaultDataUrl("https://othbak.solid.community/profile/card#me");

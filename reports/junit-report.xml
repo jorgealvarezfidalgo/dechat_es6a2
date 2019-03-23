@@ -5,9 +5,9 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature">
             </property>
         </properties>
-        <testcase name="When I search Google for &quot;itunes vote cards app&quot;" classname="google-search-testing;google-search-for-voter-cards-app" time="6.126105138">
+        <testcase name="When I search Google for &quot;itunes vote cards app&quot;" classname="google-search-testing;google-search-for-voter-cards-app" time="5.734668118">
         </testcase>
-        <testcase name="Then I should see &quot;Vote Cards&quot; in the result" classname="google-search-testing;google-search-for-voter-cards-app" time="0.126557089">
+        <testcase name="Then I should see &quot;Vote Cards&quot; in the result" classname="google-search-testing;google-search-for-voter-cards-app" time="0.139310498">
         </testcase>
     </testsuite>
     <testsuite name="google-search-testing;i-evaluate-search-for-sum-of-1+1" tests="2" failures="0" skipped="0">
@@ -15,9 +15,9 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature">
             </property>
         </properties>
-        <testcase name="When I enter &quot;1+1&quot; in input" classname="google-search-testing;i-evaluate-search-for-sum-of-1+1" time="5.46313415">
+        <testcase name="When I enter &quot;1+1&quot; in input" classname="google-search-testing;i-evaluate-search-for-sum-of-1+1" time="5.308733845">
         </testcase>
-        <testcase name="Then I get &quot;2&quot; in the result" classname="google-search-testing;i-evaluate-search-for-sum-of-1+1" time="0.050866668">
+        <testcase name="Then I get &quot;2&quot; in the result" classname="google-search-testing;i-evaluate-search-for-sum-of-1+1" time="0.062122394">
         </testcase>
     </testsuite>
 </testsuites>
