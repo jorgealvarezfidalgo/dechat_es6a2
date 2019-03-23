@@ -7,7 +7,7 @@
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "test": "nyc ./node_modules/mocha/bin/_mocha \"./tests/*test.js\" --report lcovonly -- -R spec && node ./node_modules/selenium-cucumber-js/index.js -s ./step-definitions -x 50000 && codecov ",
+    "test": "nyc ./node_modules/mocha/bin/_mocha \"./tests/*test.js\" --report lcovonly -- -R spec && codecov ",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "build:web": "webpack --config webpack.config.js",
     "build": "ng build",
