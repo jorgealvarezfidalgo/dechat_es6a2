@@ -156,10 +156,6 @@ describe('Services', function () {
         //no messages found
         assert.equal(message, null, 'there should not be any new messages: ->' + message);
 
-        const msg = messageService.getChatOfMessage(message);
-
-        assert.equal(msg.author, null, 'it should be null : ->' + msg);
-
         messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
 
     });
