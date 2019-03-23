@@ -100,4 +100,56 @@ code {
   color: antiquewhite;
 }
 
+/**https://codepen.io/nmbusman/pen/ygbBYb**/
+@font-face {
+    font-family: 'vcr';
+    src: /**url('../fonts/vcr.woff') format('woff'),**/url('../fonts/vcr.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+.space-between { justify-content: space-between }
+
+.white     { 
+  font-family: "vcr";
+  color: #FFFFFF; 
+  filter: blur(0.4px); 
+  animation: 0.1s infinite linear glitch; 
+  text-shadow: 0px 0px 3px #333333; 
+}
+
+.red       { color: #a30901; top: 5px; left: 15px; }
+.pink      { color: #d50bcf }
+.dark-blue { color: #31e3e7 }
+.cyan      { color: #31e3e7 }
+.green     { color: #51bb13 }
+.gold{}
+
+.absolute{position: absolute}
+
+
+.play-container{
+  animation: 3s infinite linear glitch-vertical; 
+}
+
+@keyframes glitch{
+  0%   { transform: translateX( 0.0px) }
+  25%  { transform: translateX(-0.5px) }
+  50%  { transform: translateX( 0.0px) }
+  75%  { transform: translateX( 0.5px) }
+  100% { transform: translateX( 0.0px) }
+}
+
+@keyframes glitch-vertical{
+  0%   { transform: translateY( 0.0px) }
+  49%  { transform: translateY( 0.0px) }
+  50%  { transform: translateY( -10.0px) }
+  51%  { transform: translateY( 0.0px) }
+  100% { transform: translateY( 0.0px) }
+}
+
 
