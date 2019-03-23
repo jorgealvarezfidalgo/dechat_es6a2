@@ -78,51 +78,16 @@ class OpenService {
 
     return deferred.promise;
   }
-  
-  /**
-   * This method returns the url of the file where to store the data of the chat.
-   * @param fileurl: the url of the file in which to look for the storage details.
-   * @param chatUrl: the url of the chat for which we want to the storage details.
-   * @returns {Promise<string|null>}: a promise that resolves with the url of the file or null if none is found.
-   */
-  async getStorageForChat(fileurl, chatUrl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
-    const engine = newEngine();
 
-    engine.query(`SELECT ?url {
-     <${chatUrl}> <${namespaces.schema}contributor> <${fileurl}>;
-        <${namespaces.storage}storeIn> ?url.
-  }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', async function(data) {
-          data = data.toObject();
-
-          deferred.resolve(data['?url'].value);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(null);
-        });
-      });
-
-    return deferred.promise;
-  }
-  
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
 	  if(interloc.includes("Group")) {
 		  return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
 	  } else {
 		  return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
 	  }
-	  
+
   }
-  
-  
+
+
 }
 module.exports = OpenService;

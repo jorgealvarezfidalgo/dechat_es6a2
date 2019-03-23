@@ -142,7 +142,7 @@ class BaseService {
     const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
     return response.status === 200;
   }
-  
+
   getDefaultFriendPhoto() {
 	  return "main/resources/static/img/friend_default.jpg";
   }
@@ -253,100 +253,8 @@ class BaseService {
     return deferred.promise;
   }
 
-  async getAllObjectsFromPredicateForResource(url, predicate) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(url, this.fetch);
-
-    if (rdfjsSource) {
-      const engine = newEngine();
-      const objects = [];
-
-      engine.query(`SELECT ?o {
-    <${url}> <${predicate}> ?o.
-  }`, {
-          sources: [{
-            type: 'rdfjsSource',
-            value: rdfjsSource
-          }]
-        })
-        .then(function(result) {
-          result.bindingsStream.on('data', function(data) {
-            data = data.toObject();
-
-            objects.push(data['?o']);
-          });
-
-          result.bindingsStream.on('end', function() {
-            deferred.resolve(objects);
-          });
-        });
-    } else {
-      deferred.resolve(null);
-    }
-
-    return deferred.promise;
-  }
-
-  async getAllResourcesInInbox(inboxUrl) {
-    const deferred = Q.defer();
-    const resources = [];
-    const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT ?resource {
-        ?resource a <http://www.w3.org/ns/ldp#Resource>.
-      }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', data => {
-          data = data.toObject();
-
-          const resource = data['?resource'].value;
-          resources.push(resource);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(resources);
-        });
-      });
-
-    return deferred.promise;
-  }
-
-  async fileContainsChatInfo(fileUrl) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileUrl, this.fetch);
-    const engine = newEngine();
-
-    engine.query(`SELECT * {
-      OPTIONAL { ?s a <${namespaces.schema}InviteAction>.}
-      OPTIONAL { ?s a <${namespaces.schema}Message> ?o; <${namespaces.schema}text> ?t.}
-    }`, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-      .then(function(result) {
-        result.bindingsStream.on('data', data => {
-          console.log(result);
-          deferred.resolve(true);
-        });
-
-        result.bindingsStream.on('end', function() {
-          deferred.resolve(false);
-        });
-      });
-
-    return deferred.promise;
-  }
-
   deleteFileForUser(url) {
-	  uploader.deleteFileForUser(url);
+    uploader.deleteFileForUser(url);
   }
 
 }

@@ -1,6 +1,6 @@
 const N3 = require('n3');
 const Q = require('q');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
+//const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
 const namespaces = require('../namespaces');
 const uniqid = require('uniqid');
 const winston = require('winston');
@@ -68,12 +68,12 @@ class JoinChatService {
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
         }
-		
-		
+
+
 
     }
 
-
+  /* istanbul ignore next */
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
 		console.log("Info to join:");
 		console.log(chat);
@@ -105,6 +105,7 @@ class JoinChatService {
         return chatJoined;
     }
 
+    /* istanbul ignore next */
     async getJoinRequest(fileurl) {
 		console.log(fileurl);
 		var chat = await baseService.getInvitation(fileurl);
@@ -114,7 +115,7 @@ class JoinChatService {
 		console.log(recipient);
         const ids = chat.agent;
 		console.log("IDS:" + ids);
-		const friendIds = ids.split("----"); 
+		const friendIds = ids.split("----");
         uploader.deleteFileForUser(fileurl);
 
         return {

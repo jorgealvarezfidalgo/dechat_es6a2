@@ -38,7 +38,7 @@ class SolidLoaderRepository {
             url: chatUrl,
             chatBaseUrl,
             userWebId,
-			members: ids
+			      members: ids
         });
 
 		console.log(chat);
@@ -170,38 +170,6 @@ class SolidLoaderRepository {
 
         return deferred.promise;
     }
-
-    /**
-     * This method is in charge of transforming the predicate to an object
-     */
-    async _getObjectFromPredicateForResource(url, predicate) {
-        const deferred = Q.defer();
-        const rdfjsSource = await this._getRDFjsSourceFromUrl(url);
-        const engine = newEngine();
-
-        engine.query(`SELECT ?o {
-    <${url}> <${predicate}> ?o.
-  }`, {
-                sources: [{
-                    type: 'rdfjsSource',
-                    value: rdfjsSource
-                }]
-            })
-            .then(function(result) {
-                result.bindingsStream.on('data', function(data) {
-                    data = data.toObject();
-
-                    deferred.resolve(data['?o']);
-                });
-
-                result.bindingsStream.on('end', function() {
-                    deferred.resolve(null);
-                });
-            });
-
-        return deferred.promise;
-    }
-
 }
 
 module.exports = SolidLoaderRepository;

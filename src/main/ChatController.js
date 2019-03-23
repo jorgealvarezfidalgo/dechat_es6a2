@@ -188,8 +188,9 @@ async function checkForNotifications() {
             if (convoToJoin) {
                 $("#showinvs").show();
                 console.log("Procesando nuevo chat");
+                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
                 chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
-				alert("New invitations. They shall be dismissed if not accepted on this session.");
+				        alert("New invitations. They shall be dismissed if not accepted on this session.");
             }
         }
     });
@@ -433,7 +434,7 @@ $('#show-contact-information').click(async () => {
             var memberName = await baseService.getFormattedName(currentChat.members[i].id);
             var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
             $("#listGroups").append(html);
-			
+
         }
 		$(".information").append("<div class='wrap-addtogroup'><div class='addtogroup'><input type='text' class='input-group' placeholder='Invite a friend'><a type='button' id='add-group' style='cursor: pointer;'>Add</a></div></div>");
     }
@@ -557,13 +558,13 @@ async function showInvitations() {
     $(".contact-list").html("");
     chatsToJoin.forEach(async chat => {
         var friendPhoto = chat.photo;
-	
+
 		if (!friendPhoto) {
 			friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
 			if(!friendPhoto)
 				friendPhoto = baseService.getDefaultFriendPhoto();
 		}
-	
+
         var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
         document.getElementById("join" + chat.url).addEventListener("click", joinChat, false);
@@ -585,14 +586,14 @@ async function joinChat() {
     await joinService.joinExistingChat(userDataUrl, chat.interlocutorWebId, userWebId, chat.url, chat.interlocutorName, chat.members);
 
     var friendPhoto = chat.photo;
-	
+
     if (!friendPhoto) {
 		friendPhoto = await baseService.getPhoto(chat.interlocutorWebId);
 		if(!friendPhoto)
 			friendPhoto = baseService.getDefaultFriendPhoto();
     }
 	chat.photo = friendPhoto;
-	
+
 	console.log("Chat to join should have loaded");
 	console.log(chat);
 
@@ -700,7 +701,7 @@ $('#addcontact').click(async () => {
 
 });
 
-$(document).on('click', '#add-group', async function() { 
+$(document).on('click', '#add-group', async function() {
 console.log($('.input-group').val());
     if ($('.input-group').val() != "") {
 			var contact = "https://" + $('.input-group').val().toLowerCase() + ".solid.community/profile/card#me";
@@ -726,5 +727,3 @@ console.log($('.input-group').val());
     } else {
         alert("No username specified.");
     } });
-
-
