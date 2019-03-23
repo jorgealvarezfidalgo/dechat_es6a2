@@ -116,26 +116,15 @@ It will show some IP addresses where the application will be available.
 == Testing
 
 There are some simple Unit tests at:
- https://github.com/Arquisoft/dechat_es6a/tree/master/src/test[src/test].
+ https://github.com/Arquisoft/dechat_es6a/tree/master/src/tests[src/tests].
 
 There are also some
  https://cucumber.io/[Cucumber based tests]
  with a simple user story defined at:
- https://github.com/Arquisoft/dechat_es6a/tree/master/src/test/resources/features[src/test/resources/features].
+ https://github.com/Arquisoft/dechat_es6a/tree/master/src/step-definition[src/step-definitions].
 
 To run tests execute:
 
 ----
 npm test
 ----
-
-
-
-
-
-
-
-
-
-
-
