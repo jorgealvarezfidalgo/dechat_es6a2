@@ -85,9 +85,6 @@ class OpenService {
 	  } else {
 		  return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
 	  }
-
   }
-
-
 }
 module.exports = OpenService;

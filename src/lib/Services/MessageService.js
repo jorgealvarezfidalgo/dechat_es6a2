@@ -90,17 +90,13 @@ class MessageService {
 		<${messageUrl}> a <${namespaces.schema}Message>;
 		  <${namespaces.schema}dateSent> <${time}>;
 		  <${namespaces.schema}givenName> <${psUsername}>;
-		  <${namespaces.schema}text> <${messageTx}>.
-	  `;
+		  <${namespaces.schema}text> <${messageTx}>.`;
     try {
       await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
       this.logger.error(`Could not save new message.`);
       this.logger.error(e);
     }
-
-
-
     if (toSend) {
 		var ids = [];
 		if(members)
@@ -125,14 +121,6 @@ class MessageService {
 		}
     }
 
-  }
-
-   /**
-   * This method returns the chat to which a message belongs.
-   * @returns {Promise}: a promise that returns the url of the chat (NamedNode) or null if none is found.
-   */
-  async getChatOfMessage(msgUrl) {
-    return baseService.getObjectFromPredicateForResource(msgUrl, namespaces.schema + 'subEvent');
   }
 }
 module.exports = MessageService;
