@@ -36,7 +36,8 @@ describe('Services', function () {
 
 
     it('Simple chat tests using openService.js', async function () {
-        const chat = await openService.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+        const userDataUrl = await baseService.getDefaultDataUrl("https://othbak.solid.community/profile/card#me");
+        const chat = await openService.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl', "https://morningstar.solid.community/profile/card#me");
 
         const selfPhoto = await baseService.getPhoto(chat.userWebId);
         assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
@@ -178,6 +179,21 @@ describe('Services', function () {
         assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
     });
 
+    it('Group chat tests using openService.js', async function () {
+        const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
+        const groupChat = await openService.loadChatFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl', "https://othbak.solid.community/profile/card#me");
+
+        const selfPhoto = await baseService.getPhoto(groupChat.userWebId);
+        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + groupChat.userWebId + ' ->' + selfPhoto);
+
+        const name = await baseService.getFormattedName(groupChat.userWebId);
+        assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
+
+        const chats = await openService.getChatsToOpen(groupChat.userWebId);
+        //the user for the moment have 4 messages
+        assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
+    });
+
     it('Join service test', async function () {
         const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
         //cannot be tested as it changes the time
@@ -187,6 +203,5 @@ describe('Services', function () {
         //if no error then it's all good
         //the other cases cannot be tested as the file urls are private and cannot be accessed.
     });
-
 
 });
