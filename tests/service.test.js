@@ -166,10 +166,11 @@ describe('Services', function () {
         //no messages found
         assert.equal(message, null, 'there should not be any new messages: ->' + message);
 
-        messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://helbrecht.solid.community/profile/card#me", true, null);
+        messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://decker.solid.community/profile/card#me", true, null);
 
     });
 
+/*
     it('Group chat tests using loader', async function () {
         //group chat
         const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
@@ -184,7 +185,9 @@ describe('Services', function () {
         //the user for the moment have 4 messages
         assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
     });
+    */
 
+/*
     it('Group chat tests using openService.js', async function () {
         const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
         const groupChat = await openService.loadChatFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl', "https://othbak.solid.community/profile/card#me");
@@ -199,7 +202,7 @@ describe('Services', function () {
         //the user for the moment have 4 messages
         assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
     });
-
+*/
     it('Join service test', async function () {
         const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
         //cannot be tested as it changes the time
