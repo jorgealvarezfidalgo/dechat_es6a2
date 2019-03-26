@@ -205,7 +205,7 @@ async function startChat() {
     const selfPhoto = await baseService.getPhoto(userWebId);
 
     if (!selfPhoto) {
-        $('#selfphoto').attr("src", "https://www.azquotes.com/public/pictures/authors/c3/10/c310c1b5df6fa4f117bf320814e9f39e/5434efd94977a_benedict_of_nursia.jpg");
+        selfPhoto = "https://www.azquotes.com/public/pictures/authors/c3/10/c310c1b5df6fa4f117bf320814e9f39e/5434efd94977a_benedict_of_nursia.jpg";
     }
     $('#selfphoto').attr("src", selfPhoto);
 
@@ -692,7 +692,7 @@ $('#addcontact').click(async () => {
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
-            document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
+            document.getElementById("openchatwindow" + contact).addEventListener("click", func, false);
         } else {
             alert("No user found with web id " + contact);
         }
