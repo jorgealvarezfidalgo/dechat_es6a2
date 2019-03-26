@@ -202,7 +202,7 @@ async function checkForNotifications() {
 
 async function startChat() {
 
-    const selfPhoto = await baseService.getPhoto(userWebId);
+    var selfPhoto = await baseService.getPhoto(userWebId);
 
     if (!selfPhoto) {
         selfPhoto = "https://www.azquotes.com/public/pictures/authors/c3/10/c310c1b5df6fa4f117bf320814e9f39e/5434efd94977a_benedict_of_nursia.jpg";
