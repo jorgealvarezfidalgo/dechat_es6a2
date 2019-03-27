@@ -60,8 +60,22 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^We click and we reach the home page with the messages shown and contacts$/, () => {
-        //"//*[contains(text(), 'button')]" });
-        return driver.wait(until.elementsLocated(by.xpath('//*[@id="user-name"]')), 10000);
+    this.Then(/^We click and we reach the home page with the messages shown$/, () => {
+        //username correct
+        return driver.wait(until.elementsLocated(by.xpath('//*[@id="user-name"]')), 10000)
+            .then(() => {
+                //selfphoto default is present
+                return driver.findElement(by.xpath('//*[@id="selfphoto"]'))
+                    .then(() => {
+                        //the user has only one conversion with Othmane Bakhtaoui
+                        driver.wait(until.elementsLocated(by.xpath('//*[@id="chatwindow0"]/div[1]/div/h1')), 20000);
+                        //click on the friend
+                        return driver.findElement(by.xpath('//*[@id="chatwindow0"]/div[1]/div/h1')).click()
+                            .then(() => {
+                                //'hello' should appear
+                                return driver.wait(until.elementsLocated(by.xpath('//*[@id="chatdiv"]/div/div[2]')), 20000);
+                            })
+                    })
+            });
     });
 };

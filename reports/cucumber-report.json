@@ -14,7 +14,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 8203473390
+              "duration": 8907494928
             },
             "line": 7,
             "match": {
@@ -27,7 +27,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
             "result": {
               "status": "passed",
-              "duration": 3738732126
+              "duration": 4470084484
             },
             "line": 8,
             "match": {
@@ -37,10 +37,10 @@
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "We click and we reach the home page with the messages shown and contacts",
+            "name": "We click and we reach the home page with the messages shown",
             "result": {
               "status": "passed",
-              "duration": 36597801
+              "duration": 9292553270
             },
             "line": 9,
             "match": {
@@ -52,7 +52,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 69995595
+              "duration": 1420894066
             },
             "hidden": true,
             "match": {
@@ -75,7 +75,7 @@
             "name": "I search Google for \"itunes vote cards app\"",
             "result": {
               "status": "passed",
-              "duration": 8160280415
+              "duration": 8136300121
             },
             "line": 12,
             "match": {
@@ -88,7 +88,7 @@
             "name": "I should see \"Outvote\" in the result",
             "result": {
               "status": "passed",
-              "duration": 895842560
+              "duration": 1266586995
             },
             "line": 13,
             "match": {
@@ -100,7 +100,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1099180048
+              "duration": 1370838461
             },
             "hidden": true,
             "match": {
