@@ -1,11 +1,71 @@
 [
   {
-    "description": "    I should be able to go to a website\n    and check its search functionality",
+    "description": "    I should be able to go to the webpage and login",
     "elements": [
       {
-        "id": "google-search-testing;google-search-for-voter-cards-app",
+        "id": "dechat-es-6a-ii;good-credential,-we-reach-the-home-page",
         "keyword": "Scenario",
-        "line": 7,
+        "line": 6,
+        "name": "Good credential, we reach the home page",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
+            "result": {
+              "status": "passed",
+              "duration": 6011616418
+            },
+            "line": 7,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:18"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
+            "result": {
+              "status": "passed",
+              "duration": 961016021
+            },
+            "line": 8,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:28"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "We click and we reach the home page with the messages shown and contacts",
+            "result": {
+              "status": "pending"
+            },
+            "line": 9,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:46"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "After ",
+            "result": {
+              "status": "passed",
+              "duration": 21526166
+            },
+            "hidden": true,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\node_modules\\selenium-cucumber-js\\runtime\\world.js:250"
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "id": "dechat-es-6a-ii;google-search-for-voter-cards-app",
+        "keyword": "Scenario",
+        "line": 11,
         "name": "Google search for voter cards app",
         "steps": [
           {
@@ -14,9 +74,9 @@
             "name": "I search Google for \"itunes vote cards app\"",
             "result": {
               "status": "passed",
-              "duration": 5355985295
+              "duration": 5226428892
             },
-            "line": 8,
+            "line": 12,
             "match": {
               "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:5"
             }
@@ -27,9 +87,9 @@
             "name": "I should see \"Outvote\" in the result",
             "result": {
               "status": "passed",
-              "duration": 701031311
+              "duration": 664853067
             },
-            "line": 9,
+            "line": 13,
             "match": {
               "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:12"
             }
@@ -39,7 +99,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 765898994
+              "duration": 750397137
             },
             "hidden": true,
             "match": {
@@ -51,10 +111,10 @@
         "type": "scenario"
       }
     ],
-    "id": "google-search-testing",
+    "id": "dechat-es-6a-ii",
     "keyword": "Feature",
     "line": 3,
-    "name": "Google Search Testing",
+    "name": "DeChat ES-6A-II",
     "tags": [],
     "uri": "D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature"
   }

@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-    <testsuite name="google-search-testing;google-search-for-voter-cards-app" tests="2" failures="0" skipped="0">
+    <testsuite name="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" tests="3" failures="0" skipped="1">
         <properties>
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature">
             </property>
         </properties>
-        <testcase name="When I search Google for &quot;itunes vote cards app&quot;" classname="google-search-testing;google-search-for-voter-cards-app" time="5.355985295">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="6.011616418">
         </testcase>
-        <testcase name="Then I should see &quot;Outvote&quot; in the result" classname="google-search-testing;google-search-for-voter-cards-app" time="0.701031311">
+        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="0.961016021">
+        </testcase>
+        <testcase name="Then We click and we reach the home page with the messages shown and contacts" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page">
+            <skipped message="">
+            </skipped>
+        </testcase>
+    </testsuite>
+    <testsuite name="dechat-es-6a-ii;google-search-for-voter-cards-app" tests="2" failures="0" skipped="0">
+        <properties>
+            <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/google-search.feature">
+            </property>
+        </properties>
+        <testcase name="When I search Google for &quot;itunes vote cards app&quot;" classname="dechat-es-6a-ii;google-search-for-voter-cards-app" time="5.226428892">
+        </testcase>
+        <testcase name="Then I should see &quot;Outvote&quot; in the result" classname="dechat-es-6a-ii;google-search-for-voter-cards-app" time="0.664853067">
         </testcase>
     </testsuite>
 </testsuites>
