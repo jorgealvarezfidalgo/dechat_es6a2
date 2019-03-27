@@ -2,5 +2,11 @@ language: node_js
 node_js:
 - "stable"
 addons:
-  firefox: latest
+  firefox: "latest"
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - "firefox --version"
+  - "sleep 3"
+
 after_success: npm run coverage
