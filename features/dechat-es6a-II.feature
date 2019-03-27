@@ -1,7 +1,7 @@
 #Search.feature
 
 Feature: DeChat ES-6A-II
-    I should be able to go to the webpage and login
+    I should be able to go to the https://arquisoft.github.io/dechat_es6a2 and login
 
     Scenario: Good credential, we reach the home page
         Given We visit the "https://arquisoft.github.io/dechat_es6a2"
