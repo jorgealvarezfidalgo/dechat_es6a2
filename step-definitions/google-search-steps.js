@@ -1,4 +1,6 @@
 const expect = require('chai').expect;
+const assert = require('chai').assert;
+
 
 module.exports = function () {
 
@@ -47,7 +49,9 @@ module.exports = function () {
                           .then(() => {
                             driver.manage().timeouts().implicitlyWait(10);
                              driver.switchTo().window(parent);
-                              return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[2]/h2')), 10000);
+                            return   driver.wait(until.elementsLocated(by.xpath('//*[@id="user-name"]')), 20000);
+                              //return river.findElement(by.xpath("//*[contains(text(), 'John')]"));
+                              //return driver.findElement(by.tagName("body")).getText().contains('John');
                             })
                       })
 
@@ -56,9 +60,8 @@ module.exports = function () {
          })
       });
 
-   this.Then(/^We click and we reach the home page with the messages shown and contacts$/, function (callback) {
-   // Write code here that turns the phrase above into concrete actions
-   callback(null, 'pending');
- });
-
+   this.Then(/^We click and we reach the home page with the messages shown and contacts$/, () => {
+   //"//*[contains(text(), 'button')]" });
+      return driver.wait(until.elementsLocated(by.xpath('//*[@id="user-name"]')), 10000);
+});
 };
