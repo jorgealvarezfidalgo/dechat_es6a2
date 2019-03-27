@@ -13,25 +13,4 @@ module.exports = function () {
         return driver.wait(until.elementsLocated(by.partialLinkText(keywords)), 10000);
     });
 
-    //Second test
-
-    this.When(/^I enter "([^"]*)" in input$/, function (expression) {
-        console.log("expression is ", expression);
-        return helpers.loadPage('https://google.com').then(e => {
-            return page.googleSearch.performSearch(expression)
-        })
-    })
-    this.Then(/^I get "([^"])*" in the result$/, function (res) {
-        return driver.wait(until.elementsLocated(by.id('cwos')), 10000)
-            .then(() => {
-                driver.findElement(by.id('cwos')).getText()
-                    .then(t => {
-                        try {
-                            expect(t).to.be.eql("2")
-                        } catch (e) {
-                            return Promise.reject(false)
-                        }
-                    })
-            })
-    })
 };

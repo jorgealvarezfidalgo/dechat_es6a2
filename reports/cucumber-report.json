@@ -14,7 +14,7 @@
             "name": "I search Google for \"itunes vote cards app\"",
             "result": {
               "status": "passed",
-              "duration": 8225551853
+              "duration": 5355985295
             },
             "line": 8,
             "match": {
@@ -24,10 +24,10 @@
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "I should see \"Vote Cards\" in the result",
+            "name": "I should see \"Outvote\" in the result",
             "result": {
               "status": "passed",
-              "duration": 1517583245
+              "duration": 701031311
             },
             "line": 9,
             "match": {
@@ -39,55 +39,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1365634697
-            },
-            "hidden": true,
-            "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\node_modules\\selenium-cucumber-js\\runtime\\world.js:250"
-            }
-          }
-        ],
-        "tags": [],
-        "type": "scenario"
-      },
-      {
-        "id": "google-search-testing;i-evaluate-search-for-sum-of-1+1",
-        "keyword": "Scenario",
-        "line": 11,
-        "name": "I evaluate search for sum of 1+1",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "name": "I enter \"1+1\" in input",
-            "result": {
-              "status": "passed",
-              "duration": 7888387730
-            },
-            "line": 12,
-            "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:18"
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "name": "I get \"2\" in the result",
-            "result": {
-              "status": "passed",
-              "duration": 1071907698
-            },
-            "line": 13,
-            "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:24"
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "After ",
-            "result": {
-              "status": "passed",
-              "duration": 1605199418
+              "duration": 765898994
             },
             "hidden": true,
             "match": {
