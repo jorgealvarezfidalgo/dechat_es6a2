@@ -3,5 +3,4 @@ node_js:
 - "stable"
 addons:
   firefox: latest
-
 after_success: npm run coverage
