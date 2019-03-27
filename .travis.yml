@@ -1,9 +1,10 @@
 language: node_js
 node_js:
 - "stable"
-sudo: required
-dist: trusty
-before_install:
-  - google-chrome-stable --headless --no-sandbox 
-  
+env:
+  - MOZ_HEADLESS=1
+
+addons:
+  firefox: "latest"
+
 after_success: npm run coverage
