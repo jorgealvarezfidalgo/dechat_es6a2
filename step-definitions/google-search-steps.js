@@ -26,6 +26,7 @@ module.exports = function () {
        });
 
        this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
+         var parent  = driver.getWindowHandle();
          return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
            .then(() => {
              return driver.findElement(by.xpath('//*[@id="nav-login-btn"]')).click()
@@ -36,7 +37,19 @@ module.exports = function () {
                     driver.manage().timeouts().implicitlyWait(10);
                      driver.switchTo().window(allHandles[allHandles.length -1]);
                      driver.manage().timeouts().implicitlyWait(10);
-                     return driver.findElement(by.xpath('//*[@id="app-container"]/div/div/button[2]'))
+                      return driver.findElement(by.xpath('/html/body/div/div/div/button[2]')).click()
+                      .then(() => {
+                          driver.wait(until.elementsLocated(by.name('username')), 10000);
+                          driver.findElement(by.name('username')).sendKeys(arg1);
+                          driver.findElement(by.name('password')).sendKeys(arg2);
+                          driver.manage().timeouts().implicitlyWait(10);
+                          return driver.findElement(by.xpath('//*[@id="login"]')).click()
+                          .then(() => {
+                            driver.manage().timeouts().implicitlyWait(10);
+                             driver.switchTo().window(parent);
+                              return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[2]/h2')), 10000);
+                            })
+                      })
 
                  })
              })

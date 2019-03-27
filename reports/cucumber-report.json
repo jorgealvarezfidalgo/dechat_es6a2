@@ -14,7 +14,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 6011616418
+              "duration": 4913377409
             },
             "line": 7,
             "match": {
@@ -27,7 +27,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
             "result": {
               "status": "passed",
-              "duration": 961016021
+              "duration": 2435611329
             },
             "line": 8,
             "match": {
@@ -43,7 +43,7 @@
             },
             "line": 9,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:46"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\google-search-steps.js:59"
             }
           },
           {
@@ -51,7 +51,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 21526166
+              "duration": 28231167
             },
             "hidden": true,
             "match": {
@@ -74,7 +74,7 @@
             "name": "I search Google for \"itunes vote cards app\"",
             "result": {
               "status": "passed",
-              "duration": 5226428892
+              "duration": 5039969264
             },
             "line": 12,
             "match": {
@@ -87,7 +87,7 @@
             "name": "I should see \"Outvote\" in the result",
             "result": {
               "status": "passed",
-              "duration": 664853067
+              "duration": 1073956887
             },
             "line": 13,
             "match": {
@@ -99,7 +99,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 750397137
+              "duration": 839073262
             },
             "hidden": true,
             "match": {
