@@ -85,7 +85,7 @@ i {
     display: flex;
 }
 
-.search {
+.search, .input-group, .input-contact {
     width: calc(100% - 20px);
     height: 30px;
     background: #ffffff;
