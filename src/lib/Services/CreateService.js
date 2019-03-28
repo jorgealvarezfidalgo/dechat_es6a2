@@ -113,14 +113,12 @@ class CreateService {
                 logger.error(`Could not add chat to WebId.`);
                 logger.error(e);
             }
-			if(toSend) {
             try {
                 await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId), invitation);
             } catch (e) {
                 this.logger.error(`Could not send invitation to interlocutor.`);
                 this.logger.error(e);
             }
-			}
         });
     }
 
