@@ -44,8 +44,6 @@ $('.login-btn').click(() => {
     auth.popupLogin({
         popupUri: 'https://solid.github.io/solid-auth-client/dist/popup.html'
     });
-
-    $(".loading").removeClass('hidden');
 });
 
 /**
@@ -88,6 +86,7 @@ auth.trackSession(async session => {
         $('#login-required').modal('hide');
         $(".mustlogin").addClass('hidden');
         $(".loading").removeClass('hidden');
+		
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -182,7 +181,7 @@ async function checkForNotifications() {
         }
 
         if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl);
+            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
 
             if (convoToJoin) {
                 $("#showinvs").show();
@@ -456,13 +455,13 @@ async function displayContacts(func) {
     $(".contact-list").html("");
     $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
-        $(".fa-search").addClass("hidden");
-        $(".input-search").attr("placeholder", " New contact -username in Solid Community-");
-        $(".addcontact").removeClass("hidden");
+		$(".search").addClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     } else {
-        $(".addcontact").addClass("hidden");
-        $(".fa-search").removeClass("hidden");
-        $(".input-search").attr("placeholder", "Find a chat");
+        $(".search").addClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     }
 
     if (!showingContacts) {
@@ -619,13 +618,17 @@ function toScrollDown() {
 
 $('#create-group').click(async () => {
     if (!showingContacts) {
-        $(".fa-search").addClass("hidden");
-        $(".input-search").attr("placeholder", " Group name");
+        $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
+		$(".writegroup").removeClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     } else {
+        $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
-        $(".fa-search").removeClass("hidden");
-        $(".input-search").attr("placeholder", "Find a chat");
+		$(".writegroup").addClass("hidden");
+		$(".createcontact").addClass("hidden");
+		$(".writecontact").addClass("hidden");
     }
     await displayContacts(markContactForGroup);
 });
@@ -645,15 +648,15 @@ async function markContactForGroup() {
 
 $('#creategroup').click(async () => {
 
-    if ($('.input-search').val() != "") {
+    if ($('.input-group').val() != "") {
         if (contactsForGroup.length >= 2) {
             const dataUrl = baseService.getDefaultDataUrl(userWebId);
             userDataUrl = dataUrl;
             console.log(contactsForGroup);
-            console.log($('.input-search').val());
+            console.log($('.input-group').val());
             console.log(userDataUrl);
             console.log(userWebId);
-            var intWebId = $('.input-search').val();
+            var intWebId = $('.input-group').val();
             console.log(intWebId);
             var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
             console.log(group);
@@ -666,8 +669,8 @@ $('#creategroup').click(async () => {
             await showChats();
             showingContacts = false;
             $(".creategroup").addClass("hidden");
-            $(".fa-search").removeClass("hidden");
-            $(".input-search").attr("placeholder", "Find a chat");
+			$(".writegroup").addClass("hidden");
+            $(".search").removeClass("hidden");
             contactsForGroup = [];
         } else {
             alert("You need at least 2 contacts to start a group.");
@@ -680,8 +683,8 @@ $('#creategroup').click(async () => {
 
 $('#addcontact').click(async () => {
 
-    if ($('.input-search').val() != "") {
-        var contact = "https://" + $('.input-search').val().toLowerCase() + ".solid.community/profile/card#me";
+    if ($('.input-contact').val() != "") {
+        var contact = "https://" + $('.input-contact').val().toLowerCase() + ".solid.community/profile/card#me";
         if (baseService.writePermission(contact)) {
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);

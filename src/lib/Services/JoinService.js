@@ -103,7 +103,7 @@ class JoinChatService {
         return chatJoined;
     }
 
-    async getJoinRequest(fileurl) {
+    async getJoinRequest(fileurl, userWebId) {
         console.log(fileurl);
         var chat = await baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
@@ -112,7 +112,7 @@ class JoinChatService {
         console.log(recipient);
         const ids = chat.agent;
         console.log("IDS:" + ids);
-        const friendIds = ids.split("----");
+        const friendIds = ids.replace("----" + userWebId, "").split("----");
         uploader.deleteFileForUser(fileurl);
 
         return {
