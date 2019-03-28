@@ -52,7 +52,7 @@ class CreateService {
     }
 
     async setUpNewGroup(userDataUrl, userWebId, interlocutorWebIds, friendName) {
-		
+
         const chatUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
         const group = new Group({
             url: chatUrl,
@@ -60,11 +60,11 @@ class CreateService {
             userWebId,
             members: interlocutorWebIds,
             interlocutorName: friendName,
-			interlocutorWebId: "Group/" + friendName,
+            interlocutorWebId: "Group/" + friendName,
             photo: "main/resources/static/img/group.jpg"
         });
-		
-		console.log(group);
+
+        console.log(group);
 
         await this.setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, group, userWebId.split("card")[0] + "Group/" + friendName.replace(/ /g, "U+0020"));
 
@@ -72,65 +72,57 @@ class CreateService {
     }
 
     async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat, firstId) {
-		
-		console.log("Setting up new");
+
+        console.log("Setting up new");
 
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
+            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${firstId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
             this.logger.error(`Could not add chat to WebId.`);
             this.logger.error(e);
-        }     
-		await this.storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat);
+        }
+        await this.storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat);
     }
-	
-	async storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
-		var id = userWebId;
-		console.log(id); 
-			interlocutorWebIds.forEach(async interlocutorWebId => {
+
+    async storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
+        var id = userWebId;
+        console.log(id);
+        interlocutorWebIds.forEach(async interlocutorWebId => {
 
             if (interlocutorWebIds.length > 1) {
-				console.log("Procesando");
+                console.log("Procesando");
                 id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
-                    if (interlocWebId != interlocutorWebId){
-						if(interlocWebId.id)
-							id += "----" + interlocWebId.id;
-						else
-							id += "----" + interlocWebId;
-					}
+                    if (interlocWebId != interlocutorWebId) {
+                        id += "----" + interlocWebId.id ? interlocWebId.id : interlocWebId;
+                    }
                 });
-				
+
             }
-			console.log(id);
+            console.log(id);
 
             console.log("Invitando: " + interlocutorWebId);
-            var invitation;
-			if(interlocutorWebId.id)
-				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId.id);
-			else
-				invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId);
+            var invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId);
             console.log(invitation);
-			try {
-            await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
-        } catch (e) {
-			console.log("?");
-            logger.error(`Could not add chat to WebId.`);
-            logger.error(e);
-        }
             try {
-				if(interlocutorWebId.id)
-				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId.id), invitation);
-			else
-				await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId), invitation);            
+                await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+            } catch (e) {
+                console.log("?");
+                logger.error(`Could not add chat to WebId.`);
+                logger.error(e);
+            }
+			if(toSend) {
+            try {
+                await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId), invitation);
             } catch (e) {
                 this.logger.error(`Could not send invitation to interlocutor.`);
                 this.logger.error(e);
             }
+			}
         });
-		}
+    }
 
 
     async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {

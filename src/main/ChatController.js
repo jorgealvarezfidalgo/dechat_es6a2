@@ -44,8 +44,6 @@ $('.login-btn').click(() => {
     auth.popupLogin({
         popupUri: 'https://solid.github.io/solid-auth-client/dist/popup.html'
     });
-
-    $(".loading").removeClass('hidden');
 });
 
 /**
@@ -88,6 +86,7 @@ auth.trackSession(async session => {
         $('#login-required').modal('hide');
         $(".mustlogin").addClass('hidden');
         $(".loading").removeClass('hidden');
+		
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -98,9 +97,11 @@ auth.trackSession(async session => {
         }
         openChats = [];
         const chats = await openService.getChatsToOpen(userWebId);
+		if(chats) {
         chats.forEach(async chat => {
             openChats.push(chat);
         });
+		}
 
         await startChat();
         await sleep(8000);
@@ -134,7 +135,7 @@ function sleep(ms) {
  */
 async function checkForNotifications() {
     //console.log('Checking for new notifications');
-
+	
     const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
     //console.log(updates);
 
@@ -182,7 +183,7 @@ async function checkForNotifications() {
         }
 
         if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl);
+            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
 
             if (convoToJoin) {
                 $("#showinvs").show();
@@ -437,7 +438,6 @@ $('#show-contact-information').click(async () => {
             $("#listGroups").append(html);
 
         }
-        $(".information").append("<div class='wrap-addtogroup'><div class='addtogroup'><input type='text' class='input-group' placeholder='Invite a friend'><a type='button' id='add-group' style='cursor: pointer;'>Add</a></div></div>");
     }
 });
 
@@ -456,13 +456,13 @@ async function displayContacts(func) {
     $(".contact-list").html("");
     $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
-        $(".fa-search").addClass("hidden");
-        $(".input-search").attr("placeholder", " New contact -username in Solid Community-");
-        $(".addcontact").removeClass("hidden");
+		$(".search").addClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     } else {
-        $(".addcontact").addClass("hidden");
-        $(".fa-search").removeClass("hidden");
-        $(".input-search").attr("placeholder", "Find a chat");
+        $(".search").addClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     }
 
     if (!showingContacts) {
@@ -619,13 +619,17 @@ function toScrollDown() {
 
 $('#create-group').click(async () => {
     if (!showingContacts) {
-        $(".fa-search").addClass("hidden");
-        $(".input-search").attr("placeholder", " Group name");
+        $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
+		$(".writegroup").removeClass("hidden");
+		$(".createcontact").removeClass("hidden");
+		$(".writecontact").removeClass("hidden");
     } else {
+        $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
-        $(".fa-search").removeClass("hidden");
-        $(".input-search").attr("placeholder", "Find a chat");
+		$(".writegroup").addClass("hidden");
+		$(".createcontact").addClass("hidden");
+		$(".writecontact").addClass("hidden");
     }
     await displayContacts(markContactForGroup);
 });
@@ -645,15 +649,15 @@ async function markContactForGroup() {
 
 $('#creategroup').click(async () => {
 
-    if ($('.input-search').val() != "") {
+    if ($('.input-group').val() != "") {
         if (contactsForGroup.length >= 2) {
             const dataUrl = baseService.getDefaultDataUrl(userWebId);
             userDataUrl = dataUrl;
             console.log(contactsForGroup);
-            console.log($('.input-search').val());
+            console.log($('.input-group').val());
             console.log(userDataUrl);
             console.log(userWebId);
-            var intWebId = $('.input-search').val();
+            var intWebId = $('.input-group').val();
             console.log(intWebId);
             var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
             console.log(group);
@@ -666,8 +670,8 @@ $('#creategroup').click(async () => {
             await showChats();
             showingContacts = false;
             $(".creategroup").addClass("hidden");
-            $(".fa-search").removeClass("hidden");
-            $(".input-search").attr("placeholder", "Find a chat");
+			$(".writegroup").addClass("hidden");
+            $(".search").removeClass("hidden");
             contactsForGroup = [];
         } else {
             alert("You need at least 2 contacts to start a group.");
@@ -680,8 +684,8 @@ $('#creategroup').click(async () => {
 
 $('#addcontact').click(async () => {
 
-    if ($('.input-search').val() != "") {
-        var contact = "https://" + $('.input-search').val().toLowerCase() + ".solid.community/profile/card#me";
+    if ($('.input-contact').val() != "") {
+        var contact = "https://" + $('.input-contact').val().toLowerCase() + ".solid.community/profile/card#me";
         if (baseService.writePermission(contact)) {
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
@@ -692,7 +696,7 @@ $('#addcontact').click(async () => {
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
-            document.getElementById("openchatwindow" + contact).addEventListener("click", openContact, false);
+            document.getElementById("openchatwindow" + contact).addEventListener("click", $(".creategroup hidden") ? openContact : markContactForGroup, false);
         } else {
             alert("No user found with web id " + contact);
         }
@@ -700,32 +704,4 @@ $('#addcontact').click(async () => {
         alert("No username specified.");
     }
 
-});
-
-$(document).on('click', '#add-group', async function () {
-    console.log($('.input-group').val());
-    if ($('.input-group').val() != "") {
-        var contact = "https://" + $('.input-group').val().toLowerCase() + ".solid.community/profile/card#me";
-        console.log(contact);
-        if (baseService.writePermission(contact)) {
-            console.log("CURRENT CHAT:");
-            console.log(currentChat);
-            //Esto invita de nuevo a los miembros...
-            //Pero si le pasamos como miembro al nuevo no genera la info debida
-            //Hay que modificarlo ligeramente
-            await createService.storeAndSendInvitations(userDataUrl, userWebId, currentChat.members, currentChat);
-            let memberName = await baseService.getFormattedName(contact);
-            var memberPhoto = await baseService.getPhoto(contact);
-            if (!memberPhoto) {
-                memberPhoto = baseService.getDefaultFriendPhoto();
-            }
-
-            var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
-            $("#listGroups").append(html);
-        } else {
-            alert("No user found with web id " + contact);
-        }
-    } else {
-        alert("No username specified.");
-    }
 });
