@@ -374,6 +374,8 @@ async function showAndStoreMessages() {
             showMessage(interlocutorMessages[i]);
             await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, false);
             var index = contactsWithChat.indexOf(interlocWebId);
+			if(index==-1)
+				index = contactsWithChat.indexOf(interlocWebId.replace("Group/", ""));
             semanticChats[index].loadMessage({
                 messagetext: interlocutorMessages[i].messagetext,
                 url: null,
