@@ -97,9 +97,11 @@ auth.trackSession(async session => {
         }
         openChats = [];
         const chats = await openService.getChatsToOpen(userWebId);
+		if(chats) {
         chats.forEach(async chat => {
             openChats.push(chat);
         });
+		}
 
         await startChat();
         await sleep(8000);
@@ -133,7 +135,7 @@ function sleep(ms) {
  */
 async function checkForNotifications() {
     //console.log('Checking for new notifications');
-
+	
     const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
     //console.log(updates);
 
