@@ -3,10 +3,10 @@
     "description": "    I should be able to go to the https://arquisoft.github.io/dechat_es6a2 and login",
     "elements": [
       {
-        "id": "dechat-es-6a-ii;good-credential,-we-reach-the-home-page",
+        "id": "dechat-es-6a-ii;bad-credential,-we-reach-the-home-page",
         "keyword": "Scenario",
         "line": 6,
-        "name": "Good credential, we reach the home page",
+        "name": "Bad credential, we reach the home page",
         "steps": [
           {
             "arguments": [],
@@ -14,7 +14,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 8907494928
+              "duration": 4815228621
             },
             "line": 7,
             "match": {
@@ -24,27 +24,27 @@
           {
             "arguments": [],
             "keyword": "And ",
-            "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
+            "name": "We put the bad credentials username \"unexistent\" and password \"unexistent\"",
             "result": {
               "status": "passed",
-              "duration": 4470084484
+              "duration": 1658876830
             },
             "line": 8,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:32"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:34"
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "We click and we reach the home page with the messages shown",
+            "name": "We click on \"login\" we will stay on the same page and no messages shown",
             "result": {
               "status": "passed",
-              "duration": 9292553270
+              "duration": 305576263
             },
             "line": 9,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:63"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:60"
             }
           },
           {
@@ -52,7 +52,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1420894066
+              "duration": 19254147
             },
             "hidden": true,
             "match": {
@@ -64,20 +64,81 @@
         "type": "scenario"
       },
       {
-        "id": "dechat-es-6a-ii;google-search-for-voter-cards-app",
+        "id": "dechat-es-6a-ii;good-credential,-we-reach-the-home-page",
         "keyword": "Scenario",
         "line": 11,
-        "name": "Google search for voter cards app",
+        "name": "Good credential, we reach the home page",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
+            "result": {
+              "status": "passed",
+              "duration": 4524865412
+            },
+            "line": 12,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:22"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
+            "result": {
+              "status": "passed",
+              "duration": 2186508468
+            },
+            "line": 13,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:72"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "We click and we reach the home page with the messages shown",
+            "result": {
+              "status": "passed",
+              "duration": 8710190668
+            },
+            "line": 14,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:103"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "After ",
+            "result": {
+              "status": "passed",
+              "duration": 771521704
+            },
+            "hidden": true,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\node_modules\\selenium-cucumber-js\\runtime\\world.js:250"
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "id": "dechat-es-6a-ii;google-search-for-arquisoft",
+        "keyword": "Scenario",
+        "line": 16,
+        "name": "Google search for arquisoft",
         "steps": [
           {
             "arguments": [],
             "keyword": "When ",
-            "name": "I search Google for \"itunes vote cards app\"",
+            "name": "I search Google for \"arquisoft\"",
             "result": {
               "status": "passed",
-              "duration": 8136300121
+              "duration": 4511980854
             },
-            "line": 12,
+            "line": 17,
             "match": {
               "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:9"
             }
@@ -85,12 +146,12 @@
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "I should see \"Outvote\" in the result",
+            "name": "I should see \"GitHub\" in the result",
             "result": {
               "status": "passed",
-              "duration": 1266586995
+              "duration": 685084466
             },
-            "line": 13,
+            "line": 18,
             "match": {
               "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:16"
             }
@@ -100,7 +161,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1370838461
+              "duration": 732983387
             },
             "hidden": true,
             "match": {
