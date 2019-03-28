@@ -118,5 +118,36 @@ module.exports = function () {
 
     //______________________________ THIRD SCENARIO __ SENDING MESSAGE TO AN EXISTING CONVERSATION ________________________//
 
+    this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
 
+    this.Then(/^the messages will appear and we an existing conversation$/, function (callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
+
+    this.Then(/^we send the implicated friend a message "([^"]*)"$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
+
+    //______________________________ FOURTH SCENARIO __ CREATING A NEW CONVERSATION ____________________________//
+
+    this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
+
+    this.Then(/^the messages will appear and we select a friend in the friends' section$/, function (callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
+
+    this.Then(/^create a new conversation and write a message "([^"]*)"$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback(null, 'pending');
+    });
+    
 };
