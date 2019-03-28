@@ -115,4 +115,8 @@ module.exports = function () {
                     })
             });
     });
+
+    //______________________________ THIRD SCENARIO __ SENDING MESSAGE TO AN EXISTING CONVERSATION ________________________//
+
+
 };
