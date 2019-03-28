@@ -60,7 +60,7 @@ class JoinChatService {
         });
         console.log(recipient);
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
+            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {

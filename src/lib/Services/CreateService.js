@@ -76,7 +76,7 @@ class CreateService {
         console.log("Setting up new");
 
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId, `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
+            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${chatUrl}> <${namespaces.schema}contributor> <${userWebId}>;
 			<${namespaces.schema}recipient> <${firstId}>;
 			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {

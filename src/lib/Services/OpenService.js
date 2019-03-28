@@ -35,7 +35,7 @@ class OpenService {
    */
   async getChatsToOpen(webid) {
     const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(webid, this.fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(webid.replace("profile/card#me","private/chatsStorage.ttl"), this.fetch);
 
     if (rdfjsSource) {
       const engine = newEngine();
