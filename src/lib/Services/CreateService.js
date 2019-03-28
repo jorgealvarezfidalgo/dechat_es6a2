@@ -98,7 +98,7 @@ class CreateService {
                     if (interlocWebId != interlocutorWebId) {
 						console.log(interlocWebId);
 						console.log(interlocWebId.id ? interlocWebId.id : interlocWebId);
-                        id += "----" + interlocWebId.id ? interlocWebId.id : interlocWebId;
+                        id += "----" + (interlocWebId.id ? interlocWebId.id : interlocWebId);
                     }
                 });
 
