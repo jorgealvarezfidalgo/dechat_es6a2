@@ -96,6 +96,8 @@ class CreateService {
                 id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
                     if (interlocWebId != interlocutorWebId) {
+						console.log(interlocWebId);
+						console.log(interlocWebId.id ? interlocWebId.id : interlocWebId);
                         id += "----" + interlocWebId.id ? interlocWebId.id : interlocWebId;
                     }
                 });
