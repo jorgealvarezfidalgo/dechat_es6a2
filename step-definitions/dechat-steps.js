@@ -1,6 +1,4 @@
 const expect = require('chai').expect;
-const assert = require('chai').assert;
-
 
 module.exports = function () {
 
@@ -17,7 +15,7 @@ module.exports = function () {
         return driver.wait(until.elementsLocated(by.partialLinkText(keywords)), 10000);
     });
 
-    //_______________________ DECHAT - ES6A - II ___________________________//
+    //_______________________ DECHAT - TESTS - ES6A - II ___________________________//
 
     this.Given(/^We visit the "([^"]*)"$/, function (arg1) {
         return helpers.loadPage(arg1)
@@ -32,38 +30,38 @@ module.exports = function () {
     //______________________________ FIRST SCENARIO __ BAD LOGIN __________________________________//
 
     this.Given(/^We put the bad credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
-      var parent = driver.getWindowHandle();
-      return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
-          .then(() => {
-              return driver.findElement(by.xpath('//*[@id="nav-login-btn"]')).click()
-                  .then(() => {
-                      driver.manage().timeouts().implicitlyWait(10);
-                      return driver.getAllWindowHandles()
-                          .then(function gotWindowHandles(allHandles) {
-                              driver.manage().timeouts().implicitlyWait(10);
-                              driver.switchTo().window(allHandles[allHandles.length - 1]);
-                              driver.manage().timeouts().implicitlyWait(10);
-                              return driver.findElement(by.xpath('/html/body/div/div/div/button[2]')).click()
-                                  .then(() => {
-                                      driver.wait(until.elementsLocated(by.name('username')), 10000);
-                                      driver.findElement(by.name('username')).sendKeys(arg1);
-                                      driver.findElement(by.name('password')).sendKeys(arg2);
-                                      driver.manage().timeouts().implicitlyWait(10);
-                                      return driver.findElement(by.xpath('//*[@id="login"]'))
-                                  })
+        var parent = driver.getWindowHandle();
+        return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
+            .then(() => {
+                return driver.findElement(by.xpath('//*[@id="nav-login-btn"]')).click()
+                    .then(() => {
+                        driver.manage().timeouts().implicitlyWait(10);
+                        return driver.getAllWindowHandles()
+                            .then(function gotWindowHandles(allHandles) {
+                                driver.manage().timeouts().implicitlyWait(10);
+                                driver.switchTo().window(allHandles[allHandles.length - 1]);
+                                driver.manage().timeouts().implicitlyWait(10);
+                                return driver.findElement(by.xpath('/html/body/div/div/div/button[2]')).click()
+                                    .then(() => {
+                                        driver.wait(until.elementsLocated(by.name('username')), 10000);
+                                        driver.findElement(by.name('username')).sendKeys(arg1);
+                                        driver.findElement(by.name('password')).sendKeys(arg2);
+                                        driver.manage().timeouts().implicitlyWait(10);
+                                        return driver.findElement(by.xpath('//*[@id="login"]'))
+                                    })
 
-                          })
-                  })
-          })
+                            })
+                    })
+            })
     });
 
     this.Then(/^We click on "([^"]*)" we will stay on the same page and no messages shown$/, function (arg1) {
-      //error paragraph
-      return driver.findElement(by.xpath('//*[@id="' + arg1 + '"]')).click()
-          .then(() => {
-              driver.manage().timeouts().implicitlyWait(10);
-              return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[2]/p')), 40000);
-          })
+        //error paragraph
+        return driver.findElement(by.xpath('//*[@id="' + arg1 + '"]')).click()
+            .then(() => {
+                driver.manage().timeouts().implicitlyWait(10);
+                return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[2]/p')), 40000);
+            })
     });
 
     //______________________________ SECOND SCENARIO __ CORRECT LOGIN __________________________________//
@@ -116,8 +114,5 @@ module.exports = function () {
                             })
                     })
             });
-            driver.quit();
     });
-
-
 };
