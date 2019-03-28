@@ -34,8 +34,10 @@ class OpenService {
    * Each object contains the url of the chat (chatUrl) and the url where the data of the chat is store (storeUrl).
    */
   async getChatsToOpen(webid) {
+	var url = webid.replace("profile/card#me","private/chatsStorage.ttl");
+	baseService.writePermission(url);
     const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(webid.replace("profile/card#me","private/chatsStorage.ttl"), this.fetch);
+    const rdfjsSource = await rdfjsSourceFromUrl(url, this.fetch);
 
     if (rdfjsSource) {
       const engine = newEngine();
