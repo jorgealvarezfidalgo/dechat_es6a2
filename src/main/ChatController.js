@@ -698,7 +698,7 @@ $('#addcontact').click(async () => {
 
             $(".contact-list").prepend(html);
 			console.log("Añadir contacto. True es abrirlo, false es marcarlo");
-			console.log($(".creategroup hidden") ? openContact : markContactForGroup);
+			console.log($(".creategroup").hasClass("hidden") ? openContact : markContactForGroup);
             document.getElementById("openchatwindow" + contact).addEventListener("click", $(".creategroup hidden") ? openContact : markContactForGroup, false);
         } else {
             alert("No user found with web id " + contact);
