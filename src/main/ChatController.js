@@ -697,9 +697,7 @@ $('#addcontact').click(async () => {
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
-			console.log("Añadir contacto. True es abrirlo, false es marcarlo");
-			console.log($(".creategroup").hasClass("hidden") ? openContact : markContactForGroup);
-            document.getElementById("openchatwindow" + contact).addEventListener("click", $(".creategroup hidden") ? openContact : markContactForGroup, false);
+            document.getElementById("openchatwindow" + contact).addEventListener("click", $(".creategroup").hasClass("hidden") ? openContact : markContactForGroup, false);
         } else {
             alert("No user found with web id " + contact);
         }
