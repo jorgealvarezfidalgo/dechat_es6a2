@@ -270,7 +270,7 @@ pre {
           <a class="navbar-brand">Cucumberjs Report</a>
           <div class="project-name visible-md visible-lg">dechat_6a2</div>
           <div class="label-container">
-            <span class="label label-success" title=scenarios>Passed: 2</span>
+            <span class="label label-success" title=scenarios>Passed: 5</span>
             <span class="label label-danger" title=scenarios>Failed: 0</span>
           </div>
         </div>
@@ -279,7 +279,7 @@ pre {
 
     <div class="container">
 
-      <div class="generated-on">Wed Mar 27 2019 21:39:17 GMT+0100 (Central European Standard Time)</div>
+      <div class="generated-on">Thu Mar 28 2019 13:59:44 GMT+0100 (Central European Standard Time)</div>
 
       <div class="row">
         <div class="chart col-lg-6 col-md-6" id="piechart_features"></div>
@@ -306,7 +306,7 @@ pre {
                         <b>Feature:</b>DeChat ES-6A-II
                         <span class="label-container">
               <span class="label label-success"
-                                                         title="2 Scenarios Passed">2</span>
+                                                         title="5 Scenarios Passed">5</span>
               
               
               
@@ -337,7 +337,7 @@ pre {
                                         <div style="padding-right: 30px">
                                             <i class="glyphicon glyphicon-chevron-right"></i>
                                             <i class="glyphicon glyphicon-chevron-down"></i>
-                                            <b>Scenario:</b>Good credential, we reach the home page
+                                            <b>Scenario:</b>Bad credential, we don't reach the home page
                                         </div>
                                         <div>
                             <span class="label-container">
@@ -374,7 +374,7 @@ pre {
                             
                           
                               <span class="step-duration">
-                               8s 907ms
+                               7s 738ms
                               </span>
                             
                          
@@ -406,11 +406,11 @@ pre {
                                     
                                     <span class="text">
                         <span class="keyword highlight">And </span>
-                          <span> We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;</span>
+                          <span> We put the bad credentials username &quot;unexistent&quot; and password &quot;unexistent&quot;</span>
                             
                           
                               <span class="step-duration">
-                               4s 470ms
+                               2s 513ms
                               </span>
                             
                          
@@ -442,11 +442,11 @@ pre {
                                     
                                     <span class="text">
                         <span class="keyword highlight">Then </span>
-                          <span> We click and we reach the home page with the messages shown</span>
+                          <span> We click on &quot;login&quot; we will stay on the same page and no messages shown</span>
                             
                           
                               <span class="step-duration">
-                               9s 292ms
+                               673ms
                               </span>
                             
                          
@@ -488,12 +488,12 @@ pre {
                                         <div style="padding-right: 30px">
                                             <i class="glyphicon glyphicon-chevron-right"></i>
                                             <i class="glyphicon glyphicon-chevron-down"></i>
-                                            <b>Scenario:</b>Google search for voter cards app
+                                            <b>Scenario:</b>Good credential, we reach the home page
                                         </div>
                                         <div>
                             <span class="label-container">
                               <span class="label label-success"
-                                                               title="2 Steps Passed">2</span>
+                                                               title="3 Steps Passed">3</span>
                               
                               
                               
@@ -520,12 +520,48 @@ pre {
                                     
                                     
                                     <span class="text">
-                        <span class="keyword highlight">When </span>
-                          <span> I search Google for &quot;itunes vote cards app&quot;</span>
+                        <span class="keyword highlight">Given </span>
+                          <span> We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;</span>
                             
                           
                               <span class="step-duration">
-                               8s 136ms
+                               7s 180ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">And </span>
+                          <span> We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               3s 57ms
                               </span>
                             
                          
@@ -557,11 +593,500 @@ pre {
                                     
                                     <span class="text">
                         <span class="keyword highlight">Then </span>
-                          <span> I should see &quot;Outvote&quot; in the result</span>
+                          <span> We click and we reach the home page with the messages shown</span>
                             
                           
                               <span class="step-duration">
-                               1s 266ms
+                               8s 929ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                
+                                
+                                <div class="tags">
+                                </div>
+                                
+                                <a data-toggle="collapse"
+                                   href="#collapseScenariodechat_6a20_2">
+                                    <div>
+
+                                        <div style="padding-right: 30px">
+                                            <i class="glyphicon glyphicon-chevron-right"></i>
+                                            <i class="glyphicon glyphicon-chevron-down"></i>
+                                            <b>Scenario:</b>When the user is logged in, we select a friend and write a message
+                                        </div>
+                                        <div>
+                            <span class="label-container">
+                              <span class="label label-success"
+                                                               title="4 Steps Passed">4</span>
+                              
+                              
+                              
+                              
+                              
+                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseScenariodechat_6a20_2"
+                             class="panel-collapse collapse">
+                            <div class="panel-body">
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Given </span>
+                          <span> We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               5s 779ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">And </span>
+                          <span> We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               2s 955ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Then </span>
+                          <span> the messages will appear and we an existing conversation</span>
+                            
+                          
+                              <span class="step-duration">
+                               8s 653ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Then </span>
+                          <span> we send the implicated friend a message &quot;hi friend&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               362ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                
+                                
+                                <div class="tags">
+                                </div>
+                                
+                                <a data-toggle="collapse"
+                                   href="#collapseScenariodechat_6a20_3">
+                                    <div>
+
+                                        <div style="padding-right: 30px">
+                                            <i class="glyphicon glyphicon-chevron-right"></i>
+                                            <i class="glyphicon glyphicon-chevron-down"></i>
+                                            <b>Scenario:</b>When the user is logged in, we should see friends and add contacts/groups icons
+                                        </div>
+                                        <div>
+                            <span class="label-container">
+                              <span class="label label-success"
+                                                               title="4 Steps Passed">4</span>
+                              
+                              
+                              
+                              
+                              
+                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseScenariodechat_6a20_3"
+                             class="panel-collapse collapse">
+                            <div class="panel-body">
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Given </span>
+                          <span> We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               7s 946ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">And </span>
+                          <span> We put the credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               3s 307ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Then </span>
+                          <span> the messages will appear and we select a friend in the friends&#39; section</span>
+                            
+                          
+                              <span class="step-duration">
+                               39ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Then </span>
+                          <span> we should see friends and add groups and friends menu</span>
+                            
+                          
+                              <span class="step-duration">
+                               9s 397ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                
+                                
+                                <div class="tags">
+                                </div>
+                                
+                                <a data-toggle="collapse"
+                                   href="#collapseScenariodechat_6a20_4">
+                                    <div>
+
+                                        <div style="padding-right: 30px">
+                                            <i class="glyphicon glyphicon-chevron-right"></i>
+                                            <i class="glyphicon glyphicon-chevron-down"></i>
+                                            <b>Scenario:</b>Google search for our application es6a-II
+                                        </div>
+                                        <div>
+                            <span class="label-container">
+                              <span class="label label-success"
+                                                               title="2 Steps Passed">2</span>
+                              
+                              
+                              
+                              
+                              
+                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseScenariodechat_6a20_4"
+                             class="panel-collapse collapse">
+                            <div class="panel-body">
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">When </span>
+                          <span> I search Google for &quot;dechat_es6a2&quot;</span>
+                            
+                          
+                              <span class="step-duration">
+                               5s 947ms
+                              </span>
+                            
+                         
+                            
+                          
+                      </span>
+                                
+                                
+
+                                    
+
+                                    
+
+                                    
+
+                                    
+                                </div>
+                                </p>
+                                
+                                
+                                
+                                <p class="scenario-container">
+                                <div class="row steps">
+                                    
+                                    
+                                    <span class="label label-success" title="Success"><i
+                                            class="glyphicon glyphicon-ok"></i></span>
+                                    
+                                    
+                                    <span class="text">
+                        <span class="keyword highlight">Then </span>
+                          <span> I should see &quot;Arquisoft&quot; in the result</span>
+                            
+                          
+                              <span class="step-duration">
+                               588ms
                               </span>
                             
                          
@@ -631,7 +1156,7 @@ pre {
         google.setOnLoadCallback(function() {drawChart({
                                                             "title" : "Scenarios",
                                                             "failed" : 0,
-                                                            "passed" : 2,
+                                                            "passed" : 5,
                                                             "notdefined" : 0,
                                                             "pending" : 0,
                                                             "skipped" : 0,
