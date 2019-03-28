@@ -78,7 +78,7 @@ i {
     display: flex;
 }
 
-.wrap-search {
+.wrap-search, .writegroup, .writecontact {
     width: 100%;
     height: 45px;
     background: #fbfbfb;
