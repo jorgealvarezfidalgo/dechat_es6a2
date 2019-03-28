@@ -460,9 +460,9 @@ async function displayContacts(func) {
 		$(".addcontact").removeClass("hidden");
 		$(".writecontact").removeClass("hidden");
     } else {
-        $(".search").addClass("hidden");
-		$(".createcontact").removeClass("hidden");
-		$(".addcontact").removeClass("hidden");
+        $(".search").removeClass("hidden");
+		$(".addcontact").addClass("hidden");
+		$(".writecontact").addClass("hidden");
     }
 
     if (!showingContacts) {
@@ -622,13 +622,13 @@ $('#create-group').click(async () => {
         $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
 		$(".writegroup").removeClass("hidden");
-		$(".createcontact").removeClass("hidden");
+		$(".addcontact").removeClass("hidden");
 		$(".writecontact").removeClass("hidden");
     } else {
         $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
 		$(".writegroup").addClass("hidden");
-		$(".createcontact").addClass("hidden");
+		$(".addcontact").addClass("hidden");
 		$(".writecontact").addClass("hidden");
     }
     await displayContacts(markContactForGroup);
