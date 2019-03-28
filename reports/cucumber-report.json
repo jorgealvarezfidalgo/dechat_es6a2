@@ -14,7 +14,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 7645363727
+              "duration": 7738221912
             },
             "line": 7,
             "match": {
@@ -27,7 +27,7 @@
             "name": "We put the bad credentials username \"unexistent\" and password \"unexistent\"",
             "result": {
               "status": "passed",
-              "duration": 3707712443
+              "duration": 2513699769
             },
             "line": 8,
             "match": {
@@ -40,7 +40,7 @@
             "name": "We click on \"login\" we will stay on the same page and no messages shown",
             "result": {
               "status": "passed",
-              "duration": 658417768
+              "duration": 673105391
             },
             "line": 9,
             "match": {
@@ -52,7 +52,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 56549598
+              "duration": 23295633
             },
             "hidden": true,
             "match": {
@@ -75,7 +75,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 9725598885
+              "duration": 7180289794
             },
             "line": 12,
             "match": {
@@ -88,7 +88,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
             "result": {
               "status": "passed",
-              "duration": 4666688000
+              "duration": 3057947723
             },
             "line": 13,
             "match": {
@@ -101,7 +101,7 @@
             "name": "We click and we reach the home page with the messages shown",
             "result": {
               "status": "passed",
-              "duration": 9395753556
+              "duration": 8929182336
             },
             "line": 14,
             "match": {
@@ -113,7 +113,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1378834227
+              "duration": 962597882
             },
             "hidden": true,
             "match": {
@@ -136,7 +136,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 9025820080
+              "duration": 5779784826
             },
             "line": 17,
             "match": {
@@ -149,7 +149,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
               "status": "passed",
-              "duration": 4888678584
+              "duration": 2955945034
             },
             "line": 18,
             "match": {
@@ -162,7 +162,7 @@
             "name": "the messages will appear and we an existing conversation",
             "result": {
               "status": "passed",
-              "duration": 9028868379
+              "duration": 8653770651
             },
             "line": 19,
             "match": {
@@ -175,7 +175,7 @@
             "name": "we send the implicated friend a message \"hi friend\"",
             "result": {
               "status": "passed",
-              "duration": 507227860
+              "duration": 362315096
             },
             "line": 20,
             "match": {
@@ -187,7 +187,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1414967801
+              "duration": 1025590944
             },
             "hidden": true,
             "match": {
@@ -199,10 +199,10 @@
         "type": "scenario"
       },
       {
-        "id": "dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message",
+        "id": "dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons",
         "keyword": "Scenario",
         "line": 22,
-        "name": "When the user is logged in, we select a friend and write a message",
+        "name": "When the user is logged in, we should see friends and add contacts/groups icons",
         "steps": [
           {
             "arguments": [],
@@ -210,7 +210,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 11595604854
+              "duration": 7946672529
             },
             "line": 23,
             "match": {
@@ -222,7 +222,8 @@
             "keyword": "And ",
             "name": "We put the credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
-              "status": "pending"
+              "status": "passed",
+              "duration": 3307036019
             },
             "line": 24,
             "match": {
@@ -234,23 +235,25 @@
             "keyword": "Then ",
             "name": "the messages will appear and we select a friend in the friends' section",
             "result": {
-              "status": "skipped"
+              "status": "passed",
+              "duration": 39851109
             },
             "line": 25,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:189"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:215"
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "create a new conversation and write a message \"why hello there\"",
+            "name": "we should see friends and add groups and friends menu",
             "result": {
-              "status": "skipped"
+              "status": "passed",
+              "duration": 9397007483
             },
             "line": 26,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:194"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:228"
             }
           },
           {
@@ -258,7 +261,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1307576069
+              "duration": 1087812845
             },
             "hidden": true,
             "match": {
@@ -270,18 +273,18 @@
         "type": "scenario"
       },
       {
-        "id": "dechat-es-6a-ii;google-search-for-arquisoft",
+        "id": "dechat-es-6a-ii;google-search-for-our-application-es6a-ii",
         "keyword": "Scenario",
         "line": 28,
-        "name": "Google search for arquisoft",
+        "name": "Google search for our application es6a-II",
         "steps": [
           {
             "arguments": [],
             "keyword": "When ",
-            "name": "I search Google for \"arquisoft\"",
+            "name": "I search Google for \"dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 8994345475
+              "duration": 5947214555
             },
             "line": 29,
             "match": {
@@ -291,10 +294,10 @@
           {
             "arguments": [],
             "keyword": "Then ",
-            "name": "I should see \"GitHub\" in the result",
+            "name": "I should see \"Arquisoft\" in the result",
             "result": {
               "status": "passed",
-              "duration": 2295051807
+              "duration": 588226672
             },
             "line": 30,
             "match": {
@@ -306,7 +309,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1535125967
+              "duration": 798758477
             },
             "hidden": true,
             "match": {
