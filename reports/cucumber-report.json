@@ -14,11 +14,11 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 16594031321
+              "duration": 7645363727
             },
             "line": 7,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:20"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:21"
             }
           },
           {
@@ -27,11 +27,11 @@
             "name": "We put the bad credentials username \"unexistent\" and password \"unexistent\"",
             "result": {
               "status": "passed",
-              "duration": 3106224719
+              "duration": 3707712443
             },
             "line": 8,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:32"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:33"
             }
           },
           {
@@ -40,11 +40,11 @@
             "name": "We click on \"login\" we will stay on the same page and no messages shown",
             "result": {
               "status": "passed",
-              "duration": 406906952
+              "duration": 658417768
             },
             "line": 9,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:58"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:59"
             }
           },
           {
@@ -52,7 +52,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 21285556
+              "duration": 56549598
             },
             "hidden": true,
             "match": {
@@ -75,11 +75,11 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 9097511622
+              "duration": 9725598885
             },
             "line": 12,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:20"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:21"
             }
           },
           {
@@ -88,11 +88,11 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
             "result": {
               "status": "passed",
-              "duration": 2780264826
+              "duration": 4666688000
             },
             "line": 13,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:69"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:70"
             }
           },
           {
@@ -101,11 +101,11 @@
             "name": "We click and we reach the home page with the messages shown",
             "result": {
               "status": "passed",
-              "duration": 11003191313
+              "duration": 9395753556
             },
             "line": 14,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:100"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:101"
             }
           },
           {
@@ -113,7 +113,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 757212157
+              "duration": 1378834227
             },
             "hidden": true,
             "match": {
@@ -136,11 +136,11 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 4945272034
+              "duration": 9025820080
             },
             "line": 17,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:20"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:21"
             }
           },
           {
@@ -148,34 +148,46 @@
             "keyword": "And ",
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
-              "status": "undefined"
+              "status": "passed",
+              "duration": 4888678584
             },
-            "line": 18
+            "line": 18,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:122"
+            }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "name": "the messages will appear and we an existing conversation",
             "result": {
-              "status": "undefined"
+              "status": "passed",
+              "duration": 9028868379
             },
-            "line": 19
+            "line": 19,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:153"
+            }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "name": "we send the implicated friend a message \"hi friend\"",
             "result": {
-              "status": "undefined"
+              "status": "passed",
+              "duration": 507227860
             },
-            "line": 20
+            "line": 20,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:166"
+            }
           },
           {
             "arguments": [],
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 716329936
+              "duration": 1414967801
             },
             "hidden": true,
             "match": {
@@ -198,46 +210,55 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 4581721184
+              "duration": 11595604854
             },
             "line": 23,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:20"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:21"
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
-            "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
+            "name": "We put the credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
-              "status": "undefined"
+              "status": "pending"
             },
-            "line": 24
+            "line": 24,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:184"
+            }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "name": "the messages will appear and we select a friend in the friends' section",
             "result": {
-              "status": "undefined"
+              "status": "skipped"
             },
-            "line": 25
+            "line": 25,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:189"
+            }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "name": "create a new conversation and write a message \"why hello there\"",
             "result": {
-              "status": "undefined"
+              "status": "skipped"
             },
-            "line": 26
+            "line": 26,
+            "match": {
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:194"
+            }
           },
           {
             "arguments": [],
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 702551746
+              "duration": 1307576069
             },
             "hidden": true,
             "match": {
@@ -260,11 +281,11 @@
             "name": "I search Google for \"arquisoft\"",
             "result": {
               "status": "passed",
-              "duration": 4469240654
+              "duration": 8994345475
             },
             "line": 29,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:7"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:8"
             }
           },
           {
@@ -273,11 +294,11 @@
             "name": "I should see \"GitHub\" in the result",
             "result": {
               "status": "passed",
-              "duration": 777619095
+              "duration": 2295051807
             },
             "line": 30,
             "match": {
-              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:14"
+              "location": "D:\\Documents\\S6\\ASW\\Practicas\\dechat_es6a2\\step-definitions\\dechat-steps.js:15"
             }
           },
           {
@@ -285,7 +306,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 748572542
+              "duration": 1535125967
             },
             "hidden": true,
             "match": {

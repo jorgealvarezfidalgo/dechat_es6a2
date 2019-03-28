@@ -21,7 +21,7 @@ Feature: DeChat ES-6A-II
 
     Scenario: When the user is logged in, we select a friend and write a message
         Given We visit the "https://arquisoft.github.io/dechat_es6a2"
-        And We put the good credentials username "asw" and password "asw-2018-19" and click on "login"
+        And We put the credentials username "asw" and password "asw-2018-19" and click on "login"
         Then the messages will appear and we select a friend in the friends' section
         Then create a new conversation and write a message "why hello there"
 
