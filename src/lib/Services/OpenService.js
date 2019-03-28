@@ -11,6 +11,10 @@ const {
 } = require('date-fns');
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const Loader = require('../Repositories/SolidLoaderRepository');
+const BaseService = require('./BaseService');
+
+
+let baseService = new BaseService(auth.fetch);
 
 let loader = new Loader(auth.fetch);
 
