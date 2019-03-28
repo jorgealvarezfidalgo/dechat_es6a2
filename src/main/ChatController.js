@@ -457,12 +457,12 @@ async function displayContacts(func) {
     $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
 		$(".search").addClass("hidden");
-		$(".createcontact").removeClass("hidden");
+		$(".addcontact").removeClass("hidden");
 		$(".writecontact").removeClass("hidden");
     } else {
         $(".search").addClass("hidden");
 		$(".createcontact").removeClass("hidden");
-		$(".writecontact").removeClass("hidden");
+		$(".addcontact").removeClass("hidden");
     }
 
     if (!showingContacts) {
