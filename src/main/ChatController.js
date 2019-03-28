@@ -436,7 +436,6 @@ $('#show-contact-information').click(async () => {
             $("#listGroups").append(html);
 
         }
-        $(".information").append("<div class='wrap-addtogroup'><div class='addtogroup'><input type='text' class='input-group' placeholder='Invite a friend'><a type='button' id='add-group' style='cursor: pointer;'>Add</a></div></div>");
     }
 });
 
@@ -703,32 +702,4 @@ $('#addcontact').click(async () => {
         alert("No username specified.");
     }
 
-});
-
-$(document).on('click', '#add-group', async function () {
-    console.log($('.input-group').val());
-    if ($('.input-group').val() != "") {
-        var contact = "https://" + $('.input-group').val().toLowerCase() + ".solid.community/profile/card#me";
-        console.log(contact);
-        if (baseService.writePermission(contact)) {
-            console.log("CURRENT CHAT:");
-            console.log(currentChat);
-            //Esto invita de nuevo a los miembros...
-            //Pero si le pasamos como miembro al nuevo no genera la info debida
-            //Hay que modificarlo ligeramente
-            await createService.storeAndSendInvitations(userDataUrl, userWebId, currentChat.members, currentChat);
-            let memberName = await baseService.getFormattedName(contact);
-            var memberPhoto = await baseService.getPhoto(contact);
-            if (!memberPhoto) {
-                memberPhoto = baseService.getDefaultFriendPhoto();
-            }
-
-            var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
-            $("#listGroups").append(html);
-        } else {
-            alert("No user found with web id " + contact);
-        }
-    } else {
-        alert("No username specified.");
-    }
 });
