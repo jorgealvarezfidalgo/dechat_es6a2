@@ -326,7 +326,8 @@ async function checkKey(e) {
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
         $('#write-chat').val("");
-        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+		console.log("Index es " + index);
         $('#chatwindow' + index).remove();
 
         semanticChats[index].loadMessage({

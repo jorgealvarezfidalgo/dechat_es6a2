@@ -106,7 +106,7 @@ class CreateService {
             console.log(id);
 
             console.log("Invitando: " + interlocutorWebId);
-            var invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId);
+            var invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, (interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId));
             console.log(invitation);
             try {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);

@@ -48,7 +48,7 @@ class JoinChatService {
         participants.forEach(async mem => {
 
             console.log("Guardando en POD B a: " + mem);
-            const invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
+            var invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             console.log(invitation);
             try {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
