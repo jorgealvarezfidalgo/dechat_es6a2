@@ -66,19 +66,14 @@ class JoinChatService {
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
         console.log(chat);
-        var chatJoined;
+        var chatJoined = null;
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
             chat.friendIds.splice(0, 1);
             chatJoined = new Group({url: fileurl, chatBaseUrl: userDataUrl, userWebId, members: chat.friendIds, interlocutorName: name.replace(/U\+0020/g, " "), interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "), photo: "main/resources/static/img/group.jpg"
             });
         } else {
-            chatJoined = new SemanticChat({
-                url: fileurl,
-                messageBaseUrl: userDataUrl, userWebId,
-                interlocutorWebId: chat.friendIds[0],
-                interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
-            });
+            chatJoined = new SemanticChat({url: fileurl, messageBaseUrl: userDataUrl, userWebId, interlocutorWebId: chat.friendIds[0], interlocutorName: await baseService.getFormattedName(chat.friendIds[0]) });
         }
         console.log("Chat processed");
         console.log(chatJoined);
@@ -99,5 +94,4 @@ class JoinChatService {
         return {friendIds, chatUrl, invitationUrl: fileurl, recipient};
     }
 }
-
 module.exports = JoinChatService;

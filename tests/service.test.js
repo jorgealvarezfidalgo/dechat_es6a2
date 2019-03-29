@@ -182,6 +182,10 @@ describe('Services', function () {
         assert.equal(group.members[2], null, 'we only have two friends and the user in this group.');
 
     });
+	
+	it('Joining group, but failing due to wrong data', async function () {
+        await joinService.joinExistingChat("Noacceptabledata", "Group/WorldMarshal",'https://helbrecht.solid.community/profile/card#me',"anurl", "World Marshal", ["Nonexistant1", "Nonexistant2"]);
+    });
 
     it('Message Service tests', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
