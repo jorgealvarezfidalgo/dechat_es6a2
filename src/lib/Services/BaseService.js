@@ -169,10 +169,8 @@ class BaseService {
                 });
 
                 result.bindingsStream.on('end', function () {
-                    deferred.resolve(newResources);
-                });
+                    deferred.resolve(newResources); });
             });
-
         return deferred.promise;
     }
 
@@ -197,18 +195,15 @@ class BaseService {
             })
                 .then(function (result) {
                     result.bindingsStream.on('data', async function (result) {
-
                         invitationFound = true;
                         result = result.toObject();
-
                         deferred.resolve({
                                 interlocutor: result['?interlocutor'].value,
                                 url: result['?invitation'].value,
                                 agent: result['?sender'].value,
                                 ievent: result['?chaturl'].value
                             }
-                        );
-                    });
+                        ); });
                     result.bindingsStream.on('end', function () {
                         if (!invitationFound) {
                             console.log("NO");
@@ -223,7 +218,5 @@ class BaseService {
     }
     deleteFileForUser(url) {
         uploader.deleteFileForUser(url);
-    }
-}
-
+    }}
 module.exports = BaseService;
