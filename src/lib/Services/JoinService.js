@@ -53,7 +53,6 @@ class JoinChatService {
             try {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
-                console.log("?");
                 logger.error(`Could not add chat to WebId.`);
                 logger.error(e);
             }
@@ -64,7 +63,6 @@ class JoinChatService {
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
-            console.log("?");
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
         }

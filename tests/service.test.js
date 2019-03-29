@@ -24,11 +24,17 @@ describe('Services', function () {
   it('base Service tests', async function () {
       const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-      const selfPhoto = await baseService.getPhoto(chat.userWebId);
+      var selfPhoto = await baseService.getPhoto(chat.userWebId);
       assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+	  
+	  selfPhoto = await baseService.getPhoto("https://helbrecht.solid.community/profile/card#me");
+      assert.equal("https://helbrecht.solid.community/profile/Lord_High_Marshal_Helbrecht.jpg", selfPhoto, 'The user photo is not ->' + selfPhoto);
 
       const name = await baseService.getFormattedName(chat.userWebId);
       assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+	  
+	  const group = await baseService.getFormattedName("URL/Group/VrilU+0020Society");
+      assert.equal(group, 'Vril Society', 'The group name is not correct : ->' + group);
 
       const note = await baseService.getNote(chat.userWebId);
       assert.equal(note, null, 'we do not have a note yet.');
@@ -41,6 +47,9 @@ describe('Services', function () {
       //we do not have an invitation
       const invite = baseService.getInvitation(chat.fileurl);
       assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
+	  
+	  //Delete a file
+	  baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
   });
 
   it('more base Service tests', async function () {
@@ -221,7 +230,7 @@ describe('Services', function () {
     });
 	
 	it('Get Invitation test', async function () {
-        const invite = baseService.getInvitation("https://othbak.solid.community/public/dechat_201903160752.ttl");
+        const invite = baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
 		assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
     });
 
