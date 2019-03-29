@@ -221,7 +221,7 @@ describe('Services', function () {
     });
 
     it('Join Services Test: processChatToJoin and getJoinRequest', async function () {
-      const invite = baseService.getInvitation("https://yarrick.solid.community/public/");
+      const invite = baseService.getInvitation("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl");
       assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
 
       var join = joinService.getJoinRequest("https://othbak.solid.community/public/dechat_201903110835.ttl", "https://othbak.solid.community/profile/card#me");
