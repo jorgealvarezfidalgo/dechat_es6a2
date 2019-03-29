@@ -5,20 +5,20 @@ module.exports = function () {
 
     //________________________ FIRST CUCUMBER GOOGLE SEARCH _______________________//
 
-    this.When(/^I search Google for "([^']*)"$/, (text) => {
+    this.When(/^I search Google for "([^"]*)"$/, (text) => {
         return helpers.loadPage("https://google.com")
             .then(() => {
                 return page.googleSearch.performSearch(text)
             })
     });
 
-    this.Then(/^I should see "([^']*)" in the result$/, function (keywords) {
+    this.Then(/^I should see "([^"]*)" in the result$/, function (keywords) {
         return driver.wait(until.elementsLocated(by.partialLinkText(keywords)), 10000);
     });
 
     //_______________________ DECHAT - TESTS - ES6A - II ___________________________//
 
-    this.Given(/^We visit the "([^']*)"$/, function (arg1) {
+    this.Given(/^We visit the "([^"]*)"$/, function (arg1) {
         return helpers.loadPage(arg1)
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='nav-login-btn']")), 10000)
@@ -30,7 +30,7 @@ module.exports = function () {
 
     //______________________________ FIRST SCENARIO __ BAD LOGIN __________________________________//
 
-    this.Given(/^We put the bad credentials username "([^']*)" and password "([^']*)"$/, function (arg1, arg2) {
+    this.Given(/^We put the bad credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
         var parent = driver.getWindowHandle();
         return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
             .then(() => {
@@ -56,7 +56,7 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^We click on "([^']*)" we will stay on the same page and no messages shown$/, function (arg1) {
+    this.Then(/^We click on "([^"]*)" we will stay on the same page and no messages shown$/, function (arg1) {
         //error paragraph
         return driver.findElement(by.xpath("//*[@id='" + arg1 + "']")).click()
             .then(() => {
@@ -67,7 +67,7 @@ module.exports = function () {
 
     //______________________________ SECOND SCENARIO __ CORRECT LOGIN __________________________________//
 
-    this.Given(/^We put the good credentials username "([^']*)" and password "([^']*)"$/, function (arg1, arg2) {
+    this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
         var parent = driver.getWindowHandle();
         return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
             .then(() => {
@@ -119,7 +119,7 @@ module.exports = function () {
 
     //______________________________ THIRD SCENARIO __ SENDING MESSAGE TO AN EXISTING CONVERSATION ________________________//
 
-    this.Given(/^We put the good credentials username "([^']*)" and password "([^']*)" and click on "([^']*)"$/, function (arg1, arg2, arg3) {
+    this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3) {
         var parent = driver.getWindowHandle();
         return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
             .then(() => {
@@ -163,7 +163,7 @@ module.exports = function () {
             });
     });
 
-    this.Then(/^we send the implicated friend a message "([^']*)"$/, function (arg1) {
+    this.Then(/^we send the implicated friend a message "([^"]*)"$/, function (arg1) {
         //"hello" should appear
         return driver.findElement(by.xpath("//*[@id='chatwindow0']/div[1]/div/h1")).click()
             .then(() => {
@@ -181,7 +181,7 @@ module.exports = function () {
 
     //______________________________ FOURTH SCENARIO __ controlling the app apearance ____________________________//
 
-    this.Given(/^We put the credentials username "([^']*)" and password "([^']*)" and click on "([^']*)"$/, function (arg1, arg2, arg3) {
+    this.Given(/^We put the credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3) {
         var parent = driver.getWindowHandle();
         return helpers.loadPage("https://arquisoft.github.io/dechat_es6a2")
             .then(() => {
