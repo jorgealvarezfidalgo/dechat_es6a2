@@ -26,59 +26,42 @@ describe('Services', function () {
 
       const selfPhoto = await baseService.getPhoto(chat.userWebId);
       assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
-      console.log("ok1");
-
-      const existPic = await baseService.getPhoto("https://yarrick.solid.community/profile/card#me");
-      assert.notEqual(existPic, null, 'The user does have a photo : ' +  existPic);
-      console.log("ok2");
-
 
       const name = await baseService.getFormattedName(chat.userWebId);
       assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
-      console.log("ok3");
-
 
       const note = await baseService.getNote(chat.userWebId);
       assert.equal(note, null, 'we do not have a note yet.');
-      console.log("ok4");
-
-
-      const note2 = await baseService.getNote("https://oth3.solid.community/profile/card#me");
-      assert.equal(note2, "testing", 'we do have a note ->' + note2);
-      console.log("ok5");
-
-
-      const defaultPic = await baseService.getDefaultFriendPhoto();
-      assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
-      console.log("ok6");
-
 
       const userDataUrl = await baseService.getDefaultDataUrl(chat.userWebId);
       chat.url = await baseService.generateUniqueUrlForResource(userDataUrl);
       //everytime should be different
       assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
-      console.log("ok7");
-
 
       //we do not have an invitation
       const invite = baseService.getInvitation(chat.fileurl);
       assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
-        console.log("ok8");
+  });
 
-      //this user does have an invitation
-      const anotherInvitation = baseService.getInvitation("https://yarrick.solid.community/public/");
-      assert.notEqual(anotherInvitation, null, 'the invitation url is not correct: ->' + anotherInvitation);
-        console.log("ok9");
+  it('more base Service tests', async function () {
+      const note2 = await baseService.getNote("https://oth3.solid.community/profile/card#me");
+      assert.equal(note2, "testing", 'we do have a note ->' + note2);
 
-      //check user inbox for updates
-      var updates = await baseService.checkUserInboxForUpdates("https://yarrick.solid.community/public/");
-      assert.notEqual(updates, null, 'the user does have updates' + updates);
-        console.log("ok10");
+      const defaultPic = await baseService.getDefaultFriendPhoto();
+      assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
+  });
 
-      var inv = baseService.getInvitation("https://oth1.solid.community/public/");
-      assert.notEqual(inv, null, 'the user does have an invitation ->' + inv);
-        console.log("ok11");
+  it('base Service tests -> updates and invitations', async function () {
+        //this user does have an invitation
+        const anotherInvitation = baseService.getInvitation("https://yarrick.solid.community/public/");
+        assert.notEqual(anotherInvitation, null, 'the invitation url is not correct: ->' + anotherInvitation);
 
+        //check user inbox for updates
+        var updates = await baseService.checkUserInboxForUpdates("https://yarrick.solid.community/public/");
+        assert.notEqual(updates, null, 'the user does have updates' + updates);
+
+        const inv = baseService.getInvitation("https://oth1.solid.community/public/");
+        assert.notEqual(inv, null, 'the user does have an invitation ->' + inv);
   });
 
     it('checking the picture and name are correct using loader', async function () {
