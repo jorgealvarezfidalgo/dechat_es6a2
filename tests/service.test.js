@@ -47,7 +47,7 @@ describe('Services', function () {
       //we do not have an invitation
       const invite = baseService.getInvitation(chat.fileurl);
       assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
-	  console.log("Must be this");
+	  
 	  //Delete a file
 	  baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
 	  baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");

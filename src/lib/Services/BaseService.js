@@ -181,32 +181,23 @@ class BaseService {
             const engine = newEngine();
             let invitationFound = false;
             const self = this;
+			var sselect = `SELECT * {
+					?invitation a <${namespaces.schema}InviteAction>;
+				<${namespaces.schema}agent> ?sender;
+				<${namespaces.schema}event> ?chaturl;
+				<${namespaces.schema}recipient> ?interlocutor.
+			  }`;
 
-            engine.query(`SELECT * {
-		?invitation a <${namespaces.schema}InviteAction>;
-	<${namespaces.schema}agent> ?sender;
-	<${namespaces.schema}event> ?chaturl;
-	<${namespaces.schema}recipient> ?interlocutor.
-  }`, {
-                sources: [{
-                    type: 'rdfjsSource',
-                    value: rdfjsSource
-                }]
+            engine.query(,sselect { sources: [{ type: 'rdfjsSource', value: rdfjsSource }]
             })
                 .then(function (result) {
                     result.bindingsStream.on('data', async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-                        deferred.resolve({
-                                interlocutor: result['?interlocutor'].value,
-                                url: result['?invitation'].value,
-                                agent: result['?sender'].value,
-                                ievent: result['?chaturl'].value
-                            }
-                        ); });
+                        deferred.resolve({interlocutor: result['?interlocutor'].value, url: result['?invitation'].value, agent: result['?sender'].value, ievent: result['?chaturl'].value}); 
+						});
                     result.bindingsStream.on('end', function () {
                         if (!invitationFound) {
-                            console.log("NO");
                             deferred.resolve(null);
                         }
                     });

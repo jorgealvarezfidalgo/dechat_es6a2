@@ -32,8 +32,6 @@ class JoinChatService {
             format: winston.format.cli()
         });
     }
-
-
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
         var recipient = interlocutorWebId;
         var participants = [];
@@ -65,7 +63,6 @@ class JoinChatService {
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
         }}
-
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
         console.log(chat);
@@ -73,20 +70,12 @@ class JoinChatService {
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
             chat.friendIds.splice(0, 1);
-            chatJoined = new Group({
-                url: fileurl,
-                chatBaseUrl: userDataUrl,
-                userWebId,
-                members: chat.friendIds,
-                interlocutorName: name.replace(/U\+0020/g, " "),
-                interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
-                photo: "main/resources/static/img/group.jpg"
+            chatJoined = new Group({url: fileurl, chatBaseUrl: userDataUrl, userWebId, members: chat.friendIds, interlocutorName: name.replace(/U\+0020/g, " "), interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "), photo: "main/resources/static/img/group.jpg"
             });
         } else {
             chatJoined = new SemanticChat({
                 url: fileurl,
-                messageBaseUrl: userDataUrl,
-                userWebId,
+                messageBaseUrl: userDataUrl, userWebId,
                 interlocutorWebId: chat.friendIds[0],
                 interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
             });
@@ -96,7 +85,6 @@ class JoinChatService {
 
         return chatJoined;
     }
-
     async getJoinRequest(fileurl, userWebId) {
         console.log(fileurl);
         var chat = await baseService.getInvitation(fileurl);
@@ -108,15 +96,8 @@ class JoinChatService {
         console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
         uploader.deleteFileForUser(fileurl);
-
-        return {
-            friendIds,
-            chatUrl,
-            invitationUrl: fileurl,
-            recipient
-        };
+        return {friendIds, chatUrl, invitationUrl: fileurl, recipient};
     }
-
 }
 
 module.exports = JoinChatService;
