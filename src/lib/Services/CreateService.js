@@ -1,19 +1,19 @@
-const N3 = require('n3');
-const Q = require('q');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
-const namespaces = require('../namespaces');
+const N3 = require("n3");
+const Q = require("q");
+const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
+const namespaces = require("../namespaces");
 const uniqid = require("uniqid");
-const winston = require('winston');
-const URI = require('uri-js');
-const auth = require('solid-auth-client');
+const winston = require("winston");
+const URI = require("uri-js");
+const auth = require("solid-auth-client");
 const {
     format
-} = require('date-fns');
-const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
-const SemanticChat = require('../semanticchat');
-const Group = require('../Group');
-const BaseService = require('./BaseService');
-const Uploader = require('../Repositories/SolidUploaderRepository');
+} = require("date-fns");
+const rdfjsSourceFromUrl = require("../Repositories/rdfjssourcefactory").fromUrl;
+const SemanticChat = require("../semanticchat");
+const Group = require("../Group");
+const BaseService = require("./BaseService");
+const Uploader = require("../Repositories/SolidUploaderRepository");
 
 let uploader = new Uploader(auth.fetch);
 
@@ -23,7 +23,7 @@ class CreateService {
     constructor(fetch) {
         this.fetch = fetch;
         this.logger = winston.createLogger({
-            level: 'error',
+            level: "error",
             transports: [
                 new winston.transports.Console(),
             ],

@@ -1,4 +1,4 @@
-const SemanticChat = require('./semanticchat');
+const SemanticChat = require("./semanticchat");
 
 class Group extends SemanticChat {
 

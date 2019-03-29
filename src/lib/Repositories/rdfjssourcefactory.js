@@ -1,5 +1,5 @@
-const N3 = require('n3');
-const Q = require('q');
+const N3 = require("n3");
+const Q = require("q");
 
 /**
  * This method returns an RDFJSSource of an url
@@ -28,7 +28,7 @@ function fromUrl(url, fetch) {
                     } else {
                         const source = {
                             match: function(s, p, o, g) {
-                                return require('streamify-array')(store.getQuads(s, p, o, g));
+                                return require("streamify-array")(store.getQuads(s, p, o, g));
                             }
                         };
 
@@ -57,7 +57,7 @@ function fromString(str) {
         } else {
             const source = {
                 match: function(s, p, o, g) {
-                    return require('streamify-array')(store.getQuads(s, p, o, g));
+                    return require("streamify-array")(store.getQuads(s, p, o, g));
                 }
             };
 

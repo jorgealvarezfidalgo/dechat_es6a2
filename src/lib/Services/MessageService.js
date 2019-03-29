@@ -1,17 +1,17 @@
 const N3 = require("n3");
-const Q = require('q');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
-const namespaces = require('../namespaces');
-const uniqid = require('uniqid');
-const winston = require('winston');
-const URI = require('uri-js');
-const auth = require('solid-auth-client');
+const Q = require("q");
+const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
+const namespaces = require("../namespaces");
+const uniqid = require("uniqid");
+const winston = require("winston");
+const URI = require("uri-js");
+const auth = require("solid-auth-client");
 const {
   format
-} = require('date-fns');
-const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
-const BaseService = require('./BaseService');
-const Uploader = require('../Repositories/SolidUploaderRepository');
+} = require("date-fns");
+const rdfjsSourceFromUrl = require("../Repositories/rdfjssourcefactory").fromUrl;
+const BaseService = require("./BaseService");
+const Uploader = require("../Repositories/SolidUploaderRepository");
 
 let uploader = new Uploader(auth.fetch);
 let baseService = new BaseService(auth.fetch);
@@ -20,7 +20,7 @@ class MessageService {
   constructor(fetch) {
     this.fetch = fetch;
 	this.logger = winston.createLogger({
-      level: 'error',
+      level: "error",
       transports: [
         new winston.transports.Console(),
       ],
@@ -44,18 +44,18 @@ class MessageService {
   					<${namespaces.schema}text> ?msgtext.
   			}`, {
           sources: [{
-            type: 'rdfjsSource',
+            type: "rdfjsSource",
             value: rdfjsSource
           }]
         })
         .then(function(result) {
-          result.bindingsStream.on('data', async function(result) {
+          result.bindingsStream.on("data", async function(result) {
             messageFound = true;
             result = result.toObject();
-            const messageUrl = result['?message'].value;
-            const messagetext = result['?msgtext'].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
-            const author = result['?username'].value.replace(/U\+0020/g, " ");
-            const time = result['?time'].value.split("/")[4];
+            const messageUrl = result["?message"].value;
+            const messagetext = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
+            const author = result["?username"].value.replace(/U\+0020/g, " ");
+            const time = result["?time"].value.split("/")[4];
             const inboxUrl = fileurl;
             deferred.resolve({
               inboxUrl,
@@ -66,7 +66,7 @@ class MessageService {
             });
           });
 
-          result.bindingsStream.on('end', function() {
+          result.bindingsStream.on("end", function() {
             if (!messageFound) {
               deferred.resolve(null);
             }

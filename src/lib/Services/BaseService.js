@@ -1,16 +1,16 @@
-const N3 = require('n3');
-const Q = require('q');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
-const namespaces = require('../namespaces');
-const uniqid = require('uniqid');
-const winston = require('winston');
-const URI = require('uri-js');
-const auth = require('solid-auth-client');
+const N3 = require("n3");
+const Q = require("q");
+const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
+const namespaces = require("../namespaces");
+const uniqid = require("uniqid");
+const winston = require("winston");
+const URI = require("uri-js");
+const auth = require("solid-auth-client");
 const {
     format
-} = require('date-fns');
-const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
-const Uploader = require('../Repositories/SolidUploaderRepository');
+} = require("date-fns");
+const rdfjsSourceFromUrl = require("../Repositories/rdfjssourcefactory").fromUrl;
+const Uploader = require("../Repositories/SolidUploaderRepository");
 
 let uploader = new Uploader(auth.fetch);
 
@@ -20,14 +20,14 @@ class BaseService {
         this.fetch = fetch;
         this.alreadyCheckedResources = [];
         this.logger = winston.createLogger({
-            level: 'error',
+            level: "error",
             transports: [
                 new winston.transports.Console(),
             ],
             format: winston.format.cli()
         });
         this.logger = winston.createLogger({
-            level: 'error',
+            level: "error",
             transports: [
                 new winston.transports.Console(),
             ],
@@ -44,7 +44,7 @@ class BaseService {
     async getFormattedName(webid) {
         if (webid.includes("Group"))
             return webid.split("Group/").pop().replace(/U\+0020/g, " ");
-        let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'name');
+        let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + "name");
 
         if (!formattedName) {
                 formattedName = webid;
@@ -55,7 +55,7 @@ class BaseService {
     }
 
     async getPhoto(webid) {
-        let photoUrl = await this.getObjectFromPredicateForResource(webid, 'http://www.w3.org/2006/vcard/ns#hasPhoto');
+        let photoUrl = await this.getObjectFromPredicateForResource(webid, "http://www.w3.org/2006/vcard/ns#hasPhoto");
         if (photoUrl)
             return photoUrl.value;
         else
@@ -63,7 +63,7 @@ class BaseService {
     }
 
     async getNote(webid) {
-        let noteUrl = await this.getObjectFromPredicateForResource(webid, 'http://www.w3.org/2006/vcard/ns#note');
+        let noteUrl = await this.getObjectFromPredicateForResource(webid, "http://www.w3.org/2006/vcard/ns#note");
         if (noteUrl)
             return noteUrl.value;
         else
@@ -85,18 +85,18 @@ class BaseService {
     <${url}> <${predicate}> ?o.
   }`, {
                 sources: [{
-                    type: 'rdfjsSource',
+                    type: "rdfjsSource",
                     value: rdfjsSource
                 }]
             })
                 .then(function (result) {
-                    result.bindingsStream.on('data', function (data) {
+                    result.bindingsStream.on("data", function (data) {
                         data = data.toObject();
 
-                        deferred.resolve(data['?o']);
+                        deferred.resolve(data["?o"]);
                     });
 
-                    result.bindingsStream.on('end', function () {
+                    result.bindingsStream.on("end", function () {
                         deferred.resolve(null);
                     });
                 });
@@ -109,13 +109,13 @@ class BaseService {
 
     getDefaultDataUrl(webId) {
         const parsedWebId = URI.parse(webId);
-        const today = format(new Date(), 'yyyyMMddhhmm');
+        const today = format(new Date(), "yyyyMMddhhmm");
 
         return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
     }
 
     async writePermission(url) {
-        const response = await uploader.executeSPARQLUpdateForUser(url, 'INSERT DATA {}');
+        const response = await uploader.executeSPARQLUpdateForUser(url, "INSERT DATA {}");
         return response.status === 200;
     }
 
@@ -124,7 +124,7 @@ class BaseService {
     }
 
     async generateUniqueUrlForResource(baseurl) {
-        let url = baseurl + '#' + uniqid();
+        let url = baseurl + "#" + uniqid();
 
         return url;
     }
@@ -152,12 +152,12 @@ class BaseService {
       ?resource a <http://www.w3.org/ns/ldp#Resource>.
     }`, {
             sources: [{
-                type: 'rdfjsSource',
+                type: "rdfjsSource",
                 value: rdfjsSource
             }]
         })
             .then(function (result) {
-                result.bindingsStream.on('data', (data) => {
+                result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
 
                     const resource = data["?resource"].value;
@@ -182,14 +182,14 @@ class BaseService {
             let invitationFound = false;
             const self = this;
 			var sselect = `SELECT * {?invitation a <${namespaces.schema}InviteAction>; <${namespaces.schema}agent> ?sender; <${namespaces.schema}event> ?chaturl;<${namespaces.schema}recipient> ?interlocutor.}`;
-            engine.query(sselect, { sources: [{ type: 'rdfjsSource', value: rdfjsSource }]
+            engine.query(sselect, { sources: [{ type: "rdfjsSource", value: rdfjsSource }]
             }).then(function (result) {
-                    result.bindingsStream.on('data', async function (result) {
+                    result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-                        deferred.resolve({interlocutor: result['?interlocutor'].value, url: result['?invitation'].value, agent: result['?sender'].value, ievent: result['?chaturl'].value});
+                        deferred.resolve({interlocutor: result["?interlocutor"].value, url: result["?invitation"].value, agent: result["?sender"].value, ievent: result["?chaturl"].value});
 						});
-                    result.bindingsStream.on('end', function () {
+                    result.bindingsStream.on("end", function () {
                         if (!invitationFound) {
                             deferred.resolve(null);
                         }});
