@@ -26,8 +26,6 @@ comment:
   require_changes: no
 
 ignore:
-  - "src/lib/Services/BaseService.js"
-  - "src/lib/Services/JoinService.js"
   - "adocs" 
   - "coverage"
   - ".nyc_output"
