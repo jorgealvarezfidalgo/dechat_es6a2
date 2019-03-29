@@ -51,7 +51,6 @@ class JoinChatService {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
                 logger.error(`Could not add chat to WebId.`);
-                logger.error(e);
             }
         });
         console.log(recipient);
@@ -61,8 +60,8 @@ class JoinChatService {
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
             logger.error(`Could not add chat to WebId.`);
-            logger.error(e);
         }}
+		
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
         console.log(chat);
@@ -77,7 +76,6 @@ class JoinChatService {
         }
         console.log("Chat processed");
         console.log(chatJoined);
-
         return chatJoined;
     }
     async getJoinRequest(fileurl, userWebId) {

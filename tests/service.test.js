@@ -184,7 +184,7 @@ describe('Services', function () {
     });
 	
 	it('Joining group, but failing due to wrong data', async function () {
-        await joinService.joinExistingChat("Noacceptabledata", "Group/WorldMarshal",'https://helbrecht.solid.community/profile/card#me',"anurl", "World Marshal", ["Nonexistant1", "Nonexistant2"]);
+        await joinService.joinExistingChat("Noacceptabledata", "Group/WorldMarshal",'https://helbrechtttt.solid.community/profile/card#me',"anurl", "World Marshal", ["Nonexistant1", "Nonexistant2"]);
     });
 
     it('Message Service tests', async function () {

@@ -169,8 +169,8 @@ class BaseService {
                 });
 
                 result.bindingsStream.on('end', function () {
-                    deferred.resolve(newResources); });
-            });
+                    deferred.resolve(newResources); }); 
+				});
         return deferred.promise;
     }
 
@@ -181,16 +181,9 @@ class BaseService {
             const engine = newEngine();
             let invitationFound = false;
             const self = this;
-			var sselect = `SELECT * {
-					?invitation a <${namespaces.schema}InviteAction>;
-				<${namespaces.schema}agent> ?sender;
-				<${namespaces.schema}event> ?chaturl;
-				<${namespaces.schema}recipient> ?interlocutor.
-			  }`;
-
+			var sselect = `SELECT * {?invitation a <${namespaces.schema}InviteAction>; <${namespaces.schema}agent> ?sender; <${namespaces.schema}event> ?chaturl;<${namespaces.schema}recipient> ?interlocutor.}`;
             engine.query(sselect, { sources: [{ type: 'rdfjsSource', value: rdfjsSource }]
-            })
-                .then(function (result) {
+            }).then(function (result) {
                     result.bindingsStream.on('data', async function (result) {
                         invitationFound = true;
                         result = result.toObject();
@@ -199,8 +192,7 @@ class BaseService {
                     result.bindingsStream.on('end', function () {
                         if (!invitationFound) {
                             deferred.resolve(null);
-                        }
-                    });
+                        }});
                 });
         } else {
             deferred.resolve(null);
