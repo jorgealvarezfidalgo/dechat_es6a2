@@ -136,11 +136,17 @@ describe('Services', function () {
         const selfPhoto = await baseService.getPhoto(chat.userWebId);
         assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
 
+        const existPic = await baseService.getPhoto("https://yarrick.solid.community/profile/card#me");
+        assert.notEqual(existPic, null, 'The user does have a photo : ' +  existPic);
+
         const name = await baseService.getFormattedName(chat.userWebId);
         assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
 
         const note = await baseService.getNote(chat.userWebId);
         assert.equal(note, null, 'we do not have a note yet.');
+
+        const note2 = await baseService.getNote("https://oth3.solid.community/profile/card#me");
+        assert.equal(note2, "testing", 'we do have a note ->' + note2);
 
         const defaultPic = await baseService.getDefaultFriendPhoto();
         assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
@@ -150,12 +156,24 @@ describe('Services', function () {
         //everytime should be different
         assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
 
-        //invite is not null
+        //we do not have an invitation
         const invite = baseService.getInvitation(chat.fileurl);
         assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
 
+        //this user does have an invitation
+        const anotherInvitation = baseService.getInvitation("https://yarrick.solid.community/public/");
+        assert.notEqual(anotherInvitation, null, 'the invitation url is not correct: ->' + anotherInvitation);
+
         //deleting used chat.url
-        baseService.deleteFileForUser(chat.url);
+        baseService.deleteFileForUser("https://othbak.solid.community/public/dechat_201903110834.ttl");
+
+        //check user inbox for updates
+        var updates = await baseService.checkUserInboxForUpdates("https://yarrick.solid.community/public/");
+        assert.notEqual(updates, null, 'the user does have updates' + updates);
+
+        var inv = baseService.getInvitation("https://oth1.solid.community/public/");
+        assert.notEqual(inv, null, 'the user does have an invitation ->' + inv);
+
     });
 
     it('Message Service tests', async function () {
@@ -193,7 +211,7 @@ describe('Services', function () {
         //the group for the moment has 1 messages
         assert.equal(groupChat.getNumberOfMsgs(), 1, 'the number of messages is not correct : ' + groupChat.getNumberOfMsgs());
     });
-    
+
 
 /*
     it('Group chat tests using openService.js', async function () {
