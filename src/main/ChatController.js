@@ -74,134 +74,6 @@ function afterChatOption() {
     $('#chat-options').addClass('hidden');
 }
 
-/**
- *    This method is in charge of the user's login
- */
-auth.trackSession(async session => {
-    const loggedIn = !!session;
-    //alert(`logged in: ${loggedIn}`);
-
-    if (loggedIn) {
-        $('#user-menu').removeClass('hidden');
-        $('#nav-login-btn').addClass('hidden');
-        $('#login-required').modal('hide');
-        $(".mustlogin").addClass('hidden');
-        $(".loading").removeClass('hidden');
-		
-
-        userWebId = session.webId;
-        const name = await baseService.getFormattedName(userWebId);
-
-        if (name) {
-            $('#user-name').removeClass('hidden');
-            $('#user-name').text(name);
-        }
-        openChats = [];
-        const chats = await openService.getChatsToOpen(userWebId);
-		if(chats) {
-        chats.forEach(async chat => {
-            openChats.push(chat);
-        });
-		}
-
-        await startChat();
-        await sleep(8000);
-        await loadChats();
-        checkForNotifications();
-        $(".wrap").removeClass('hidden');
-        $(".loading").addClass('hidden');
-        // refresh every 3sec
-        refreshIntervalId = setInterval(checkForNotifications, 3000);
-    } else {
-        //alert("you're not logged in");
-        $('#nav-login-btn').removeClass('hidden');
-        $('#user-menu').addClass('hidden');
-        $('#new-chat-options').addClass('hidden');
-        $('#join-chat-options').addClass('hidden');
-        $('#open-chat-options').addClass('hidden');
-        userWebId = null;
-        clearInterval(refreshIntervalId);
-        refreshIntervalId = null;
-    }
-});
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
- * This method checks if a new message has been made by the friend.
- * The necessarily data is stored and the UI is updated.
- * @returns {Promise<void>}
- */
-async function checkForNotifications() {
-    //console.log('Checking for new notifications');
-	
-    const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
-    //console.log(updates);
-
-    updates.forEach(async (fileurl) => {
-
-        //console.log(fileurl);
-
-        // check for new
-        let newMessageFound = false;
-        let message = await messageService.getNewMessage(fileurl, userWebId);
-        if (message) {
-            console.log("Guardando mensajes");
-
-            newMessageFound = true;
-            var nameThroughUrl;
-            var authorUrl;
-            if (!message.author.includes("Group")) {
-                nameThroughUrl = message.author.split("/").pop();
-                authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
-            } else {
-                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
-                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
-            }
-            console.log("nombre de authorUrl is:" + nameThroughUrl);
-            console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
-            console.log(message);
-
-            console.log(authorUrl);
-            console.log(contactsWithChat);
-            if (nameThroughUrl === $('#interlocutorw-name').text()) {
-                interlocutorMessages.push(message);
-                await showAndStoreMessages();
-            } else if (contactsWithChat.indexOf(authorUrl) != -1) {
-                console.log("NEW MESSAGE - SITUATION B");
-                var index = contactsWithChat.indexOf(authorUrl);
-                $('#chatwindow' + index).remove();
-                var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
-                $(".contact-list").prepend(html);
-                document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
-                interlocutorMessages.push(message);
-            } else if (openChat) {
-                interlocutorMessages.push(message);
-            }
-        }
-
-        if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
-
-            if (convoToJoin) {
-                $("#showinvs").show();
-                console.log("Procesando nuevo chat");
-                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
-                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
-                alert("New invitations. They shall be dismissed if not accepted on this session.");
-            }
-        }
-    });
-    if (chatsToJoin.length == 0) {
-        $("#showinvs").hide();
-    }
-    // console.log(semanticChats);
-    // console.log(contactsWithChat);
-}
-
 async function startChat() {
 
     var selfPhoto = await baseService.getPhoto(userWebId);
@@ -284,6 +156,136 @@ async function loadMessagesToWindow() {
     await showAndStoreMessages();
     console.log(userDataUrl);
 }
+
+/**
+ *    This method is in charge of the user's login
+ */
+auth.trackSession(async session => {
+    const loggedIn = !!session;
+    //alert(`logged in: ${loggedIn}`);
+
+    if (loggedIn) {
+        $('#user-menu').removeClass('hidden');
+        $('#nav-login-btn').addClass('hidden');
+        $('#login-required').modal('hide');
+        $(".mustlogin").addClass('hidden');
+        $(".loading").removeClass('hidden');
+
+
+        userWebId = session.webId;
+        const name = await baseService.getFormattedName(userWebId);
+
+        if (name) {
+            $('#user-name').removeClass('hidden');
+            $('#user-name').text(name);
+        }
+        openChats = [];
+        const chats = await openService.getChatsToOpen(userWebId);
+		if(chats) {
+        chats.forEach(async chat => {
+            openChats.push(chat);
+        });
+		}
+
+        await startChat();
+        await sleep(8000);
+        await loadChats();
+        checkForNotifications();
+        $(".wrap").removeClass('hidden');
+        $(".loading").addClass('hidden');
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
+    } else {
+        //alert("you're not logged in");
+        $('#nav-login-btn').removeClass('hidden');
+        $('#user-menu').addClass('hidden');
+        $('#new-chat-options').addClass('hidden');
+        $('#join-chat-options').addClass('hidden');
+        $('#open-chat-options').addClass('hidden');
+        userWebId = null;
+        clearInterval(refreshIntervalId);
+        refreshIntervalId = null;
+    }
+});
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * This method checks if a new message has been made by the friend.
+ * The necessarily data is stored and the UI is updated.
+ * @returns {Promise<void>}
+ */
+async function checkForNotifications() {
+    //console.log('Checking for new notifications');
+
+    const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
+    //console.log(updates);
+
+    updates.forEach(async (fileurl) => {
+
+        //console.log(fileurl);
+
+        // check for new
+        let newMessageFound = false;
+        let message = await messageService.getNewMessage(fileurl, userWebId);
+        if (message) {
+            console.log("Guardando mensajes");
+
+            newMessageFound = true;
+            var nameThroughUrl;
+            var authorUrl;
+            if (!message.author.includes("Group")) {
+                nameThroughUrl = message.author.split("/").pop();
+                authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
+            } else {
+                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
+                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+            }
+            console.log("nombre de authorUrl is:" + nameThroughUrl);
+            console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
+            console.log(message);
+
+            console.log(authorUrl);
+            console.log(contactsWithChat);
+            if (nameThroughUrl === $('#interlocutorw-name').text()) {
+                interlocutorMessages.push(message);
+                await showAndStoreMessages();
+            } else if (contactsWithChat.indexOf(authorUrl) != -1) {
+                console.log("NEW MESSAGE - SITUATION B");
+                var index = contactsWithChat.indexOf(authorUrl);
+                $('#chatwindow' + index).remove();
+                var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+                $(".contact-list").prepend(html);
+                document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                interlocutorMessages.push(message);
+            } else if (openChat) {
+                interlocutorMessages.push(message);
+            }
+        }
+
+        if (!newMessageFound) {
+            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
+
+            if (convoToJoin) {
+                $("#showinvs").show();
+                console.log("Procesando nuevo chat");
+                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
+                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
+                alert("New invitations. They shall be dismissed if not accepted on this session.");
+            }
+        }
+    });
+    if (chatsToJoin.length === 0) {
+        $("#showinvs").hide();
+    }
+    // console.log(semanticChats);
+    // console.log(contactsWithChat);
+}
+
+
 
 async function loadMessages(id) {
     $(".chat").html("");
@@ -508,7 +510,7 @@ async function showChats() {
         }
 
         const newmsg = 0;
-        if (newmsg == 0) {
+        if (newmsg === 0) {
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
             var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");

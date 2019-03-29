@@ -1,4 +1,4 @@
-const N3 = require('n3');
+const N3 = require("n3");
 const Q = require('q');
 const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
 const namespaces = require('../namespaces');
@@ -104,14 +104,14 @@ class MessageService {
 		console.log(ids);
 		if(ids.length < 2)
 			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
-      
+
 		else {
 		    ids.forEach(async id => {
   		  try {
   				if(id.value)
   					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id.value), sparqlUpdate);
   				else
-  					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
+  				  await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
 		  } catch (e) {
 			this.logger.error(`Could not send message to interlocutor.`);
 			this.logger.error(e);

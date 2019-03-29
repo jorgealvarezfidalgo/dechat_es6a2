@@ -2,7 +2,7 @@ const N3 = require('n3');
 const Q = require('q');
 const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
 const namespaces = require('../namespaces');
-const uniqid = require('uniqid');
+const uniqid = require("uniqid");
 const winston = require('winston');
 const URI = require('uri-js');
 const auth = require('solid-auth-client');
@@ -95,7 +95,7 @@ class CreateService {
                 console.log("Procesando");
                 id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
-                    if (interlocWebId != interlocutorWebId) {
+                    if (interlocWebId !== interlocutorWebId) {
 						console.log(interlocWebId);
 						console.log(interlocWebId.id ? interlocWebId.id : interlocWebId);
                         id += "----" + (interlocWebId.id ? interlocWebId.id : interlocWebId);

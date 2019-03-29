@@ -1,4 +1,4 @@
-const N3 = require('n3');
+const N3 = require("n3");
 const Q = require('q');
 const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
 const namespaces = require('../namespaces');
@@ -57,14 +57,14 @@ class OpenService {
             value: rdfjsSource
           }]
         })
-        .then(result => {
+        .then((result) => {
           result.bindingsStream.on('data', async (data) => {
             const deferred = Q.defer();
             promises.push(deferred.promise);
             data = data.toObject();
             chatUrls.push({
               chatUrl: data['?chat'].value,
-              storeUrl: data['?url'].value,
+              storeUrl: data["?url"].value,
               interlocutor: data['?int'].value
             });
             deferred.resolve();

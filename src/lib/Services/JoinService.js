@@ -8,7 +8,7 @@ const URI = require('uri-js');
 const auth = require('solid-auth-client');
 const {
     format
-} = require('date-fns');
+} = require("date-fns");
 const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
 const BaseService = require('./BaseService');
 const CreateService = require('./CreateService');

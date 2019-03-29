@@ -131,7 +131,7 @@ class BaseService {
 
     async getInboxUrl(webId) {
         if (!this.inboxUrls[webId]) {
-            this.inboxUrls[webId] = (await this.getObjectFromPredicateForResource(webId, namespaces.ldp + 'inbox')).value;
+            this.inboxUrls[webId] = (await this.getObjectFromPredicateForResource(webId, namespaces.ldp + "inbox")).value;
         }
         return this.inboxUrls[webId];
     }
@@ -157,10 +157,10 @@ class BaseService {
             }]
         })
             .then(function (result) {
-                result.bindingsStream.on('data', data => {
+                result.bindingsStream.on('data', (data) => {
                     data = data.toObject();
 
-                    const resource = data['?resource'].value;
+                    const resource = data["?resource"].value;
                     //console.log(resource);
                     if (self.alreadyCheckedResources.indexOf(resource) === -1) {
                         newResources.push(resource);
@@ -168,8 +168,8 @@ class BaseService {
                     }
                 });
 
-                result.bindingsStream.on('end', function () {
-                    deferred.resolve(newResources); }); 
+                result.bindingsStream.on("end", function () {
+                    deferred.resolve(newResources); });
 				});
         return deferred.promise;
     }
@@ -187,7 +187,7 @@ class BaseService {
                     result.bindingsStream.on('data', async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-                        deferred.resolve({interlocutor: result['?interlocutor'].value, url: result['?invitation'].value, agent: result['?sender'].value, ievent: result['?chaturl'].value}); 
+                        deferred.resolve({interlocutor: result['?interlocutor'].value, url: result['?invitation'].value, agent: result['?sender'].value, ievent: result['?chaturl'].value});
 						});
                     result.bindingsStream.on('end', function () {
                         if (!invitationFound) {
