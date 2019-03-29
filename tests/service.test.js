@@ -168,16 +168,15 @@ describe('Services', function () {
         messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://decker.solid.community/profile/card#me", true, null);
 
     });
-	
+
 	it('Message Service: get new message from simulated inbox', async function () {
         let message = await messageService.getNewMessage("https://yarrick.solid.community/public/dechat_201903140619.ttl", null);
 
         assert.equal(message.inboxUrl, "https://yarrick.solid.community/public/dechat_201903140619.ttl", 'Url should be : -> https://yarrick.solid.community/public/dechat_201903140619.ttl');
-		assert.equal(message.messagetext, "The unenlightened masses", "Message text not properly loaded");
-		assert.equal(message.messageUrl, "https://sundowner.solid.community/private/dechat_201903281144.ttl#jtt86m2l", "Wrong message url");
-		assert.equal(message.author, "https://yarrick.solid.community/public/Group/Grupo C/Sundowner", "Author of message not properly loading");
-		assert.equal(message.time, "2119-03-28T23-46-30", "Time of message not properly loading");
-		
+    		assert.equal(message.messagetext, "The unenlightened masses", "Message text not properly loaded");
+    		assert.equal(message.messageUrl, "https://sundowner.solid.community/private/dechat_201903281144.ttl#jtt86m2l", "Wrong message url");
+    		assert.equal(message.author, "https://yarrick.solid.community/public/Group/Grupo C/Sundowner", "Author of message not properly loading");
+    		assert.equal(message.time, "2119-03-28T23-46-30", "Time of message not properly loading");
     });
 
 /*
@@ -224,7 +223,3 @@ describe('Services', function () {
     });
 
 });
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}

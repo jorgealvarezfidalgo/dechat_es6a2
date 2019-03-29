@@ -5,11 +5,11 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="7.738221912">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="5.292108083">
         </testcase>
-        <testcase name="And We put the bad credentials username &quot;unexistent&quot; and password &quot;unexistent&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="2.513699769">
+        <testcase name="And We put the bad credentials username &quot;unexistent&quot; and password &quot;unexistent&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="2.012567714">
         </testcase>
-        <testcase name="Then We click on &quot;login&quot; we will stay on the same page and no messages shown" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="0.673105391">
+        <testcase name="Then We click on &quot;login&quot; we will stay on the same page and no messages shown" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="0.504730868">
         </testcase>
     </testsuite>
     <testsuite name="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" tests="3" failures="0" skipped="0">
@@ -17,11 +17,11 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="7.180289794">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="4.475493116">
         </testcase>
-        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="3.057947723">
+        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="3.100704079">
         </testcase>
-        <testcase name="Then We click and we reach the home page with the messages shown" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="8.929182336">
+        <testcase name="Then We click and we reach the home page with the messages shown" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="9.177489523">
         </testcase>
     </testsuite>
     <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" tests="4" failures="0" skipped="0">
@@ -29,13 +29,13 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="5.779784826">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="4.400971379">
         </testcase>
-        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="2.955945034">
+        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="2.918477368">
         </testcase>
-        <testcase name="Then the messages will appear and we an existing conversation" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="8.653770651">
+        <testcase name="Then the messages will appear and we an existing conversation" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="8.928442017">
         </testcase>
-        <testcase name="Then we send the implicated friend a message &quot;hi friend&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="0.362315096">
+        <testcase name="Then we send the implicated friend a message &quot;hi friend&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="0.313132495">
         </testcase>
     </testsuite>
     <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" tests="4" failures="0" skipped="0">
@@ -43,13 +43,13 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="7.946672529">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="4.400543922">
         </testcase>
-        <testcase name="And We put the credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="3.307036019">
+        <testcase name="And We put the credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="3.272461252">
         </testcase>
-        <testcase name="Then the messages will appear and we select a friend in the friends&apos; section" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="0.039851109">
+        <testcase name="Then the messages will appear and we select a friend in the friends&apos; section" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="0.018560015">
         </testcase>
-        <testcase name="Then we should see friends and add groups and friends menu" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="9.397007483">
+        <testcase name="Then we should see friends and add groups and friends menu" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="8.96389923">
         </testcase>
     </testsuite>
     <testsuite name="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" tests="2" failures="0" skipped="0">
@@ -57,9 +57,9 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="When I search Google for &quot;dechat_es6a2&quot;" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="5.947214555">
+        <testcase name="When I search Google for &quot;dechat_es6a2&quot;" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="5.559458023">
         </testcase>
-        <testcase name="Then I should see &quot;Arquisoft&quot; in the result" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="0.588226672">
+        <testcase name="Then I should see &quot;Arquisoft&quot; in the result" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="0.902609306">
         </testcase>
     </testsuite>
 </testsuites>

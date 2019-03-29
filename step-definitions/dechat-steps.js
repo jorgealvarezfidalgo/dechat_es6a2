@@ -231,13 +231,13 @@ module.exports = function () {
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath('//*[@id="create-group"]')), 25000)
                     .then(() => {
-                        //see only one conversation
-                        return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[3]/section[1]/div[3]/div/div[1]')), 20000)
+                        //see only one conversation with Othmane Bakhtaoui
+                        return driver.wait(until.elementsLocated(by.xpath('//*[@id="chatwindow0"]/div[1]/div/h1')), 20000)
                             .then(() => {
                                 return driver.wait(until.elementsLocated(by.xpath('//*[@id="interlocutorw-name"]')), 20000)
-                                //search menu is active
+                                //show contact information
                                     .then(() => {
-                                        return driver.wait(until.elementsLocated(by.xpath('/html/body/div/div[3]/section[1]/div[2]/div[1]/input')), 20000);
+                                        return driver.wait(until.elementsLocated(by.xpath('//*[@id="show-contact-information"]')), 20000);
                                     })
                             })
                     })
