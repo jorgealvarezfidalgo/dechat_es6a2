@@ -32,6 +32,7 @@ class JoinChatService {
             format: winston.format.cli()
         });
     }
+
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
         var recipient = interlocutorWebId;
         var participants = [];
@@ -55,13 +56,14 @@ class JoinChatService {
         });
         console.log(recipient);
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
+            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
             logger.error(`Could not add chat to WebId.`);
-        }}
-		
+        }
+    }
+
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
         console.log(chat);
@@ -69,10 +71,23 @@ class JoinChatService {
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
             chat.friendIds.splice(0, 1);
-            chatJoined = new Group({url: fileurl, chatBaseUrl: userDataUrl, userWebId, members: chat.friendIds, interlocutorName: name.replace(/U\+0020/g, " "), interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "), photo: "main/resources/static/img/group.jpg"
+            chatJoined = new Group({
+                url: fileurl,
+                chatBaseUrl: userDataUrl,
+                userWebId,
+                members: chat.friendIds,
+                interlocutorName: name.replace(/U\+0020/g, " "),
+                interlocutorWebId: "Group/" + name.replace(/U\+0020/g, " "),
+                photo: "main/resources/static/img/group.jpg"
             });
         } else {
-            chatJoined = new SemanticChat({url: fileurl, messageBaseUrl: userDataUrl, userWebId, interlocutorWebId: chat.friendIds[0], interlocutorName: await baseService.getFormattedName(chat.friendIds[0]) });
+            chatJoined = new SemanticChat({
+                url: fileurl,
+                messageBaseUrl: userDataUrl,
+                userWebId,
+                interlocutorWebId: chat.friendIds[0],
+                interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
+            });
         }
         console.log("Chat processed");
         console.log(chatJoined);
@@ -89,7 +104,12 @@ class JoinChatService {
         console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
         uploader.deleteFileForUser(fileurl);
-        return {friendIds, chatUrl, invitationUrl: fileurl, recipient};
+        return {
+            friendIds,
+            chatUrl,
+            invitationUrl: fileurl,
+            recipient
+        };
     }
 }
 module.exports = JoinChatService;
