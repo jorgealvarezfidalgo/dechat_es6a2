@@ -234,6 +234,30 @@ describe('Services', function () {
 		console.log(invite);
 		assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
     });
+	
+	it('Process chat to join', async function () {
+		var ids = ["https://morningstar.solid.community/profile/card#me"];
+        const chat = {friendIds: ids};
+		const semanticChat = await joinService.processChatToJoin(chat, "https://helbrecht.solid.community/private/dechat_201903231229.ttl","https://helbrecht.solid.community/profile/card#me" , null);
+		assert.equal(semanticChat.url, "https://helbrecht.solid.community/private/dechat_201903231229.ttl", 'the file url is not correct: ->' + semanticChat.url);
+		assert.equal(semanticChat.messageBaseUrl, null, 'It should be null: ->' + semanticChat.messageBaseUrl);
+		assert.equal(semanticChat.userWebId, "https://helbrecht.solid.community/profile/card#me", 'the user id is not correct: ->' + semanticChat.userWebId);
+		assert.equal(semanticChat.interlocutorWebId, "https://morningstar.solid.community/profile/card#me", 'the interlocutor id is not correct: ->' + semanticChat.interlocutorWebId);
+		assert.equal(semanticChat.interlocutorName, "Luci", 'the formatted name is not correct: ->' + semanticChat.interlocutorName);
+		
+		ids = [ "Group/SrpskaU+0020Garda","https://sundowner.solid.community/profile/card#me","https://morningstar.solid.community/profile/card#me"];
+		const group = {friendIds: ids};
+		const semanticGroup = await joinService.processChatToJoin(group, "https://helbrecht.solid.community/private/dechat_201903231230.ttl","https://helbrecht.solid.community/profile/card#me" , null);
+		assert.equal(semanticGroup.url, "https://helbrecht.solid.community/private/dechat_201903231230.ttl", 'the file url is not correct: ->' + semanticGroup.url);
+		assert.equal(semanticGroup.messageBaseUrl, null, 'It should be null: ->' + semanticGroup.messageBaseUrl);
+		assert.equal(semanticGroup.userWebId, "https://helbrecht.solid.community/profile/card#me", 'the user id is not correct: ->' + semanticGroup.userWebId);
+		assert.equal(semanticGroup.interlocutorWebId, "Group/Srpska Garda", 'the interlocutor id is not correct: ->' + semanticGroup.interlocutorWebId);
+		assert.equal(semanticGroup.interlocutorName, "Srpska Garda", 'the formatted name is not correct: ->' + semanticGroup.interlocutorName);
+		ids.splice(0, 1);
+		assert.equal(semanticGroup.members, ids, 'the members are not correct: ->' + semanticGroup.members);
+		
+		
+    });
 
     it('Join Services Test: processChatToJoin and getJoinRequest', async function () {
       const invite = baseService.getInvitation("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl");

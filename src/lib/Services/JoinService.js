@@ -46,7 +46,6 @@ class JoinChatService {
         }
         console.log("B");
         participants.forEach(async mem => {
-
             console.log("Guardando en POD B a: " + mem);
             var invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             console.log(invitation);
@@ -65,10 +64,7 @@ class JoinChatService {
         } catch (e) {
             logger.error(`Could not add chat to WebId.`);
             logger.error(e);
-        }
-
-
-    }
+        }}
 
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
