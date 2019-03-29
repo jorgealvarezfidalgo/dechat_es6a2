@@ -219,6 +219,11 @@ describe('Services', function () {
         //if no error then it's all good
         //the other cases cannot be tested as the file urls are private and cannot be accessed.
     });
+	
+	it('Get Invitation test', async function () {
+        const invite = baseService.getInvitation("https://othbak.solid.community/public/dechat_201903160752.ttl");
+		assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
+    });
 
     it('Join Services Test: processChatToJoin and getJoinRequest', async function () {
       const invite = baseService.getInvitation("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl");
