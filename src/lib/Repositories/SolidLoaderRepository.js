@@ -49,6 +49,8 @@ class SolidLoaderRepository {
      * This method loads the messages from the url passed through the parameter
      */
     async loadFromUrl(chat, chatUrl) {
+		
+		console.log("Loading from url");
 
         const messages = await this._findMessage(chatUrl);
 

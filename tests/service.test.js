@@ -180,10 +180,10 @@ describe('Services', function () {
 		
     });
 
-/*
+
     it('Group chat tests using loader', async function () {
         //group chat
-        const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl#jtklh91x#jtklhe65', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
+        const groupChat = await loader.loadGroupFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl');
 
         const selfPhoto = await baseService.getPhoto(groupChat.userWebId);
         assert.equal(selfPhoto, null, 'The user does not have a photo : ' + groupChat.userWebId + ' ->' + selfPhoto);
@@ -191,11 +191,10 @@ describe('Services', function () {
         const name = await baseService.getFormattedName(groupChat.userWebId);
         assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
 
-        const chats = await openService.getChatsToOpen(groupChat.userWebId);
-        //the user for the moment have 4 messages
-        assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
+        //the group for the moment has 1 messages
+        assert.equal(groupChat.getNumberOfMsgs(), 1, 'the number of messages is not correct : ' + groupChat.getNumberOfMsgs());
     });
-    */
+    
 
 /*
     it('Group chat tests using openService.js', async function () {
