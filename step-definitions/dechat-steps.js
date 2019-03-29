@@ -212,7 +212,7 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^the messages will appear and we select a friend in the friends" section$/, () => {
+    this.Then(/^the messages will appear and we select a friend in the friends' section$/, () => {
         //username correct
         return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000)
             .then(() => {
