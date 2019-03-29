@@ -188,7 +188,7 @@ class BaseService {
 				<${namespaces.schema}recipient> ?interlocutor.
 			  }`;
 
-            engine.query(,sselect { sources: [{ type: 'rdfjsSource', value: rdfjsSource }]
+            engine.query(sselect, { sources: [{ type: 'rdfjsSource', value: rdfjsSource }]
             })
                 .then(function (result) {
                     result.bindingsStream.on('data', async function (result) {
