@@ -47,24 +47,7 @@ class BaseService {
         let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'name');
 
         if (!formattedName) {
-            formattedName = null;
-            const firstname = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'givenName');
-            const lastname = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + 'lastName');
-            if (firstname) {
-                formattedName = firstname;
-            }
-            if (lastname) {
-                if (formattedName) {
-                    formattedName += ' ';
-                } else {
-                    formattedName = '';
-                }
-
-                formattedName += lastname;
-            }
-            if (!formattedName) {
                 formattedName = webid;
-            }
         } else {
             formattedName = formattedName.value;
         }
