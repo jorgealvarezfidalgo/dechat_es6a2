@@ -14,7 +14,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 5006664301
+              "duration": 4551058214
             },
             "line": 7,
             "match": {
@@ -27,7 +27,7 @@
             "name": "We put the bad credentials username \"unexistent\" and password \"unexistent\"",
             "result": {
               "status": "passed",
-              "duration": 1891489890
+              "duration": 2023126932
             },
             "line": 8,
             "match": {
@@ -40,7 +40,7 @@
             "name": "We click on \"login\" we will stay on the same page and no messages shown",
             "result": {
               "status": "passed",
-              "duration": 435479258
+              "duration": 480062404
             },
             "line": 9,
             "match": {
@@ -52,7 +52,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 38829858
+              "duration": 23429155
             },
             "hidden": true,
             "match": {
@@ -75,7 +75,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 4773039623
+              "duration": 6473615387
             },
             "line": 12,
             "match": {
@@ -88,7 +88,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\"",
             "result": {
               "status": "passed",
-              "duration": 2507120204
+              "duration": 2447909095
             },
             "line": 13,
             "match": {
@@ -101,7 +101,7 @@
             "name": "We click and we reach the home page with the messages shown",
             "result": {
               "status": "passed",
-              "duration": 9966838887
+              "duration": 9334619919
             },
             "line": 14,
             "match": {
@@ -113,7 +113,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 794765665
+              "duration": 833655968
             },
             "hidden": true,
             "match": {
@@ -136,7 +136,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 4903582344
+              "duration": 4363935893
             },
             "line": 17,
             "match": {
@@ -149,7 +149,7 @@
             "name": "We put the good credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
               "status": "passed",
-              "duration": 2612715151
+              "duration": 2941420596
             },
             "line": 18,
             "match": {
@@ -162,7 +162,7 @@
             "name": "the messages will appear and we an existing conversation",
             "result": {
               "status": "passed",
-              "duration": 9108605320
+              "duration": 9016551914
             },
             "line": 19,
             "match": {
@@ -175,7 +175,7 @@
             "name": "we send the implicated friend a message \"hi friend\"",
             "result": {
               "status": "passed",
-              "duration": 317200448
+              "duration": 307487848
             },
             "line": 20,
             "match": {
@@ -187,7 +187,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1023463129
+              "duration": 835623771
             },
             "hidden": true,
             "match": {
@@ -210,7 +210,7 @@
             "name": "We visit the \"https://arquisoft.github.io/dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 4795880135
+              "duration": 4806273032
             },
             "line": 23,
             "match": {
@@ -223,7 +223,7 @@
             "name": "We put the credentials username \"asw\" and password \"asw-2018-19\" and click on \"login\"",
             "result": {
               "status": "passed",
-              "duration": 2571106821
+              "duration": 2533295039
             },
             "line": 24,
             "match": {
@@ -236,7 +236,7 @@
             "name": "the messages will appear and we select a friend in the friends' section",
             "result": {
               "status": "passed",
-              "duration": 32000815
+              "duration": 28101158
             },
             "line": 25,
             "match": {
@@ -249,7 +249,7 @@
             "name": "we should see friends and add groups and friends menu",
             "result": {
               "status": "passed",
-              "duration": 8954309495
+              "duration": 9000967112
             },
             "line": 26,
             "match": {
@@ -261,7 +261,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 907294346
+              "duration": 1008212550
             },
             "hidden": true,
             "match": {
@@ -284,7 +284,7 @@
             "name": "I search Google for \"dechat_es6a2\"",
             "result": {
               "status": "passed",
-              "duration": 5434418121
+              "duration": 5604052230
             },
             "line": 29,
             "match": {
@@ -297,7 +297,7 @@
             "name": "I should see \"Arquisoft\" in the result",
             "result": {
               "status": "passed",
-              "duration": 609748630
+              "duration": 589882540
             },
             "line": 30,
             "match": {
@@ -309,7 +309,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 862557126
+              "duration": 755175313
             },
             "hidden": true,
             "match": {

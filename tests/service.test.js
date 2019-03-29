@@ -60,7 +60,7 @@ describe('Services', function () {
         var updates = await baseService.checkUserInboxForUpdates("https://yarrick.solid.community/public/");
         assert.notEqual(updates, null, 'the user does have updates' + updates);
 
-        const inv = baseService.getInvitation("https://oth1.solid.community/public/");
+        const inv = baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl#jtbuliv7");
         assert.notEqual(inv, null, 'the user does have an invitation ->' + inv);
   });
 
