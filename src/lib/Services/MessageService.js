@@ -37,7 +37,6 @@ class MessageService {
     if (rdfjsSource) {
       const engine = newEngine();
       let messageFound = false;
-      //const self = this;
       engine.query(`SELECT * {
   				?message a <${namespaces.schema}Message>;
   					<${namespaces.schema}dateSent> ?time;
@@ -51,7 +50,6 @@ class MessageService {
         })
         .then(function(result) {
           result.bindingsStream.on('data', async function(result) {
-            //console.log(result);
             messageFound = true;
             result = result.toObject();
             const messageUrl = result['?message'].value;

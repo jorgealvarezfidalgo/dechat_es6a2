@@ -33,7 +33,6 @@ class JoinChatService {
         });
     }
 
-
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
         var recipient = interlocutorWebId;
         var participants = [];
@@ -46,36 +45,29 @@ class JoinChatService {
         }
         console.log("B");
         participants.forEach(async mem => {
-
             console.log("Guardando en POD B a: " + mem);
             var invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             console.log(invitation);
             try {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
-                console.log("?");
                 logger.error(`Could not add chat to WebId.`);
-                logger.error(e);
             }
         });
         console.log(recipient);
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
+            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
-            console.log("?");
             logger.error(`Could not add chat to WebId.`);
-            logger.error(e);
         }
-
-
     }
 
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         console.log("Info to join:");
         console.log(chat);
-        var chatJoined;
+        var chatJoined = null;
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
             chat.friendIds.splice(0, 1);
@@ -99,10 +91,8 @@ class JoinChatService {
         }
         console.log("Chat processed");
         console.log(chatJoined);
-
         return chatJoined;
     }
-
     async getJoinRequest(fileurl, userWebId) {
         console.log(fileurl);
         var chat = await baseService.getInvitation(fileurl);
@@ -114,7 +104,6 @@ class JoinChatService {
         console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
         uploader.deleteFileForUser(fileurl);
-
         return {
             friendIds,
             chatUrl,
@@ -122,7 +111,5 @@ class JoinChatService {
             recipient
         };
     }
-
 }
-
 module.exports = JoinChatService;

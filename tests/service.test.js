@@ -24,11 +24,17 @@ describe('Services', function () {
   it('base Service tests', async function () {
       const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
-      const selfPhoto = await baseService.getPhoto(chat.userWebId);
+      var selfPhoto = await baseService.getPhoto(chat.userWebId);
       assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+	  
+	  selfPhoto = await baseService.getPhoto("https://helbrecht.solid.community/profile/card#me");
+      assert.equal("https://helbrecht.solid.community/profile/Lord_High_Marshal_Helbrecht.jpg", selfPhoto, 'The user photo is not ->' + selfPhoto);
 
       const name = await baseService.getFormattedName(chat.userWebId);
       assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+	  
+	  const group = await baseService.getFormattedName("URL/Group/VrilU+0020Society");
+      assert.equal(group, 'Vril Society', 'The group name is not correct : ->' + group);
 
       const note = await baseService.getNote(chat.userWebId);
       assert.equal(note, null, 'we do not have a note yet.');
@@ -41,6 +47,10 @@ describe('Services', function () {
       //we do not have an invitation
       const invite = baseService.getInvitation(chat.fileurl);
       assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
+	  
+	  //Delete a file
+	  baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
+	  baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
   });
 
   it('more base Service tests', async function () {
@@ -172,6 +182,10 @@ describe('Services', function () {
         assert.equal(group.members[2], null, 'we only have two friends and the user in this group.');
 
     });
+	
+	it('Joining group, but failing due to wrong data', async function () {
+        await joinService.joinExistingChat("Noacceptabledata", "Group/WorldMarshal",'https://helbrechtttt.solid.community/profile/card#me',"anurl", "World Marshal", ["Nonexistant1", "Nonexistant2"]);
+    });
 
     it('Message Service tests', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
@@ -218,6 +232,36 @@ describe('Services', function () {
         await joinService.joinExistingChat(userDataUrl, "https://othbak.solid.community/profile/card#me", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903221145.ttl#jtknkfrd", "Othmane Bakhtaoui", undefined);
         //if no error then it's all good
         //the other cases cannot be tested as the file urls are private and cannot be accessed.
+    });
+	
+	it('Get Invitation test', async function () {
+        const invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
+		console.log(invite);
+		assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
+    });
+	
+	it('Process chat to join', async function () {
+		var ids = ["https://morningstar.solid.community/profile/card#me"];
+        const chat = {friendIds: ids};
+		const semanticChat = await joinService.processChatToJoin(chat, "https://helbrecht.solid.community/private/dechat_201903231229.ttl","https://helbrecht.solid.community/profile/card#me" , null);
+		assert.equal(semanticChat.url, "https://helbrecht.solid.community/private/dechat_201903231229.ttl", 'the file url is not correct: ->' + semanticChat.url);
+		assert.equal(semanticChat.messageBaseUrl, null, 'It should be null: ->' + semanticChat.messageBaseUrl);
+		assert.equal(semanticChat.userWebId, "https://helbrecht.solid.community/profile/card#me", 'the user id is not correct: ->' + semanticChat.userWebId);
+		assert.equal(semanticChat.interlocutorWebId, "https://morningstar.solid.community/profile/card#me", 'the interlocutor id is not correct: ->' + semanticChat.interlocutorWebId);
+		assert.equal(semanticChat.interlocutorName, "Luci", 'the formatted name is not correct: ->' + semanticChat.interlocutorName);
+		
+		ids = [ "Group/SrpskaU+0020Garda","https://sundowner.solid.community/profile/card#me","https://morningstar.solid.community/profile/card#me"];
+		const group = {friendIds: ids};
+		const semanticGroup = await joinService.processChatToJoin(group, "https://helbrecht.solid.community/private/dechat_201903231230.ttl","https://helbrecht.solid.community/profile/card#me" , null);
+		assert.equal(semanticGroup.url, "https://helbrecht.solid.community/private/dechat_201903231230.ttl", 'the file url is not correct: ->' + semanticGroup.url);
+		assert.equal(semanticGroup.messageBaseUrl, null, 'It should be null: ->' + semanticGroup.messageBaseUrl);
+		assert.equal(semanticGroup.userWebId, "https://helbrecht.solid.community/profile/card#me", 'the user id is not correct: ->' + semanticGroup.userWebId);
+		assert.equal(semanticGroup.interlocutorWebId, "Group/Srpska Garda", 'the interlocutor id is not correct: ->' + semanticGroup.interlocutorWebId);
+		assert.equal(semanticGroup.interlocutorName, "Srpska Garda", 'the formatted name is not correct: ->' + semanticGroup.interlocutorName);
+		ids.splice(0, 1);
+		assert.equal(semanticGroup.members, ids, 'the members are not correct: ->' + semanticGroup.members);
+		
+		
     });
 
     it('Join Services Test: processChatToJoin and getJoinRequest', async function () {
