@@ -21,6 +21,49 @@ const loader = new Loader(auth.fetch);
 
 describe('Services', function () {
 
+  it('base Service tests', async function () {
+      const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
+
+      const selfPhoto = await baseService.getPhoto(chat.userWebId);
+      assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
+
+      const name = await baseService.getFormattedName(chat.userWebId);
+      assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
+
+      const note = await baseService.getNote(chat.userWebId);
+      assert.equal(note, null, 'we do not have a note yet.');
+
+      const userDataUrl = await baseService.getDefaultDataUrl(chat.userWebId);
+      chat.url = await baseService.generateUniqueUrlForResource(userDataUrl);
+      //everytime should be different
+      assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
+
+      //we do not have an invitation
+      const invite = baseService.getInvitation(chat.fileurl);
+      assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
+  });
+
+  it('more base Service tests', async function () {
+      const note2 = await baseService.getNote("https://oth3.solid.community/profile/card#me");
+      assert.equal(note2, "testing", 'we do have a note ->' + note2);
+
+      const defaultPic = await baseService.getDefaultFriendPhoto();
+      assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
+  });
+
+  it('base Service tests -> updates and invitations', async function () {
+        //this user does have an invitation
+        const anotherInvitation = baseService.getInvitation("https://yarrick.solid.community/public/");
+        assert.notEqual(anotherInvitation, null, 'the invitation url is not correct: ->' + anotherInvitation);
+
+        //check user inbox for updates
+        var updates = await baseService.checkUserInboxForUpdates("https://yarrick.solid.community/public/");
+        assert.notEqual(updates, null, 'the user does have updates' + updates);
+
+        const inv = baseService.getInvitation("https://oth1.solid.community/public/");
+        assert.notEqual(inv, null, 'the user does have an invitation ->' + inv);
+  });
+
     it('checking the picture and name are correct using loader', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
@@ -130,34 +173,6 @@ describe('Services', function () {
 
     });
 
-    it('base Service tests', async function () {
-        const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
-
-        const selfPhoto = await baseService.getPhoto(chat.userWebId);
-        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + chat.userWebId + ' ->' + selfPhoto);
-
-        const name = await baseService.getFormattedName(chat.userWebId);
-        assert.equal(name, 'Othmane Bakhtaoui', 'The user name is not correct : ->' + name);
-
-        const note = await baseService.getNote(chat.userWebId);
-        assert.equal(note, null, 'we do not have a note yet.');
-
-        const defaultPic = await baseService.getDefaultFriendPhoto();
-        assert.equal(defaultPic, "main/resources/static/img/friend_default.jpg", 'Default picture is incorrect.');
-
-        const userDataUrl = await baseService.getDefaultDataUrl(chat.userWebId);
-        chat.url = await baseService.generateUniqueUrlForResource(userDataUrl);
-        //everytime should be different
-        assert.notEqual(chat.url, "https://othbak.solid.community/private/dechat_201903220911.ttl#yeb74cmsjtki2wzo", 'chat unique url is not correct');
-
-        //invite is not null
-        const invite = baseService.getInvitation(chat.fileurl);
-        assert.equal(invite.sender, null, 'the invitation url is not correct: ->' + invite.sender);
-
-        //deleting used chat.url
-        baseService.deleteFileForUser(chat.url);
-    });
-
     it('Message Service tests', async function () {
         const chat = await loader.loadChatFromUrl('https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl', 'https://othbak.solid.community/profile/card#me', 'https://othbak.solid.community/public/unittest_201903201125.ttl');
 
@@ -168,6 +183,7 @@ describe('Services', function () {
         messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", '2119-03-22T22-08-59', "hey", "https://decker.solid.community/profile/card#me", true, null);
 
     });
+
 
 	it('Message Service: get new message from simulated inbox', async function () {
         let message = await messageService.getNewMessage("https://yarrick.solid.community/public/dechat_201903140619.ttl", null);
@@ -193,24 +209,7 @@ describe('Services', function () {
         //the group for the moment has 1 messages
         assert.equal(groupChat.getNumberOfMsgs(), 1, 'the number of messages is not correct : ' + groupChat.getNumberOfMsgs());
     });
-    
 
-/*
-    it('Group chat tests using openService.js', async function () {
-        const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
-        const groupChat = await openService.loadChatFromUrl('https://morningstar.solid.community/public/dechat_201903221046.ttl', 'https://morningstar.solid.community/profile/card#me', 'https://morningstar.solid.community/public/dechat_201903221046.ttl', "https://othbak.solid.community/profile/card#me");
-
-        const selfPhoto = await baseService.getPhoto(groupChat.userWebId);
-        assert.equal(selfPhoto, null, 'The user does not have a photo : ' + groupChat.userWebId + ' ->' + selfPhoto);
-
-        const name = await baseService.getFormattedName(groupChat.userWebId);
-        assert.equal(name, 'Luci', 'The user name is not correct : ->' + name);
-
-        const chats = await openService.getChatsToOpen(groupChat.userWebId);
-        //the user for the moment have 4 messages
-        assert.equal(chats.length, 4, 'the number of messages is not correct : ' + chats.length);
-    });
-*/
     it('Join service test', async function () {
         const userDataUrl = await baseService.getDefaultDataUrl("https://morningstar.solid.community/profile/card#me");
         //cannot be tested as it changes the time
@@ -219,6 +218,18 @@ describe('Services', function () {
         await joinService.joinExistingChat(userDataUrl, "https://othbak.solid.community/profile/card#me", "https://morningstar.solid.community/profile/card#me", "https://morningstar.solid.community/private/dechat_201903221145.ttl#jtknkfrd", "Othmane Bakhtaoui", undefined);
         //if no error then it's all good
         //the other cases cannot be tested as the file urls are private and cannot be accessed.
+    });
+
+    it('Join Services Test: processChatToJoin and getJoinRequest', async function () {
+      const invite = baseService.getInvitation("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl");
+      assert.notEqual(invite, null, 'the invitation url is not correct: ->' + invite);
+
+      var join = joinService.getJoinRequest("https://othbak.solid.community/public/dechat_201903110835.ttl", "https://othbak.solid.community/profile/card#me");
+      assert.notEqual(join, null, 'the user does have a join request: ->' + join);
+
+      var processChatToJoin = joinService.processChatToJoin("https://othbak.solid.community/public/dechat_201903110835.ttl", "https://othbak.solid.community/public/dechat_201903110835.ttl", "https://othbak.solid.community/profile/card#me", "https://othbak.solid.community/profile/card#me" ,"https://othbak.solid.community/public/dechat_201903110835.ttl");
+      assert.notEqual(processChatToJoin, null, 'the user does have a join request: ->' + processChatToJoin);
+
     });
 
 });
