@@ -1,35 +1,12 @@
-const N3 = require('n3');
-const Q = require('q');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
-const namespaces = require('../namespaces');
-const uniqid = require('uniqid');
-const winston = require('winston');
-const URI = require('uri-js');
-const auth = require('solid-auth-client');
-const {
-  format
-} = require('date-fns');
-const rdfjsSourceFromUrl = require('../Repositories/rdfjssourcefactory').fromUrl;
-const Loader = require('../Repositories/SolidLoaderRepository');
-const BaseService = require('./BaseService');
-
+const Service = require("./Service");
+const BaseService = require("./BaseService");
 
 let baseService = new BaseService(auth.fetch);
 
-let loader = new Loader(auth.fetch);
-
-
-class OpenService {
-  constructor(fetch) {
-    this.fetch = fetch;
-	this.logger = winston.createLogger({
-      level: 'error',
-      transports: [
-        new winston.transports.Console(),
-      ],
-      format: winston.format.cli()
-    });
-  }
+class OpenService extends Service {
+    constructor(fetch) {
+        super(fetch);
+    }
 
   /**
    * This method returns all the chats that a user can continue, based on his WebId.
@@ -53,26 +30,26 @@ class OpenService {
   				<${namespaces.storage}storeIn> ?url.
   		  }`, {
           sources: [{
-            type: 'rdfjsSource',
+            type: "rdfjsSource",
             value: rdfjsSource
           }]
         })
-        .then(result => {
-          result.bindingsStream.on('data', async (data) => {
+        .then((result) => {
+          result.bindingsStream.on("data", async (data) => {
             const deferred = Q.defer();
             promises.push(deferred.promise);
             data = data.toObject();
             chatUrls.push({
-              chatUrl: data['?chat'].value,
-              storeUrl: data['?url'].value,
-              interlocutor: data['?int'].value
+              chatUrl: data["?chat"].value,
+              storeUrl: data["?url"].value,
+              interlocutor: data["?int"].value
             });
             deferred.resolve();
           });
 
-          result.bindingsStream.on('end', function() {
+          result.bindingsStream.on("end", function() {
             Q.all(promises).then(() => {
-              //console.log(chatUrls);
+              ////console.log(chatUrls);
               deferred.resolve(chatUrls);
             });
           });
@@ -85,11 +62,11 @@ class OpenService {
   }
 
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
-	  if(interloc.includes("Group")) {
-		  return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
-	  } else {
-		  return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
-	  }
+	if(interloc.includes("Group")) {
+		return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
+	} else {
+		return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
+	}
   }
 }
 module.exports = OpenService;

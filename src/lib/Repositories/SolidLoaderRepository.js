@@ -1,10 +1,10 @@
-const N3 = require('n3');
-const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine;
-const Q = require('q');
-const streamify = require('streamify-array');
-const namespaces = require('../namespaces');
-const SemanticChat = require('../semanticchat');
-const Group = require('../Group');
+const n3 = require("n3");
+const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
+const Q = require("q");
+const streamify = require("streamify-array");
+const namespaces = require("../namespaces");
+const SemanticChat = require("../semanticchat");
+const Group = require("../Group");
 
 /**
  * The Loader allows creating a Semantic Chat instance via information loaded from an url.
@@ -31,7 +31,7 @@ class SolidLoaderRepository {
 
 	async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
 
-		console.log("Interlocutor group");
+		//console.log("Interlocutor group");
 		var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
 
         const chat = new Group({
@@ -41,7 +41,7 @@ class SolidLoaderRepository {
 			      members: ids
         });
 
-		console.log(chat);
+		//console.log(chat);
         return await this.loadFromUrl(chat, chatUrl);
     }
 
@@ -50,7 +50,7 @@ class SolidLoaderRepository {
      */
     async loadFromUrl(chat, chatUrl) {
 		
-		console.log("Loading from url");
+		//console.log("Loading from url");
 
         const messages = await this._findMessage(chatUrl);
 
@@ -75,26 +75,26 @@ class SolidLoaderRepository {
 		<${namespaces.schema}givenName> ?username;
 		<${namespaces.schema}text> ?msgtext. }`, {
                 sources: [{
-                    type: 'rdfjsSource',
+                    type: "rdfjsSource",
                     value: rdfjsSource
                 }]
             })
             .then(function(result) {
-                result.bindingsStream.on('data', data => {
+                result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
-                    if (data['?msgtext']) {
-                        var messageText = data['?msgtext'].value.split("/")[4];
-                        var author = data['?username'].value.split("/").pop();
+                    if (data["?msgtext"]) {
+                        var messageText = data["?msgtext"].value.split("/")[4];
+                        var author = data["?username"].value.split("/").pop();
                         results.push({
                             messagetext: messageText.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":"),
-                            url: data['?message'].value,
+                            url: data["?message"].value,
                             author: author.replace(/U\+0020/g, " "),
-                            time: data['?time'].value.split("/")[4]
+                            time: data["?time"].value.split("/")[4]
                         });
                     }
                 });
 
-                result.bindingsStream.on('end', function() {
+                result.bindingsStream.on("end", function() {
                     deferred.resolve(results);
                 });
             });
@@ -103,7 +103,7 @@ class SolidLoaderRepository {
     }
 
     /**
-     * This method is in charge of finding the webId of the user's friend
+     * This method is in charge of finding the webId of the user"s friend
      */
     async findWebIdOfInterlocutor(chatUrl, userWebId) {
         const deferred = Q.defer();
@@ -116,19 +116,19 @@ class SolidLoaderRepository {
 			<${namespaces.schema}agent> ?agent;
 			<${namespaces.schema}recipient> ?recipient.
     }`, {                sources: [{
-                    type: 'rdfjsSource',
+                    type: "rdfjsSource",
                     value: rdfjsSource
                 }]
             })
 			.then(function(result) {
-                result.bindingsStream.on('data', data => {
+                result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
-                    if (data['?recipient']) {
-                        results.push(data['?recipient']);
+                    if (data["?recipient"]) {
+                        results.push(data["?recipient"]);
                     }
                 });
 
-                result.bindingsStream.on('end', function() {
+                result.bindingsStream.on("end", function() {
                     deferred.resolve(results);
                 });
             });
@@ -142,13 +142,13 @@ class SolidLoaderRepository {
         const deferred = Q.defer();
 
         this.fetch(url)
-            .then(async res => {
+            .then(async (res) => {
                 if (res.status === 404) {
                     deferred.reject(404);
                 } else {
                     const body = await res.text();
-                    const store = N3.Store();
-                    const parser = N3.Parser({
+                    const store = n3.Store();
+                    const parser = n3.Parser({
                         baseIRI: res.url
                     });
 

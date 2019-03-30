@@ -1,4 +1,4 @@
-const URI = require('uri-js');
+const URI = require("uri-js");
 
 /**
  * A class with helper methods for read and write of Solid PODs.
@@ -19,7 +19,7 @@ class SolidUploaderRepository {
      */
     deleteFileForUser(url) {
         return this.fetch(url, {
-            method: 'DELETE'
+            method: "DELETE"
         });
     }
 
@@ -31,10 +31,10 @@ class SolidUploaderRepository {
      */
     executeSPARQLUpdateForUser(url, query) {
         return this.fetch(url, {
-            method: 'PATCH',
+            method: "PATCH",
             body: query,
             headers: {
-                'Content-Type': 'application/sparql-update'
+                "Content-Type": "application/sparql-update"
             }
         });
     }
@@ -47,7 +47,7 @@ class SolidUploaderRepository {
      */
     sendToInterlocutorInbox(url, data) {
         return this.fetch(url, {
-            method: 'POST',
+            method: "POST",
             body: data
         });
     }

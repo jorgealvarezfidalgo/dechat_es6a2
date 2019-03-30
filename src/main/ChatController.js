@@ -1,16 +1,16 @@
 "use strict";
 
-const BaseService = require('../lib/Services/BaseService');
-const JoinService = require('../lib/Services/JoinService');
-const MessageService = require('../lib/Services/MessageService');
-const OpenService = require('../lib/Services/OpenService');
-const CreateService = require('../lib/Services/CreateService');
-const SemanticChat = require('../lib/semanticchat');
-const auth = require('solid-auth-client');
+const BaseService = require("../lib/Services/BaseService");
+const JoinService = require("../lib/Services/JoinService");
+const MessageService = require("../lib/Services/MessageService");
+const OpenService = require("../lib/Services/OpenService");
+const CreateService = require("../lib/Services/CreateService");
+const SemanticChat = require("../lib/semanticchat");
+const auth = require("solid-auth-client");
 const {
     default: data
-} = require('@solid/query-ldflex');
-const namespaces = require('../lib/namespaces');
+} = require("@solid/query-ldflex");
+const namespaces = require("../lib/namespaces");
 
 
 let baseService = new BaseService(auth.fetch);
@@ -34,22 +34,22 @@ let currentChat;
 let showingContacts = false;
 
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $("[data-toggle='tooltip']").tooltip();
 });
 
 /**
  *    This method is in charge of showing the popup to login or register
  */
-$('.login-btn').click(() => {
+$(".login-btn").click(() => {
     auth.popupLogin({
-        popupUri: 'https://solid.github.io/solid-auth-client/dist/popup.html'
+        popupUri: "https://solid.github.io/solid-auth-client/dist/popup.html"
     });
 });
 
 /**
- *    This method is in charge of the user's logout
+ *    This method is in charge of the user"s logout
  */
-$('#logout-btn').click(() => {
+$("#logout-btn").click(() => {
     auth.logout();
 	location.reload(true);
     $(".contact-list").html("");
@@ -61,145 +61,17 @@ $('#logout-btn').click(() => {
     semanticChats = [];
     contactsWithChat = [];
     contactsForGroup = [];
-    $(".wrap").addClass('hidden');
-    $(".mustlogin").removeClass('hidden');
-    $('#interlocutorw-name').text("");
-    $('#interlocutorphoto').attr("src", "");
+    $(".wrap").addClass("hidden");
+    $(".mustlogin").removeClass("hidden");
+    $("#interlocutorw-name").text("");
+    $("#interlocutorphoto").attr("src", "");
 });
 
 /**
  * This method updates the UI after a chat option has been selected by the user.
  */
 function afterChatOption() {
-    $('#chat-options').addClass('hidden');
-}
-
-/**
- *    This method is in charge of the user's login
- */
-auth.trackSession(async session => {
-    const loggedIn = !!session;
-    //alert(`logged in: ${loggedIn}`);
-
-    if (loggedIn) {
-        $('#user-menu').removeClass('hidden');
-        $('#nav-login-btn').addClass('hidden');
-        $('#login-required').modal('hide');
-        $(".mustlogin").addClass('hidden');
-        $(".loading").removeClass('hidden');
-		
-
-        userWebId = session.webId;
-        const name = await baseService.getFormattedName(userWebId);
-
-        if (name) {
-            $('#user-name').removeClass('hidden');
-            $('#user-name').text(name);
-        }
-        openChats = [];
-        const chats = await openService.getChatsToOpen(userWebId);
-		if(chats) {
-        chats.forEach(async chat => {
-            openChats.push(chat);
-        });
-		}
-
-        await startChat();
-        await sleep(8000);
-        await loadChats();
-        checkForNotifications();
-        $(".wrap").removeClass('hidden');
-        $(".loading").addClass('hidden');
-        // refresh every 3sec
-        refreshIntervalId = setInterval(checkForNotifications, 3000);
-    } else {
-        //alert("you're not logged in");
-        $('#nav-login-btn').removeClass('hidden');
-        $('#user-menu').addClass('hidden');
-        $('#new-chat-options').addClass('hidden');
-        $('#join-chat-options').addClass('hidden');
-        $('#open-chat-options').addClass('hidden');
-        userWebId = null;
-        clearInterval(refreshIntervalId);
-        refreshIntervalId = null;
-    }
-});
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
- * This method checks if a new message has been made by the friend.
- * The necessarily data is stored and the UI is updated.
- * @returns {Promise<void>}
- */
-async function checkForNotifications() {
-    //console.log('Checking for new notifications');
-	
-    const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
-    //console.log(updates);
-
-    updates.forEach(async (fileurl) => {
-
-        //console.log(fileurl);
-
-        // check for new
-        let newMessageFound = false;
-        let message = await messageService.getNewMessage(fileurl, userWebId);
-        if (message) {
-            console.log("Guardando mensajes");
-
-            newMessageFound = true;
-            var nameThroughUrl;
-            var authorUrl;
-            if (!message.author.includes("Group")) {
-                nameThroughUrl = message.author.split("/").pop();
-                authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
-            } else {
-                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
-                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
-            }
-            console.log("nombre de authorUrl is:" + nameThroughUrl);
-            console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
-            console.log(message);
-
-            console.log(authorUrl);
-            console.log(contactsWithChat);
-            if (nameThroughUrl === $('#interlocutorw-name').text()) {
-                interlocutorMessages.push(message);
-                await showAndStoreMessages();
-            } else if (contactsWithChat.indexOf(authorUrl) != -1) {
-                console.log("NEW MESSAGE - SITUATION B");
-                var index = contactsWithChat.indexOf(authorUrl);
-                $('#chatwindow' + index).remove();
-                var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
-                $(".contact-list").prepend(html);
-                document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
-                interlocutorMessages.push(message);
-            } else if (openChat) {
-                interlocutorMessages.push(message);
-            }
-        }
-
-        if (!newMessageFound) {
-            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
-
-            if (convoToJoin) {
-                $("#showinvs").show();
-                console.log("Procesando nuevo chat");
-                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
-                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
-                alert("New invitations. They shall be dismissed if not accepted on this session.");
-            }
-        }
-    });
-    if (chatsToJoin.length == 0) {
-        $("#showinvs").hide();
-    }
-    // console.log(semanticChats);
-    // console.log(contactsWithChat);
+    $("#chat-options").addClass("hidden");
 }
 
 async function startChat() {
@@ -209,11 +81,11 @@ async function startChat() {
     if (!selfPhoto) {
         selfPhoto = "https://www.azquotes.com/public/pictures/authors/c3/10/c310c1b5df6fa4f117bf320814e9f39e/5434efd94977a_benedict_of_nursia.jpg";
     }
-    $('#selfphoto').attr("src", selfPhoto);
+    $("#selfphoto").attr("src", selfPhoto);
 
     afterChatOption();
-    console.log(openChats);
-    openChats.forEach(async chat => {
+    //console.log(openChats);
+    openChats.forEach(async (chat) => {
         interlocWebId = chat.interlocutor;
         const friendName = await baseService.getFormattedName(chat.interlocutor);
         var friendPhoto;
@@ -239,7 +111,7 @@ async function startChat() {
 }
 
 async function loadChats() {
-    console.log(semanticChats);
+    //console.log(semanticChats);
     semanticChats.sort(function (a, b) {
         var x = a.getLastMessage().time;
         var y = b.getLastMessage().time;
@@ -256,13 +128,13 @@ async function loadChats() {
             lastMsg = "Sin mensajes";
         } else {
             lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            console.log(chat.getNumberOfMsgs() - 1);
+            //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 
         const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
             var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
@@ -271,8 +143,8 @@ async function loadChats() {
         chatCounter += 1;
     });
 
-    //console.log(semanticChats);
-    //console.log(contactsWithChat);
+    ////console.log(semanticChats);
+    ////console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
@@ -282,20 +154,150 @@ async function loadMessagesToWindow() {
     var id = this.getAttribute("id").replace("chatwindow", "");
     await loadMessages(Number(id));
     await showAndStoreMessages();
-    console.log(userDataUrl);
+    //console.log(userDataUrl);
 }
+
+/**
+ *    This method is in charge of the user"s login
+ */
+auth.trackSession(async (session) => {
+    const loggedIn = !!session;
+    //alert(`logged in: ${loggedIn}`);
+
+    if (loggedIn) {
+        $("#user-menu").removeClass("hidden");
+        $("#nav-login-btn").addClass("hidden");
+        $("#login-required").modal("hide");
+        $(".mustlogin").addClass("hidden");
+        $(".loading").removeClass("hidden");
+
+
+        userWebId = session.webId;
+        const name = await baseService.getFormattedName(userWebId);
+
+        if (name) {
+            $("#user-name").removeClass("hidden");
+            $("#user-name").text(name);
+        }
+        openChats = [];
+        const chats = await openService.getChatsToOpen(userWebId);
+		if(chats) {
+        chats.forEach(async (chat) => {
+            openChats.push(chat);
+        });
+		}
+
+        await startChat();
+        await sleep(8000);
+        await loadChats();
+        checkForNotifications();
+        $(".wrap").removeClass("hidden");
+        $(".loading").addClass("hidden");
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
+    } else {
+        //alert("you"re not logged in");
+        $("#nav-login-btn").removeClass("hidden");
+        $("#user-menu").addClass("hidden");
+        $("#new-chat-options").addClass("hidden");
+        $("#join-chat-options").addClass("hidden");
+        $("#open-chat-options").addClass("hidden");
+        userWebId = null;
+        clearInterval(refreshIntervalId);
+        refreshIntervalId = null;
+    }
+});
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * This method checks if a new message has been made by the friend.
+ * The necessarily data is stored and the UI is updated.
+ * @returns {Promise<void>}
+ */
+async function checkForNotifications() {
+    ////console.log("Checking for new notifications");
+
+    const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
+    ////console.log(updates);
+
+    updates.forEach(async (fileurl) => {
+
+        ////console.log(fileurl);
+
+        // check for new
+        let newMessageFound = false;
+        let message = await messageService.getNewMessage(fileurl, userWebId);
+        if (message) {
+            //console.log("Guardando mensajes");
+
+            newMessageFound = true;
+            var nameThroughUrl;
+            var authorUrl;
+            if (!message.author.includes("Group")) {
+                nameThroughUrl = message.author.split("/").pop();
+                authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
+            } else {
+                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
+                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+            }
+            //console.log("nombre de authorUrl is:" + nameThroughUrl);
+            //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
+            //console.log(message);
+
+            //console.log(authorUrl);
+            //console.log(contactsWithChat);
+            if (nameThroughUrl === $("#interlocutorw-name").text()) {
+                interlocutorMessages.push(message);
+                await showAndStoreMessages();
+            } else if (contactsWithChat.indexOf(authorUrl) != -1) {
+                //console.log("NEW MESSAGE - SITUATION B");
+                var index = contactsWithChat.indexOf(authorUrl);
+                $("#chatwindow" + index).remove();
+                var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+                $(".contact-list").prepend(html);
+                document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                interlocutorMessages.push(message);
+            } else if (openChat) {
+                interlocutorMessages.push(message);
+            }
+        }
+
+        if (!newMessageFound) {
+            const convoToJoin = await joinService.getJoinRequest(fileurl, userWebId);
+
+            if (convoToJoin) {
+                $("#showinvs").show();
+                //console.log("Procesando nuevo chat");
+                //console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
+                chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
+                alert("New invitations. They shall be dismissed if not accepted on this session.");
+            }
+        }
+    });
+    if (chatsToJoin.length === 0) {
+        $("#showinvs").hide();
+    }
+    // //console.log(semanticChats);
+    // //console.log(contactsWithChat);
+}
+
+
 
 async function loadMessages(id) {
     $(".chat").html("");
     $("#nm" + id).remove();
     currentChat = semanticChats[id];
     userDataUrl = currentChat.url;
-    // console.log(semanticChats);
+    // //console.log(semanticChats);
     var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
         friendPhoto = baseService.getDefaultFriendPhoto();
     }
-    $('#interlocutorphoto').attr("src", friendPhoto);
+    $("#interlocutorphoto").attr("src", friendPhoto);
     interlocWebId = currentChat.interlocutorWebId;
     $("#interlocutorw-name").html("");
     $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
@@ -314,34 +316,34 @@ async function checkKey(e) {
 
     e = e || window.event;
 
-    if (e.keyCode == '13' && $("#write-chat").val() != "") {
-        const username = $('#user-name').text();
+    if (e.keyCode == "13" && $("#write-chat").val() != "") {
+        const username = $("#user-name").text();
         const message = $("#write-chat").val();
-        var dateFormat = require('date-fns');
+        var dateFormat = require("date-fns");
         var now = new Date();
-        const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        console.log(currentChat);
+        const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+        //console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
-            await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
-        $('#write-chat').val("");
+            await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
+        $("#write-chat").val("");
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
 		if(index==-1)
 			index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
-		console.log("Index es " + index);
-        $('#chatwindow' + index).remove();
+		//console.log("Index es " + index);
+        $("#chatwindow" + index).remove();
 
         semanticChats[index].loadMessage({
             messagetext: message,
             url: null,
             author: username,
-            time: time
+            time: ttime
         });
 
         const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
-            time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
         toScrollDown();
 
@@ -359,18 +361,18 @@ async function checkKey(e) {
 
 async function showAndStoreMessages() {
     var i = 0;
-    //console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
+    ////console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
 
     while (i < interlocutorMessages.length) {
-        //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
+        ////console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
         var nameThroughUrl;
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
             nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
-        console.log("nombre de authorUrl is:" + nameThroughUrl);
-        console.log("original interlocutorName is:" + $('#interlocutorw-name').text());
-        if (nameThroughUrl === $('#interlocutorw-name').text()) {
+        //console.log("nombre de authorUrl is:" + nameThroughUrl);
+        //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
+        if (nameThroughUrl === $("#interlocutorw-name").text()) {
             showMessage(interlocutorMessages[i]);
             await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, false);
             var index = contactsWithChat.indexOf(interlocWebId);
@@ -383,13 +385,13 @@ async function showAndStoreMessages() {
                 time: interlocutorMessages[i].time
             });
             baseService.deleteFileForUser(interlocutorMessages[i].inboxUrl);
-            $('#chatwindow' + index).remove();
+            $("#chatwindow" + index).remove();
             const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
             interlocutorMessages[i] = "D";
-            console.log("Matching names. All Correct");
+            //console.log("Matching names. All Correct");
         }
         i++;
     }
@@ -403,7 +405,7 @@ async function showAndStoreMessages() {
 
 function showMessage(message) {
     const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-    if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $('#user-name').text()) {
+    if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
     } else {
@@ -415,19 +417,20 @@ function showMessage(message) {
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
-    $(".fa fa-bars fa-lg").removeClass('hidden');
+    $(".fa fa-bars fa-lg").removeClass("hidden");
     ;
     toScrollDown();
 }
 
-$('#show-contact-information').click(async () => {
+$("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
     $(".information").css("display", "flex");
     $("#close-contact-information").show();
-    console.log(currentChat);
+    //console.log(currentChat);
     var note;
-    if (!interlocWebId.includes("Group"))
+    if (!interlocWebId.includes("Group")) {
         note = await baseService.getNote(interlocWebId);
+	}
     if (!note) {
         note = "Nothing to see here";
     }
@@ -447,20 +450,20 @@ $('#show-contact-information').click(async () => {
     }
 });
 
-$('#close-contact-information').click(async () => {
+$("#close-contact-information").click(async () => {
     $(".chat-head i").show();
     $("#close-contact-information").hide();
     $(".information >").remove();
     $(".information").hide();
 });
 
-$('#show-contacts').click(async () => {
+$("#show-contacts").click(async () => {
     await displayContacts(openContact);
 });
 
 async function displayContacts(func) {
     $(".contact-list").html("");
-    $('#data-url').prop('value', baseService.getDefaultDataUrl(userWebId));
+    $("#data-url").prop("value", baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
 		$(".search").addClass("hidden");
 		$(".addcontact").removeClass("hidden");
@@ -508,7 +511,7 @@ async function showChats() {
         }
 
         const newmsg = 0;
-        if (newmsg == 0) {
+        if (newmsg === 0) {
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
             var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
@@ -523,9 +526,9 @@ async function openContact() {
     $(".chat").html("");
     var intWebId = this.getAttribute("id").replace("openchatwindow", "");
     var index = contactsWithChat.indexOf(intWebId);
-    // console.log(contactsWithChat);
-    // console.log(this.getAttribute("id").replace("openchatwindow", ""));
-    // console.log(index);
+    // //console.log(contactsWithChat);
+    // //console.log(this.getAttribute("id").replace("openchatwindow", ""));
+    // //console.log(index);
     if (index != -1) {
         loadMessages(index);
     } else {
@@ -546,18 +549,18 @@ async function openContact() {
             semanticChats.push(semanticChat);
             index = semanticChats.indexOf(semanticChat);
             contactsWithChat.splice(index, 0, intWebId);
-            console.log(semanticChat);
-            console.log(contactsWithChat);
+            //console.log(semanticChat);
+            //console.log(contactsWithChat);
             loadMessages(index);
         } else {
-            $('#write-permission-url').text(dataUrl);
-            $('#write-permission').modal('show');
+            $("#write-permission-url").text(dataUrl);
+            $("#write-permission").modal("show");
         }
     }
 
 }
 
-$('#showinvs').click(async () => {
+$("#showinvs").click(async () => {
     await showInvitations();
 });
 
@@ -601,8 +604,8 @@ async function joinChat() {
     }
     chat.photo = friendPhoto;
 
-    console.log("Chat to join should have loaded");
-    console.log(chat);
+    //console.log("Chat to join should have loaded");
+    //console.log(chat);
 
     semanticChats.push(chat);
     var index = semanticChats.indexOf(chat);
@@ -610,8 +613,8 @@ async function joinChat() {
         contactsWithChat.splice(index, 0, chat.interlocutorName);
     else
         contactsWithChat.splice(index, 0, chat.interlocutorWebId);
-    console.log(semanticChats);
-    console.log(contactsWithChat);
+    //console.log(semanticChats);
+    //console.log(contactsWithChat);
 
     await showChats();
     await loadMessages(index);
@@ -619,11 +622,11 @@ async function joinChat() {
 }
 
 function toScrollDown() {
-    var elem = document.getElementById('chatdiv');
+    var elem = document.getElementById("chatdiv");
     elem.scrollTop = elem.scrollHeight;
 }
 
-$('#create-group').click(async () => {
+$("#create-group").click(async () => {
     if (!showingContacts) {
         $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
@@ -644,34 +647,34 @@ async function markContactForGroup() {
     var intWebId = this.getAttribute("id").replace("openchatwindow", "");
     var index = contactsForGroup.indexOf(intWebId);
     if (index == -1) {
-        console.log('ctmsg' + intWebId.split("/")[2]);
-        $('#ctmsg' + intWebId.split("/")[2].split(".")[0]).html("Selected");
+        //console.log("ctmsg" + intWebId.split("/")[2]);
+        $("#ctmsg" + intWebId.split("/")[2].split(".")[0]).html("Selected");
         contactsForGroup.push(intWebId);
     } else {
-        $('#ctmsg' + intWebId.split("/")[2].split(".")[0]).html("");
+        $("#ctmsg" + intWebId.split("/")[2].split(".")[0]).html("");
         contactsForGroup.splice(index, 1);
     }
 }
 
-$('#creategroup').click(async () => {
+$("#creategroup").click(async () => {
 
-    if ($('.input-group').val() != "") {
+    if ($(".input-group").val() != "") {
         if (contactsForGroup.length >= 2) {
             const dataUrl = baseService.getDefaultDataUrl(userWebId);
             userDataUrl = dataUrl;
-            console.log(contactsForGroup);
-            console.log($('.input-group').val());
-            console.log(userDataUrl);
-            console.log(userWebId);
-            var intWebId = $('.input-group').val();
-            console.log(intWebId);
+            //console.log(contactsForGroup);
+            //console.log($(".input-group").val());
+            //console.log(userDataUrl);
+            //console.log(userWebId);
+            var intWebId = $(".input-group").val();
+            //console.log(intWebId);
             var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
-            console.log(group);
+            //console.log(group);
             semanticChats.push(group);
             var index = semanticChats.indexOf(group);
             contactsWithChat.splice(index, 0, "Group/" + intWebId);
-            console.log(semanticChats);
-            console.log(contactsWithChat);
+            //console.log(semanticChats);
+            //console.log(contactsWithChat);
             loadMessages(index);
             await showChats();
             showingContacts = false;
@@ -688,10 +691,10 @@ $('#creategroup').click(async () => {
 
 });
 
-$('#addcontact').click(async () => {
+$("#addcontact").click(async () => {
 
-    if ($('.input-contact').val() != "") {
-        var contact = "https://" + $('.input-contact').val().toLowerCase() + ".solid.community/profile/card#me";
+    if ($(".input-contact").val() != "") {
+        var contact = "https://" + $(".input-contact").val().toLowerCase() + ".solid.community/profile/card#me";
         if (baseService.writePermission(contact)) {
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
