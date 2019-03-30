@@ -5,7 +5,12 @@ This section describes overall, principal regulations and solution ideas that ar
 relevant in multiple parts of our system.
 ****
 
+=== Concepts Mind Map
+
 image::concepts.png[concepts.png,800]
+
+=== Concepts Detailed
+
 
 ==== User Experience concepts (UX)
 The user interface is for the moment only available in English and it's inspired
