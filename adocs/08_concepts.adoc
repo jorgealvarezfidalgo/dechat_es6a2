@@ -1,8 +1,28 @@
 [[section-concepts]]
-== Cross-cutting Concepts
+= Cross-cutting Concepts
 
+This section describes overall, principal regulations and solution ideas that are
+relevant in multiple partsof our system.
+
+
+==== Domain concepts
 ****
-.Disclaimer
-At the current stage of the project, there is not enough information available to complete this section.
-Further decisions are required in order to provide any substantial data on this subject.
+****
+==== User Experience concepts (UX)
+****
+****
+==== Safety and security concepts
+****
+****
+==== Architecture and design patterns
+****
+****
+==== "Under-the-hood" Concepts
+****
+****
+==== development concepts
+****
+****
+====  operational concepts
+****
 ****
