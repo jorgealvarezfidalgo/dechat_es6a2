@@ -1,8 +1,6 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
 
-
-
 ****
 .Technical Constraints
 |===
