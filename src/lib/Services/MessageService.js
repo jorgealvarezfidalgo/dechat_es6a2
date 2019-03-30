@@ -1,26 +1,26 @@
 const Service = require("./Service");
 const BaseService = require("./BaseService");
 
-let baseService = new BaseService(auth.fetch);
-
 class MessageService  extends Service {
     constructor(fetch) {
         super(fetch);
+		this.baseService = new BaseService(this.auth.fetch);
     }
 
 
   async getNewMessage(fileurl, userWebId) {
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
+    const deferred = this.Q.defer();
+    const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);
 
     if (rdfjsSource) {
-      const engine = newEngine();
+      const engine = this.newEngine();
       let messageFound = false;
+	  const self = this;
       engine.query(`SELECT * {
-  				?message a <${namespaces.schema}Message>;
-  					<${namespaces.schema}dateSent> ?time;
-  					<${namespaces.schema}givenName> ?username;
-  					<${namespaces.schema}text> ?msgtext.
+  				?message a <${self.namespaces.schema}Message>;
+  					<${self.namespaces.schema}dateSent> ?time;
+  					<${self.namespaces.schema}givenName> ?username;
+  					<${self.namespaces.schema}text> ?msgtext.
   			}`, {
           sources: [{
             type: "rdfjsSource",
@@ -62,14 +62,14 @@ class MessageService  extends Service {
     const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     const psUsername = username.replace(/ /g, "U+0020");
 
-    const messageUrl = await baseService.generateUniqueUrlForResource(userDataUrl);
+    const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
     const sparqlUpdate = `
-		<${messageUrl}> a <${namespaces.schema}Message>;
-		  <${namespaces.schema}dateSent> <${time}>;
-		  <${namespaces.schema}givenName> <${psUsername}>;
-		  <${namespaces.schema}text> <${messageTx}>.`;
+		<${messageUrl}> a <${this.namespaces.schema}Message>;
+		  <${this.namespaces.schema}dateSent> <${time}>;
+		  <${this.namespaces.schema}givenName> <${psUsername}>;
+		  <${this.namespaces.schema}text> <${messageTx}>.`;
     try {
-      await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
+      await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
       this.logger.error("Could not save new message.");
       this.logger.error(e);
@@ -84,16 +84,16 @@ class MessageService  extends Service {
 		}
 		//console.log(ids);
 		if(ids.length < 2) {
-			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
+			await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(ids[0]), sparqlUpdate);
 		}
 		else {
 			ids.forEach(async (id) => {
 			try {
 				if(id.value) {
-  					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id.value), sparqlUpdate);
+  					await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id.value), sparqlUpdate);
 				}
   				else {
-  				  await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
+  				  await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id), sparqlUpdate);
 				}
 			} catch (e) {
 			this.logger.error("Could not send message to interlocutor.");

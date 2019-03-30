@@ -1,11 +1,10 @@
 const Service = require("./Service");
 const BaseService = require("./BaseService");
 
-let baseService = new BaseService(auth.fetch);
-
 class OpenService extends Service {
     constructor(fetch) {
         super(fetch);
+		this.baseService = new BaseService(this.auth.fetch);
     }
 
   /**
@@ -16,18 +15,19 @@ class OpenService extends Service {
    */
   async getChatsToOpen(webid) {
 	var url = webid.replace("profile/card#me","private/chatsStorage.ttl");
-	baseService.writePermission(url);
-    const deferred = Q.defer();
-    const rdfjsSource = await rdfjsSourceFromUrl(url, this.fetch);
+	this.baseService.writePermission(url);
+    const deferred = this.Q.defer();
+    const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
     if (rdfjsSource) {
-      const engine = newEngine();
+      const engine = this.newEngine();
       const chatUrls = [];
       const promises = [];
+	  const self = this;
 
       engine.query(`SELECT ?chat ?int ?url {
-  			 ?chat <${namespaces.schema}contributor> <${webid}>;
-  				<${namespaces.schema}recipient> ?int;
-  				<${namespaces.storage}storeIn> ?url.
+  			 ?chat <${self.namespaces.schema}contributor> <${webid}>;
+  				<${self.namespaces.schema}recipient> ?int;
+  				<${self.namespaces.storage}storeIn> ?url.
   		  }`, {
           sources: [{
             type: "rdfjsSource",
@@ -36,7 +36,7 @@ class OpenService extends Service {
         })
         .then((result) => {
           result.bindingsStream.on("data", async (data) => {
-            const deferred = Q.defer();
+            const deferred = this.Q.defer();
             promises.push(deferred.promise);
             data = data.toObject();
             chatUrls.push({
@@ -48,7 +48,7 @@ class OpenService extends Service {
           });
 
           result.bindingsStream.on("end", function() {
-            Q.all(promises).then(() => {
+            self.Q.all(promises).then(() => {
               ////console.log(chatUrls);
               deferred.resolve(chatUrls);
             });
@@ -63,9 +63,9 @@ class OpenService extends Service {
 
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
 	if(interloc.includes("Group")) {
-		return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
+		return await this.loader.loadGroupFromUrl(url, userWebId, userDataUrl);
 	} else {
-		return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
+		return await this.loader.loadChatFromUrl(url, userWebId, userDataUrl);
 	}
   }
 }

@@ -15,9 +15,6 @@ const Loader = require("../Repositories/SolidLoaderRepository");
 const SemanticChat = require("../semanticchat");
 const Group = require("../Group");
 
-let uploader = new Uploader(auth.fetch);
-let loader = new Loader(auth.fetch);
-
 class Service {
     constructor(fetch) {
         this.inboxUrls = {};
@@ -37,6 +34,22 @@ class Service {
             ],
             format: winston.format.cli()
         });
+		this.auth = auth;
+		this.N3 = N3;
+		this.Q = Q;
+		this.format = format;
+		this.newEngine = newEngine;
+		this.namespaces = namespaces;
+		this.uniqid = uniqid;
+		this.URI = URI;
+		this.rdfjsSourceFromUrl = rdfjsSourceFromUrl;
+		this.SemanticChat = SemanticChat;
+		this.Group = Group;
+		this.uploader = new Uploader(auth.fetch);
+		this.loader = new Loader(auth.fetch);
     }
+	
 }
+
+
 module.exports = Service;

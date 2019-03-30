@@ -15,7 +15,7 @@ class BaseService extends Service {
         if (webid.includes("Group")) {
             return webid.split("Group/").pop().replace(/U\+0020/g, " ");
 		}
-        let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + "name");
+        let formattedName = await this.getObjectFromPredicateForResource(webid, this.namespaces.foaf + "name");
 
         if (!formattedName) {
                 formattedName = webid;
@@ -52,10 +52,10 @@ class BaseService extends Service {
      * @returns {Promise}: a promise that resolves with the object or null if none is found.
      */
     async getObjectFromPredicateForResource(url, predicate) {
-        const deferred = Q.defer();
-        const rdfjsSource = await rdfjsSourceFromUrl(url, this.fetch);
+        const deferred = this.Q.defer();
+        const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
         if (rdfjsSource) {
-            const engine = newEngine();
+            const engine = this.newEngine();
             engine.query(`SELECT ?o {
     <${url}> <${predicate}> ?o.
   }`, {
@@ -83,14 +83,14 @@ class BaseService extends Service {
     }
 
     getDefaultDataUrl(webId) {
-        const parsedWebId = URI.parse(webId);
-        const today = format(new Date(), "yyyyMMddhhmm");
+        const parsedWebId = this.URI.parse(webId);
+        const today = this.format(new Date(), "yyyyMMddhhmm");
 
         return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
     }
 
     async writePermission(url) {
-        const response = await uploader.executeSPARQLUpdateForUser(url, "INSERT DATA {}");
+        const response = await this.uploader.executeSPARQLUpdateForUser(url, "INSERT DATA {}");
         return response.status === 200;
     }
 
@@ -99,14 +99,14 @@ class BaseService extends Service {
     }
 
     async generateUniqueUrlForResource(baseurl) {
-        let url = baseurl + "#" + uniqid();
+        let url = baseurl + "#" + this.uniqid();
 
         return url;
     }
 
     async getInboxUrl(webId) {
         if (!this.inboxUrls[webId]) {
-            this.inboxUrls[webId] = (await this.getObjectFromPredicateForResource(webId, namespaces.ldp + "inbox")).value;
+            this.inboxUrls[webId] = (await this.getObjectFromPredicateForResource(webId, this.namespaces.ldp + "inbox")).value;
         }
         return this.inboxUrls[webId];
     }
@@ -118,11 +118,11 @@ class BaseService extends Service {
      * this method was called.
      */
     async checkUserInboxForUpdates(inboxUrl) {
-        const deferred = Q.defer();
+        const deferred = this.Q.defer();
         const newResources = [];
-        const rdfjsSource = await rdfjsSourceFromUrl(inboxUrl, this.fetch);
+        const rdfjsSource = await this.rdfjsSourceFromUrl(inboxUrl, this.fetch);
         const self = this;
-        const engine = newEngine();
+        const engine = this.newEngine();
         engine.query(`SELECT ?resource {
       ?resource a <http://www.w3.org/ns/ldp#Resource>.
     }`, {
@@ -150,13 +150,13 @@ class BaseService extends Service {
     }
 
     async getInvitation(fileurl) {
-        const deferred = Q.defer();
-        const rdfjsSource = await rdfjsSourceFromUrl(fileurl, this.fetch);
+        const deferred = this.Q.defer();
+        const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);
         if (rdfjsSource) {
-            const engine = newEngine();
+            const engine = this.newEngine();
             let invitationFound = false;
             const self = this;
-			var sselect = `SELECT * {?invitation a <${namespaces.schema}InviteAction>; <${namespaces.schema}agent> ?sender; <${namespaces.schema}event> ?chaturl;<${namespaces.schema}recipient> ?interlocutor.}`;
+			var sselect = `SELECT * {?invitation a <${this.namespaces.schema}InviteAction>; <${this.namespaces.schema}agent> ?sender; <${this.namespaces.schema}event> ?chaturl;<${this.namespaces.schema}recipient> ?interlocutor.}`;
             engine.query(sselect, { sources: [{ type: "rdfjsSource", value: rdfjsSource }]
             }).then(function (result) {
                     result.bindingsStream.on("data", async function (result) {
@@ -175,6 +175,6 @@ class BaseService extends Service {
         return deferred.promise;
     }
     deleteFileForUser(url) {
-        uploader.deleteFileForUser(url);
+        this.uploader.deleteFileForUser(url);
     }}
 module.exports = BaseService;

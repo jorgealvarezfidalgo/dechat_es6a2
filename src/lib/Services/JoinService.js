@@ -2,12 +2,11 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 const CreateService = require("./CreateService");
 
-let baseService = new BaseService(auth.fetch);
-let createService = new CreateService(auth.fetch);
-
 class JoinChatService extends Service {
     constructor(fetch) {
         super(fetch);
+		this.baseService = new BaseService(this.auth.fetch);
+		this.createService = new CreateService(this.auth.fetch);
     }
 
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
@@ -23,19 +22,19 @@ class JoinChatService extends Service {
         //console.log("B");
         participants.forEach(async (mem) => {
             //console.log("Guardando en POD B a: " + mem);
-            var invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
+            var invitation = await this.createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             //console.log(invitation);
             try {
-                await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
                 logger.error("Could not add chat to WebId.");
             }
         });
         //console.log(recipient);
         try {
-            await uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${namespaces.schema}contributor> <${userWebId}>;
-    			<${namespaces.schema}recipient> <${recipient}>;
-    			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
+            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${userWebId}>;
+    			<${this.namespaces.schema}recipient> <${recipient}>;
+    			<${this.namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
             logger.error("Could not add chat to WebId.");
         }
@@ -48,7 +47,7 @@ class JoinChatService extends Service {
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
             chat.friendIds.splice(0, 1);
-            chatJoined = new Group({
+            chatJoined = new this.Group({
                 url: fileurl,
                 chatBaseUrl: userDataUrl,
                 userWebId,
@@ -58,12 +57,12 @@ class JoinChatService extends Service {
                 photo: "main/resources/static/img/group.jpg"
             });
         } else {
-            chatJoined = new SemanticChat({
+            chatJoined = new this.SemanticChat({
                 url: fileurl,
                 messageBaseUrl: userDataUrl,
                 userWebId,
                 interlocutorWebId: chat.friendIds[0],
-                interlocutorName: await baseService.getFormattedName(chat.friendIds[0])
+                interlocutorName: await this.baseService.getFormattedName(chat.friendIds[0])
             });
         }
         //console.log("Chat processed");
@@ -72,7 +71,7 @@ class JoinChatService extends Service {
     }
     async getJoinRequest(fileurl, userWebId) {
         //console.log(fileurl);
-        var chat = await baseService.getInvitation(fileurl);
+        var chat = await this.baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
         //console.log(chatUrl);
         const recipient = chat.interlocutor;
@@ -80,7 +79,7 @@ class JoinChatService extends Service {
         const ids = chat.agent;
         //console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
-        uploader.deleteFileForUser(fileurl);
+        this.uploader.deleteFileForUser(fileurl);
         return {
             friendIds,
             chatUrl,
