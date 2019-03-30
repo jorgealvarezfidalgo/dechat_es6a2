@@ -197,7 +197,7 @@ describe("Services", function () {
 		//No sending
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-09-43", "Something warm and pure", "https://decker.solid.community/profile/card#me", false, null);
 		//Group sending
-		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Find the beast within ourselves", ["https://decker.solid.community/profile/card#me", "https://thenothingnessofoursouls.solid.community/profile/card#me"], true, null);
+		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Find the beast within ourselves", "Group/Test" , true, ["https://decker.solid.community/profile/card#me", "https://thenothingnessofoursouls.solid.community/profile/card#me"]);
     });
 
 
