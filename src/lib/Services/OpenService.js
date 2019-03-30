@@ -1,35 +1,9 @@
-const N3 = require("n3");
-const Q = require("q");
-const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
-const namespaces = require("../namespaces");
-const uniqid = require("uniqid");
-const winston = require("winston");
-const URI = require("uri-js");
-const auth = require("solid-auth-client");
-const {
-  format
-} = require("date-fns");
-const rdfjsSourceFromUrl = require("../Repositories/rdfjssourcefactory").fromUrl;
-const Loader = require("../Repositories/SolidLoaderRepository");
-const BaseService = require("./BaseService");
+const Service = require("./Service");
 
-
-let baseService = new BaseService(auth.fetch);
-
-let loader = new Loader(auth.fetch);
-
-
-class OpenService {
-  constructor(fetch) {
-    this.fetch = fetch;
-	this.logger = winston.createLogger({
-      level: "error",
-      transports: [
-        new winston.transports.Console(),
-      ],
-      format: winston.format.cli()
-    });
-  }
+class OpenService extends Service {
+    constructor(fetch) {
+        super(fetch);
+    }
 
   /**
    * This method returns all the chats that a user can continue, based on his WebId.
