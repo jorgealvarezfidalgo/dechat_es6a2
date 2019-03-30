@@ -1,10 +1,15 @@
 [[section-design-decisions]]
 == Design Decisions
-
 ****
-We have decided to do the whole application using JavaScript and npm because our references are made with JS and, npm because it is the most used package manager related to JavaScript applications.
-
-We may use Angular in the near future to improve app style, however, in the demo version, this is not contemplated.
-
-See our main reference https://github.com/pheyvaer/solid-chess[here]
+This section describes all the decisions made to develop our decentralized chat app.
 ****
+
+image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/DesDesicions.png[DesDesicions.png,800]
+
+==== Front End
+
+==== Back End
+
+==== Persistence and Data Storage
+
+==== Continuous Integration

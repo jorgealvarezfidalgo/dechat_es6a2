@@ -1,1 +1,1 @@
-asciidoctor -b html5 ../src/docs/index.adoc -o ../target/docs/index.html
+asciidoctor -b html5 ../src/adocs/index.adoc -o ../src/docs/index.html
