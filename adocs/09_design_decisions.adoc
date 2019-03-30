@@ -4,7 +4,11 @@
 This section describes all the decisions made to develop our decentralized chat app.
 ****
 
+=== Design Decisions Mind Map
+
 image::DesDesicions.png[DesDesicions.png,800]
+
+=== Design Decisions Detailed
 
 ==== Front End
 to design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
