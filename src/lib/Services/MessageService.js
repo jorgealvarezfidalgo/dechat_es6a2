@@ -1,4 +1,7 @@
 const Service = require("./Service");
+const BaseService = require("./BaseService");
+
+let baseService = new BaseService(auth.fetch);
 
 class MessageService  extends Service {
     constructor(fetch) {

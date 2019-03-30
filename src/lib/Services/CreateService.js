@@ -1,6 +1,10 @@
 const Service = require("./Service");
+const BaseService = require("./BaseService");
 
-class CreateService  extends Service {
+let baseService = new BaseService(auth.fetch);
+
+class CreateService extends Service {
+	
     constructor(fetch) {
         super(fetch);
     }

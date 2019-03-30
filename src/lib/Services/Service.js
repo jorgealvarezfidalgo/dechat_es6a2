@@ -10,8 +10,6 @@ const {
     format
 } = require("date-fns");
 const rdfjsSourceFromUrl = require("../Repositories/rdfjssourcefactory").fromUrl;
-const BaseService = require("./BaseService");
-const CreateService = require("./CreateService");
 const Uploader = require("../Repositories/SolidUploaderRepository");
 const Loader = require("../Repositories/SolidLoaderRepository");
 const SemanticChat = require("../semanticchat");
@@ -19,9 +17,6 @@ const Group = require("../Group");
 
 let uploader = new Uploader(auth.fetch);
 let loader = new Loader(auth.fetch);
-
-let baseService = new BaseService(auth.fetch);
-let createService = new CreateService(auth.fetch);
 
 class Service {
     constructor(fetch) {

@@ -1,4 +1,9 @@
 const Service = require("./Service");
+const BaseService = require("./BaseService");
+const CreateService = require("./CreateService");
+
+let baseService = new BaseService(auth.fetch);
+let createService = new CreateService(auth.fetch);
 
 class JoinChatService extends Service {
     constructor(fetch) {
