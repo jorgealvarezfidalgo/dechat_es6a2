@@ -24,4 +24,4 @@ image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/Busine
 
 **Technical Context diagram**
 
-image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/Business%20Context.png[Technical Context,800]
+image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/Technical%20Context.png[Technical Context,800]
