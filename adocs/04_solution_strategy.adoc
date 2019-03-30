@@ -2,41 +2,61 @@
 == Solution Strategy
 
 
+=== Introduction
+In this document, you will find the software decisions and solutions in order to ensure a **quality app** such as the technologies used and what is used for testing.
+
+=== Decisions
+The project is developed using the following :
+
+
+* *Node.js*:
 
 ****
-In this block we will talk about fundamental decisions as well as the architecture that shapes our system.
+.Technologies used for developing
+|===
+|Technology |Purpose
 
+|Solid
+|Following the solid specs, we'll ensure the data is stored in a **private** part of the user's pod.
 
-Let's highlight four fundamental decisions.
+|JavaScript
+|As the purpose of our app is to be used on the web, JS is the obvious and best choice for web client applications.
+
+|HTML, CSS and Bootstrap
+|To ensure only the best **UI** and **UX**.
+
+|Node JS
+|For **server-side**. As we will use **npm** to manage dependencies and it's pretty good to create real-time apps.
+
+|===
+
+.Organizational Constraints
+|===
+|Constraint |Explanation
+
+|Software Development
+|The project is available in this **GitHub** repository in order to use __Multiple Integration__ options such as **link:https://travis-ci.org/Arquisoft/dechat_es6a2[Travis]** and **link:https://coveralls.io/github/Arquisoft/dechat_es6a2[Code Coverage]** options and to simplify the code sharing and reviewing.
+
+|Time
+|There is limited time to complete the project and the documentation being **30th April 2019** the limit.
+
+|===
+
+.Conventions
+|===
+|Constraint |Explanation
+
+|Arc42
+|As a template for the documentation of the project, we must use link:http://arc42.org[Arc 42] format.
+
+|===
 ****
 
-****
-**Technological decisions:**
 
-****
 
-****
-**Decisions about the top-level decomposition of the system:**
+=== Solution Aproaches
 
-- These types of decisions are no more than decisions about the decomposition of the system at a high level.
-****
-
-****
-
-**Decisions on the key quality objectives:**
-
-- This type of decision was made with all the members of the group agreeing.
-
-****
-
-****
-**Relevant organizational decisions:**
-
-- In our case, the development process was the one stipulated by the group.
-
-- Each member of the group had a task, usually in conjunction with other members.
-
-- The process of development up to now consists of different phases, which have been developed by assignment of tasks.
-****
-
-**"Unfinished document"**
+Once we started to do the project of the chat, we took some direct solutions. We started to programming
+in Javascript based in the project of a Solid Chess.  We will implement some integration test with Travis to take advantage of
+the continuous integration service using Mocha and his assertion library to help us to prove and improve the code. We can connect to the pod and
+we can send messages with Javascript using JQuery.
