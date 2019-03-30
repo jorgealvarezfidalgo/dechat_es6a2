@@ -31,7 +31,7 @@ class SolidLoaderRepository {
 
 	async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
 
-		console.log("Interlocutor group");
+		//console.log("Interlocutor group");
 		var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
 
         const chat = new Group({
@@ -41,7 +41,7 @@ class SolidLoaderRepository {
 			      members: ids
         });
 
-		console.log(chat);
+		//console.log(chat);
         return await this.loadFromUrl(chat, chatUrl);
     }
 
@@ -50,7 +50,7 @@ class SolidLoaderRepository {
      */
     async loadFromUrl(chat, chatUrl) {
 		
-		console.log("Loading from url");
+		//console.log("Loading from url");
 
         const messages = await this._findMessage(chatUrl);
 

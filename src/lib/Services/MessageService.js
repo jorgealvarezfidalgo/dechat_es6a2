@@ -101,7 +101,7 @@ class MessageService {
 			ids = members;
 		else
 			ids.push(interlocutorWebId);
-		console.log(ids);
+		//console.log(ids);
 		if(ids.length < 2)
 			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
 

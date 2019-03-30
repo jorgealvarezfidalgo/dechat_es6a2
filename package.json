@@ -1,6 +1,6 @@
 {
   "name": "dechat_6a2",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "Decentralized, solid-based chat",
   "main": "src/index.js",
   "presets": [

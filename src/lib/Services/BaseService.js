@@ -161,7 +161,7 @@ class BaseService {
                     data = data.toObject();
 
                     const resource = data["?resource"].value;
-                    //console.log(resource);
+                    ////console.log(resource);
                     if (self.alreadyCheckedResources.indexOf(resource) === -1) {
                         newResources.push(resource);
                         self.alreadyCheckedResources.push(resource);

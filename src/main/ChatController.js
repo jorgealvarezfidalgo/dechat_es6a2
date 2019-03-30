@@ -84,7 +84,7 @@ async function startChat() {
     $("#selfphoto").attr("src", selfPhoto);
 
     afterChatOption();
-    console.log(openChats);
+    //console.log(openChats);
     openChats.forEach(async chat => {
         interlocWebId = chat.interlocutor;
         const friendName = await baseService.getFormattedName(chat.interlocutor);
@@ -111,7 +111,7 @@ async function startChat() {
 }
 
 async function loadChats() {
-    console.log(semanticChats);
+    //console.log(semanticChats);
     semanticChats.sort(function (a, b) {
         var x = a.getLastMessage().time;
         var y = b.getLastMessage().time;
@@ -128,7 +128,7 @@ async function loadChats() {
             lastMsg = "Sin mensajes";
         } else {
             lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            console.log(chat.getNumberOfMsgs() - 1);
+            //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 
@@ -143,8 +143,8 @@ async function loadChats() {
         chatCounter += 1;
     });
 
-    //console.log(semanticChats);
-    //console.log(contactsWithChat);
+    ////console.log(semanticChats);
+    ////console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
@@ -154,7 +154,7 @@ async function loadMessagesToWindow() {
     var id = this.getAttribute("id").replace("chatwindow", "");
     await loadMessages(Number(id));
     await showAndStoreMessages();
-    console.log(userDataUrl);
+    //console.log(userDataUrl);
 }
 
 /**
@@ -218,20 +218,20 @@ function sleep(ms) {
  * @returns {Promise<void>}
  */
 async function checkForNotifications() {
-    //console.log("Checking for new notifications");
+    ////console.log("Checking for new notifications");
 
     const updates = await baseService.checkUserInboxForUpdates(await baseService.getInboxUrl(userWebId)); //HECHO
-    //console.log(updates);
+    ////console.log(updates);
 
     updates.forEach(async (fileurl) => {
 
-        //console.log(fileurl);
+        ////console.log(fileurl);
 
         // check for new
         let newMessageFound = false;
         let message = await messageService.getNewMessage(fileurl, userWebId);
         if (message) {
-            console.log("Guardando mensajes");
+            //console.log("Guardando mensajes");
 
             newMessageFound = true;
             var nameThroughUrl;
@@ -243,17 +243,17 @@ async function checkForNotifications() {
                 nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
                 authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
             }
-            console.log("nombre de authorUrl is:" + nameThroughUrl);
-            console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
-            console.log(message);
+            //console.log("nombre de authorUrl is:" + nameThroughUrl);
+            //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
+            //console.log(message);
 
-            console.log(authorUrl);
-            console.log(contactsWithChat);
+            //console.log(authorUrl);
+            //console.log(contactsWithChat);
             if (nameThroughUrl === $("#interlocutorw-name").text()) {
                 interlocutorMessages.push(message);
                 await showAndStoreMessages();
             } else if (contactsWithChat.indexOf(authorUrl) != -1) {
-                console.log("NEW MESSAGE - SITUATION B");
+                //console.log("NEW MESSAGE - SITUATION B");
                 var index = contactsWithChat.indexOf(authorUrl);
                 $("#chatwindow" + index).remove();
                 var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
@@ -271,8 +271,8 @@ async function checkForNotifications() {
 
             if (convoToJoin) {
                 $("#showinvs").show();
-                console.log("Procesando nuevo chat");
-                console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
+                //console.log("Procesando nuevo chat");
+                //console.log("chatToJoin: " + convoToJoin + "," + fileurl + "," + userWebId + "," + userDataUrl);
                 chatsToJoin.push(await joinService.processChatToJoin(convoToJoin, fileurl, userWebId, userDataUrl));
                 alert("New invitations. They shall be dismissed if not accepted on this session.");
             }
@@ -281,8 +281,8 @@ async function checkForNotifications() {
     if (chatsToJoin.length === 0) {
         $("#showinvs").hide();
     }
-    // console.log(semanticChats);
-    // console.log(contactsWithChat);
+    // //console.log(semanticChats);
+    // //console.log(contactsWithChat);
 }
 
 
@@ -292,7 +292,7 @@ async function loadMessages(id) {
     $("#nm" + id).remove();
     currentChat = semanticChats[id];
     userDataUrl = currentChat.url;
-    // console.log(semanticChats);
+    // //console.log(semanticChats);
     var friendPhoto = currentChat.photo;
     if (!friendPhoto) {
         friendPhoto = baseService.getDefaultFriendPhoto();
@@ -322,7 +322,7 @@ async function checkKey(e) {
         var dateFormat = require("date-fns");
         var now = new Date();
         const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-        console.log(currentChat);
+        //console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
@@ -331,7 +331,7 @@ async function checkKey(e) {
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
 		if(index==-1)
 			index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
-		console.log("Index es " + index);
+		//console.log("Index es " + index);
         $("#chatwindow" + index).remove();
 
         semanticChats[index].loadMessage({
@@ -361,17 +361,17 @@ async function checkKey(e) {
 
 async function showAndStoreMessages() {
     var i = 0;
-    //console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
+    ////console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
 
     while (i < interlocutorMessages.length) {
-        //console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
+        ////console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
         var nameThroughUrl;
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
             nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
-        console.log("nombre de authorUrl is:" + nameThroughUrl);
-        console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
+        //console.log("nombre de authorUrl is:" + nameThroughUrl);
+        //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
         if (nameThroughUrl === $("#interlocutorw-name").text()) {
             showMessage(interlocutorMessages[i]);
             await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, false);
@@ -391,7 +391,7 @@ async function showAndStoreMessages() {
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
             interlocutorMessages[i] = "D";
-            console.log("Matching names. All Correct");
+            //console.log("Matching names. All Correct");
         }
         i++;
     }
@@ -426,7 +426,7 @@ $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
     $(".information").css("display", "flex");
     $("#close-contact-information").show();
-    console.log(currentChat);
+    //console.log(currentChat);
     var note;
     if (!interlocWebId.includes("Group"))
         note = await baseService.getNote(interlocWebId);
@@ -525,9 +525,9 @@ async function openContact() {
     $(".chat").html("");
     var intWebId = this.getAttribute("id").replace("openchatwindow", "");
     var index = contactsWithChat.indexOf(intWebId);
-    // console.log(contactsWithChat);
-    // console.log(this.getAttribute("id").replace("openchatwindow", ""));
-    // console.log(index);
+    // //console.log(contactsWithChat);
+    // //console.log(this.getAttribute("id").replace("openchatwindow", ""));
+    // //console.log(index);
     if (index != -1) {
         loadMessages(index);
     } else {
@@ -548,8 +548,8 @@ async function openContact() {
             semanticChats.push(semanticChat);
             index = semanticChats.indexOf(semanticChat);
             contactsWithChat.splice(index, 0, intWebId);
-            console.log(semanticChat);
-            console.log(contactsWithChat);
+            //console.log(semanticChat);
+            //console.log(contactsWithChat);
             loadMessages(index);
         } else {
             $("#write-permission-url").text(dataUrl);
@@ -603,8 +603,8 @@ async function joinChat() {
     }
     chat.photo = friendPhoto;
 
-    console.log("Chat to join should have loaded");
-    console.log(chat);
+    //console.log("Chat to join should have loaded");
+    //console.log(chat);
 
     semanticChats.push(chat);
     var index = semanticChats.indexOf(chat);
@@ -612,8 +612,8 @@ async function joinChat() {
         contactsWithChat.splice(index, 0, chat.interlocutorName);
     else
         contactsWithChat.splice(index, 0, chat.interlocutorWebId);
-    console.log(semanticChats);
-    console.log(contactsWithChat);
+    //console.log(semanticChats);
+    //console.log(contactsWithChat);
 
     await showChats();
     await loadMessages(index);
@@ -646,7 +646,7 @@ async function markContactForGroup() {
     var intWebId = this.getAttribute("id").replace("openchatwindow", "");
     var index = contactsForGroup.indexOf(intWebId);
     if (index == -1) {
-        console.log("ctmsg" + intWebId.split("/")[2]);
+        //console.log("ctmsg" + intWebId.split("/")[2]);
         $("#ctmsg" + intWebId.split("/")[2].split(".")[0]).html("Selected");
         contactsForGroup.push(intWebId);
     } else {
@@ -661,19 +661,19 @@ $("#creategroup").click(async () => {
         if (contactsForGroup.length >= 2) {
             const dataUrl = baseService.getDefaultDataUrl(userWebId);
             userDataUrl = dataUrl;
-            console.log(contactsForGroup);
-            console.log($(".input-group").val());
-            console.log(userDataUrl);
-            console.log(userWebId);
+            //console.log(contactsForGroup);
+            //console.log($(".input-group").val());
+            //console.log(userDataUrl);
+            //console.log(userWebId);
             var intWebId = $(".input-group").val();
-            console.log(intWebId);
+            //console.log(intWebId);
             var group = await createService.setUpNewGroup(userDataUrl, userWebId, contactsForGroup, intWebId);
-            console.log(group);
+            //console.log(group);
             semanticChats.push(group);
             var index = semanticChats.indexOf(group);
             contactsWithChat.splice(index, 0, "Group/" + intWebId);
-            console.log(semanticChats);
-            console.log(contactsWithChat);
+            //console.log(semanticChats);
+            //console.log(contactsWithChat);
             loadMessages(index);
             await showChats();
             showingContacts = false;

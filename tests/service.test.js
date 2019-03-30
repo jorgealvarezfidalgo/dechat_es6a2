@@ -134,7 +134,7 @@ describe("Services", function () {
             const updates = await baseService.checkUserInboxForUpdates(inboxUrls[chat.userWebId]);
             assert.equal(updates, null, "there are no updates in this profile");
         } catch (err) {
-            console.log(err);
+            //console.log(err);
         }
 
     });
@@ -236,7 +236,7 @@ describe("Services", function () {
 
 	it("Get Invitation test", async function () {
         const invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
-		console.log(invite);
+		//console.log(invite);
 		assert.notEqual(invite, null, "the invitation url is not correct: ->" + invite);
     });
 
