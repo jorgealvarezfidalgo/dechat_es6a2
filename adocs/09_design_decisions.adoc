@@ -4,7 +4,7 @@
 This section describes all the decisions made to develop our decentralized chat app.
 ****
 
-image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/DesDesicions.png[DesDesicions.png,800]
+image::DesDesicions.png[DesDesicions.png,800]
 
 ==== Front End
 to design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
