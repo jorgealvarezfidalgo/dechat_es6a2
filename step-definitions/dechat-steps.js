@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
-var driver = require("selenium-webdriver");
-var by = driver.By;
+var webdriver = require("selenium-webdriver");
+var by = webdriver.By;
 
 module.exports = function () {
 
