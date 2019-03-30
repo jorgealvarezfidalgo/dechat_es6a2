@@ -1,4 +1,4 @@
-const N3 = require("n3");
+const n3 = require("n3");
 const Q = require("q");
 //const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
 const namespaces = require("../namespaces");
@@ -44,14 +44,14 @@ class JoinChatService {
             participants.push(recipient);
         }
         //console.log("B");
-        participants.forEach(async mem => {
+        participants.forEach(async (mem) => {
             //console.log("Guardando en POD B a: " + mem);
             var invitation = await createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             //console.log(invitation);
             try {
                 await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
-                logger.error(`Could not add chat to WebId.`);
+                logger.error("Could not add chat to WebId.");
             }
         });
         //console.log(recipient);
@@ -60,7 +60,7 @@ class JoinChatService {
     			<${namespaces.schema}recipient> <${recipient}>;
     			<${namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
-            logger.error(`Could not add chat to WebId.`);
+            logger.error("Could not add chat to WebId.");
         }
     }
 

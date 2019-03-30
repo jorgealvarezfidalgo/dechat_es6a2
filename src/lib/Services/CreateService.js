@@ -89,7 +89,7 @@ class CreateService {
     async storeAndSendInvitations(userDataUrl, userWebId, interlocutorWebIds, semanticChat) {
         var id = userWebId;
         //console.log(id);
-        interlocutorWebIds.forEach(async interlocutorWebId => {
+        interlocutorWebIds.forEach(async (interlocutorWebId) => {
 
             if (interlocutorWebIds.length > 1) {
                 //console.log("Procesando");

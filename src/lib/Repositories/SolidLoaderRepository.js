@@ -1,4 +1,4 @@
-const N3 = require("n3");
+const n3 = require("n3");
 const newEngine = require("@comunica/actor-init-sparql-rdfjs").newEngine;
 const Q = require("q");
 const streamify = require("streamify-array");
@@ -80,7 +80,7 @@ class SolidLoaderRepository {
                 }]
             })
             .then(function(result) {
-                result.bindingsStream.on("data", data => {
+                result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?msgtext"]) {
                         var messageText = data["?msgtext"].value.split("/")[4];
@@ -121,7 +121,7 @@ class SolidLoaderRepository {
                 }]
             })
 			.then(function(result) {
-                result.bindingsStream.on("data", data => {
+                result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?recipient"]) {
                         results.push(data["?recipient"]);
@@ -142,13 +142,13 @@ class SolidLoaderRepository {
         const deferred = Q.defer();
 
         this.fetch(url)
-            .then(async res => {
+            .then(async (res) => {
                 if (res.status === 404) {
                     deferred.reject(404);
                 } else {
                     const body = await res.text();
-                    const store = N3.Store();
-                    const parser = N3.Parser({
+                    const store = n3.Store();
+                    const parser = n3.Parser({
                         baseIRI: res.url
                     });
 

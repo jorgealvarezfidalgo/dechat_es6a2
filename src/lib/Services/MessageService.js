@@ -92,28 +92,32 @@ class MessageService {
     try {
       await uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
     } catch (e) {
-      this.logger.error(`Could not save new message.`);
+      this.logger.error("Could not save new message.");
       this.logger.error(e);
     }
     if (toSend) {
 		var ids = [];
-		if(members)
+		if(members) {
 			ids = members;
-		else
-			ids.push(interlocutorWebId);
-		//console.log(ids);
-		if(ids.length < 2)
-			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
-
+		}
 		else {
-		    ids.forEach(async id => {
-  		  try {
-  				if(id.value)
+			ids.push(interlocutorWebId);
+		}
+		//console.log(ids);
+		if(ids.length < 2) {
+			await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(ids[0]), sparqlUpdate);
+		}
+		else {
+			ids.forEach(async (id) => {
+			try {
+				if(id.value) {
   					await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id.value), sparqlUpdate);
-  				else
+				}
+  				else {
   				  await uploader.sendToInterlocutorInbox(await baseService.getInboxUrl(id), sparqlUpdate);
-		  } catch (e) {
-			this.logger.error(`Could not send message to interlocutor.`);
+				}
+			} catch (e) {
+			this.logger.error("Could not send message to interlocutor.");
 			this.logger.error(e);
 		}});
 		}

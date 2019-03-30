@@ -42,8 +42,9 @@ class BaseService {
      * null if no name details were found.
      */
     async getFormattedName(webid) {
-        if (webid.includes("Group"))
+        if (webid.includes("Group")) {
             return webid.split("Group/").pop().replace(/U\+0020/g, " ");
+		}
         let formattedName = await this.getObjectFromPredicateForResource(webid, namespaces.foaf + "name");
 
         if (!formattedName) {
@@ -56,18 +57,22 @@ class BaseService {
 
     async getPhoto(webid) {
         let photoUrl = await this.getObjectFromPredicateForResource(webid, "http://www.w3.org/2006/vcard/ns#hasPhoto");
-        if (photoUrl)
+        if (photoUrl) {
             return photoUrl.value;
-        else
+		}
+        else {
             return null;
+		}
     }
 
     async getNote(webid) {
         let noteUrl = await this.getObjectFromPredicateForResource(webid, "http://www.w3.org/2006/vcard/ns#note");
-        if (noteUrl)
+        if (noteUrl) {
             return noteUrl.value;
-        else
+		}
+        else {
             return null;
+		}
     }
 
     /**

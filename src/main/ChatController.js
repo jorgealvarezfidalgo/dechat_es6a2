@@ -85,7 +85,7 @@ async function startChat() {
 
     afterChatOption();
     //console.log(openChats);
-    openChats.forEach(async chat => {
+    openChats.forEach(async (chat) => {
         interlocWebId = chat.interlocutor;
         const friendName = await baseService.getFormattedName(chat.interlocutor);
         var friendPhoto;
@@ -160,7 +160,7 @@ async function loadMessagesToWindow() {
 /**
  *    This method is in charge of the user"s login
  */
-auth.trackSession(async session => {
+auth.trackSession(async (session) => {
     const loggedIn = !!session;
     //alert(`logged in: ${loggedIn}`);
 
@@ -182,7 +182,7 @@ auth.trackSession(async session => {
         openChats = [];
         const chats = await openService.getChatsToOpen(userWebId);
 		if(chats) {
-        chats.forEach(async chat => {
+        chats.forEach(async (chat) => {
             openChats.push(chat);
         });
 		}
@@ -209,7 +209,7 @@ auth.trackSession(async session => {
 });
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -321,12 +321,12 @@ async function checkKey(e) {
         const message = $("#write-chat").val();
         var dateFormat = require("date-fns");
         var now = new Date();
-        const time = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+        const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
         //console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
         else
-            await messageService.storeMessage(userDataUrl, username, userWebId, time, message, interlocWebId, true, null);
+            await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
         $("#write-chat").val("");
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
 		if(index==-1)
@@ -338,12 +338,12 @@ async function checkKey(e) {
             messagetext: message,
             url: null,
             author: username,
-            time: time
+            time: ttime
         });
 
         const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
-            time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
         toScrollDown();
 
@@ -428,8 +428,9 @@ $("#show-contact-information").click(async () => {
     $("#close-contact-information").show();
     //console.log(currentChat);
     var note;
-    if (!interlocWebId.includes("Group"))
+    if (!interlocWebId.includes("Group")) {
         note = await baseService.getNote(interlocWebId);
+	}
     if (!note) {
         note = "Nothing to see here";
     }

@@ -85,11 +85,11 @@ class OpenService {
   }
 
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
-	  if(interloc.includes("Group")) {
-		  return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
-	  } else {
-		  return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
-	  }
+	if(interloc.includes("Group")) {
+		return await loader.loadGroupFromUrl(url, userWebId, userDataUrl);
+	} else {
+		return await loader.loadChatFromUrl(url, userWebId, userDataUrl);
+	}
   }
 }
 module.exports = OpenService;
