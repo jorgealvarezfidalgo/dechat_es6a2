@@ -3,9 +3,9 @@
 
 
 ****
-The goal of this project is to create a decentralized chat app (DeChat) based on link:https://github.com/solid/solid-spec[Solid specifications].
+The goal of this project is to create a decentralized chat app based on link:https://github.com/solid/solid-spec[Solid specifications].
 
-In this document, we are describing relevant requirements of the project, quality goals for the software architecture and the relevant stakeholders and their expectations.
+In this document, you can find the important requirements of our project, quality goals for the software architecture and the relevant stakeholders and their expectations.
 ****
 
 === Requirements Overview
@@ -15,10 +15,11 @@ In this document, we are describing relevant requirements of the project, qualit
 [options="header",cols="1,2"]
 |===
 | *Requirement* | *Description*
-| Decentralized arquitecture | The application will be separated from the data storage, and the users data will be stored in their own link:https://solid.inrupt.com/how-it-works[PODs].
-| Multimedia messages | Accompanying text messages, the app will allow users to send photos and videos. 
-| Group chats | Users can make a friends group to chat with all the members simoultaneosly.
-| Notifications | The app will send a notification when the user recives a message.
+| Decentralized architecture | The application will be **separated** from the **data storage**, which means all the data including messages, images will be stored in their own link:https://solid.inrupt.com/how-it-works[PODs].
+| Data | the data sent _**for the moment**_ only includes **text** messages, **emojis** and **gifs** .
+| Chats | Users can create a new conversation and be asked to join one by their friends-
+| Group chats | Users can create or asked to join a group chat by their friends.
+| Notifications | Whenever there's a new invitation, the users will be notified and it's their choice to accept it or reject it.
 |===
 ****
 
@@ -26,26 +27,26 @@ In this document, we are describing relevant requirements of the project, qualit
 
 
 ****
-[options="header",cols="1,2,2"]
+[options="header",cols="1,3,1"]
 |===
-| *Goal* | *Description* | *Priority*
-| Efficiency | Messages will be sent instantly to ensure smooth communication. | High, high
-| Security | Only the members of a chat can see the messages of it. | High, medium
-| Usability | The application must be easy for non-technical people | High, medium
+| *Goal* | *Description* | *Importance*
+| Usability | The main objective of our app is to be used and familiar to all sorts of people | High
+| Efficiency | The conversation will be in **real time** to ensure smooth communication | High
+| Security | Ensure the conversation is seen by the members included **Only** and the data shared is **private** | High
+| Maintainability | The app will be modularized to ensure the simplicity of testing and future case of reusability by others | High
+| Reliability | We'll ensure the app is available at all time and ensure fault tolerance for a **better** user's experience | High
 |===
-The two values indicated in the priority mean, respectively, how important it is to success, and how difficult it is to achieve.
 ****
 
 === Stakeholders
 
-
 ****
-[options="header",cols="1,2,2"]
+[options="header",cols="1,2,3"]
 |===
-| *Role/Name* | *Description* | *Expectations*
-| DeChat users | Users of the developed app | Chat with a person or group of people owning their own data.
-| José Emilio Labra Gayo | Coordinator of the Software Architecture subject | Expects students to develop the requested application. 
-| Inrupt | Company interested in the application | Have a functional decentralized chat application following solid specifications.
-| Development team | Members of the team that developes the app | Develop a functional application that satisfies customer expectations.
+| *Role* | *Description* | *Expectations*
+| Users | Our DeChat app users | to be able to chat with people and not to worry about data being stolen.
+| Inrupt | The **Solid** development company | To see their technology being used and enjoyed by users.
+| Developers  | The **two** members team | To see their hard work has paid off by ensuring the quality of the app.
+| José Emilio Labra Gayo | Our teacher and Coordinator of the Software Architecture | To see his students learn something new and investigating our their own to prepare us for the future.
 |===
 ****
