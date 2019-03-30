@@ -1,28 +1,61 @@
 [[section-concepts]]
-= Cross-cutting Concepts
-
+== Cross-cutting Concepts
+****
 This section describes overall, principal regulations and solution ideas that are
-relevant in multiple partsof our system.
-
-
-==== Domain concepts
+relevant in multiple parts of our system.
 ****
-****
+
+image::https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/concepts.png[concepts.png,800]
+
 ==== User Experience concepts (UX)
-****
-****
+The user interface is for the moment only available in English and it's inspired
+and that's because we want to the user to feel at ease and use a familiar UI instead of complicating it.
+
 ==== Safety and security concepts
-****
-****
+The main objective of this whole app and Solid Specs is to ensure the security of
+the user by choosing the person who he'd like to speak and not having to worry
+about his data stolen because as we know, the messages and data shared is stored
+in his private pod and no one will see it except him.
+
 ==== Architecture and design patterns
-****
-****
+The application is in **main.js** and it is managed by the **ChatController.js** which uses additional libraries and services included in the **lib/** folder.
+
 ==== "Under-the-hood" Concepts
+* Persistency :
 ****
+the Data shared between the users is stored in each user's personal solid pod.
 ****
-==== development concepts
+
+* Transaction handling :
 ****
+In our app we ensure the correct use of ACID properties by sending and receiving the correcting messages without any changes in real time and concurrently.
 ****
-====  operational concepts
+
+* Exception and error handling :
 ****
+The main _error_ not controlled by the app is having a **not stable** internet connection as it **could** damage the app's correct functioning.
+****
+
+* Reporting :
+****
+For reports, we use travis and code coverage to make sure everything is okay and also track all the changes made.
+****
+
+==== Development concepts
+* Build
+****
+To build the app we use Node Js *webpack* running the following command
+----
+npm run build:web
+----
+****
+
+* Test
+****
+It is very important to test our application in order to ensure the correct use of it and that's why we use various frameworks including **mocha** and **cucumber.js**.
+****
+
+* Deploy
+****
+We will be using **link:https://www.docker.com:[Docker]** to deploy our app in the future.
 ****
