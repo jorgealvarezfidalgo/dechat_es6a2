@@ -1,5 +1,6 @@
 const expect = require("chai").expect;
-var webdriver = require("selenium-webdriver");
+var driver = require("selenium-webdriver");
+var by = driver.By;
 
 module.exports = function () {
 
@@ -8,7 +9,7 @@ module.exports = function () {
     this.When(/^I search Google for "([^"]*)"$/, (text) => {
         return helpers.loadPage("https://google.com")
             .then(() => {
-                return page.googleSearch.performSearch(text)
+                return page.googleSearch.performSearch(text);
             })
     });
 
@@ -48,7 +49,7 @@ module.exports = function () {
                                         driver.findElement(by.name("username")).sendKeys(arg1);
                                         driver.findElement(by.name("password")).sendKeys(arg2);
                                         driver.manage().timeouts().implicitlyWait(10);
-                                        return driver.findElement(by.xpath("//*[@id='login']"))
+                                        return driver.findElement(by.xpath("//*[@id='login']"));
                                     })
 
                             })
@@ -173,7 +174,7 @@ module.exports = function () {
                         return driver.findElement(by.xpath("//*[@id='write-chat']")).sendKeys(webdriver.Key.ENTER)
                             .then(() => {
                                 //new message should appear
-                                return driver.wait(until.elementsLocated(by.xpath("//*[@id='chatdiv']/div/div[3]")), 20000)
+                                return driver.wait(until.elementsLocated(by.xpath("//*[@id='chatdiv']/div/div[3]")), 20000);
                             })
                     })
             })
