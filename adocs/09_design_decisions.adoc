@@ -1,10 +1,28 @@
 [[section-design-decisions]]
 == Design Decisions
-
 ****
-We have decided to do the whole application using JavaScript and npm because our references are made with JS and, npm because it is the most used package manager related to JavaScript applications.
-
-We may use Angular in the near future to improve app style, however, in the demo version, this is not contemplated.
-
-See our main reference https://github.com/pheyvaer/solid-chess[here]
+This section describes all the decisions made to develop our decentralized chat app.
 ****
+
+image::DesDesicions.png[DesDesicions.png,800]
+
+==== Front End
+to design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
+and _**Bootstrap**_ in addition to _jQuery_.
+
+==== Back End
+Moving to the functionality part, we are using basically *_JavaScript_* and *_Node.JS_*
+to manage dependencies and libraries such as *n3* and *Q* to work with _RDF_ and _Linked Data_.
+
+For the testing part, we are using *mocha* and *nyc* for unit tests,
+and *cucumber-selenium* for **link:https://en.wikipedia.org/wiki/Behavior-driven_development:[BDD]** tests.
+
+==== Persistence and Data Storage
+Following *Solid* specifications, all the data shared between users are *private* and stored in their respective POD.
+
+==== Continuous Integration
+we are using **link:https://travis-ci.org/Arquisoft/dechat_es6a2:[Travis]**
+for running the tests and checking the correct build of our app,
+**link:https://coveralls.io/github/Arquisoft/dechat_es6a2?branch=master:[Coveralls]**
+for code coverage to make sure of not forgetting any part of app
+and **link:https://app.codacy.com/project/jelabra/dechat_es6a2/dashboard:[Code Quality]** .

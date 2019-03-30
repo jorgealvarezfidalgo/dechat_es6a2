@@ -1,0 +1,1 @@
+asciidoctor -b html5 adocs/index.adoc -o docs/index.html
