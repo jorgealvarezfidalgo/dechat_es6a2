@@ -2,13 +2,26 @@
 == Risks and Technical Debts
 
 ****
-In this document we will be talking about risks and technical debts, ordered by priority. As its said, we have the following:
-
-* SOLID Documentation: There are very few resources, so our information source is limited.
-* Amount of libs: As its said before, there are few resources concerning SOLID itself, so the amount of libs compatible with SOLID technology are scarce. We will be searching conscientiously, hoping to find something.  
-* Language : We are not used to JavaScript, and the information found refers to it, so we will have to check it out. We could also look for frameworks like Angular or Node.js that makes js development more comfortable.
-* RDF : We know the basic concepts of RDF, but we need to learn SPARQL to understand how SOLID base works.
-* Docker: We had a demonstration about Docker and how a POD could be created, so we talked once about using it. However, we haven't enough knowledge about it, so, if we are finally using it, we will have to spend time learning how it works.
-
-WARNING: This document is WIP (Work in Progress), so it may change in the near future.
+In this document we will be talking about risks and technical debts we faced or we might face in the future.
 ****
+
+==== Solid
+Solid is a whole *new* world for us and it took us a while to adapt its specifications
+and functionality to our project.
+
+==== JavaScript and Node.JS
+Although we used JavaScript many times in the past but it was very difficult
+adapting to this language and managing node libraries as well as what dependencies
+and versions to choose.
+
+==== Libraries
+There aren't much libraries to manage **Linked Data** and **RDF** resources and **SPARQL** and it was
+difficult to find them and use them but with time we got used to it.
+
+==== BDD
+We have never used *Cucumber* and we are new to the *Behavior-Driven Development* world,
+so it took us a few days to learn how to use it with **_Node_** and adapting it to Travis to build our app.
+
+==== Deployment
+We have never used *Docker*. Thus, in these few remaining weeks, we will learn about it and use it
+to deploy our chat web application.
