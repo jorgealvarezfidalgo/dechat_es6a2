@@ -40,7 +40,7 @@ image::userJourney.png[user journey,800]
 
 ==== Second Scenario : Login Process
 ===== Login flowchart
-image::login.png[login flowchart,800]
+image::loginProcess.png[login flowchart,800]
 
 ===== Login runtime view in details
 
