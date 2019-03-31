@@ -39,10 +39,28 @@ image::userJourney.png[user journey,800]
       - now the users can exchange messages
 
 ==== Second Scenario : Login Process
+
 ===== Login flowchart
 image::loginProcess.png[login flowchart,800]
 
 ===== Login runtime view in details
+When entering the webpage, there are two possibilities :
+
+1 -> the user's already logged in or connected in *solid.community/* for example
+
+2 -> the user's not logged in, the user nust *click* on *Login*
+
+  -> If the user has an account
+    - click on the provider and fill the login form.
+
+  -> If the user doesn't have an account
+    - there is the possibility to register and create a personal POD.
+    - Login using the entered informatin in the register process.
+
+3 -> the app will load automatically all the user's data including the conversations, friends and invitations.
+
+4 -> now the user is in the main UI.
+
 
 ==== Third Scenario : Send Message Process
 ===== Sending messages Flowchart
