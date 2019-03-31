@@ -9,11 +9,43 @@ building blocks in form of scenarios.
 === Scenarios
 
 ==== Main Scenario : the user's journey flow.
-image::userJourney.png[quality tree,800]
+===== User journey flowchart
+image::userJourney.png[user journey,800]
 
-****
-****
+===== User journey in details
+1 -> Entering the main app
+
+2 -> Click on Login
+
+  -> Login or Sign up
+  -> Confirm information
+
+3 -> The app loads all the data necessary including the user's friends and invitations and messages.
+
+4 -> User wants to send or view messages
+
+  -> Already open conversation
+
+  -> Creating a new conversation
+    -> group
+      - user select the members he wants to add
+      - click on add
+      - the conversation is created and the members are notified
+      - now anyone can join and exchange messages
+    -> individual
+      - user select the friend
+      - click on it
+      - the conversation is created and the friend is notified
+      - now the users can exchange messages
 
 ==== Second Scenario : Login Process
+===== Login flowchart
+image::login.png[login flowchart,800]
+
+===== Login runtime view in details
 
 ==== Third Scenario : Send Message Process
+===== Sending messages Flowchart
+image::sendMessages.png[messages flowchart,800]
+
+===== sending messages in details

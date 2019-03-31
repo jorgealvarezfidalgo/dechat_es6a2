@@ -701,36 +701,31 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <div class="sect1">
 <h2 id="section-system-scope-and-context">3. System Scope and Context</h2>
 <div class="sectionbody">
-<div class="sidebarblock">
-<div class="content">
 <div class="paragraph">
-<div class="title">Contents</div>
-<p>This project is part of the Software Architecture subject.
-Our system scope is the implementation and testing of a descentralized chat using SOLID. For this, we use the architectural style peer-to-peer.</p>
+<p>We thereupon proceed to list the communication partners involved as well as their interfaces. We provide two distinct contexts to describe it, one domain-specific (Business) and another technical-related.</p>
 </div>
-</div>
+<div class="paragraph">
+<p>Chats created by an user may be either individual or groupal; following diagrams describe a one-to-one situation. Keep in mind, though, that groupal communications adhere to the same structure; the only difference being the number of interlocutor&#8217;s PODs chat and message info will be sent to.</p>
 </div>
 <div class="sect2">
 <h3 id="_business_context">3.1. Business Context</h3>
-<div class="sidebarblock">
-<div class="content">
-
-</div>
-</div>
 <div class="paragraph">
 <p><strong>Business Context diagram</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/Business%20Context.png" alt="Business Context" width="800">
+<img src="./images/images/Business%20Context.png" alt="Business Context" width="800">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_technical_context">3.2. Technical Context</h3>
 <div class="paragraph">
 <p><strong>Technical Context diagram</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://github.com/Arquisoft/dechat_es6a2/blob/master/adocs/images/Technical%20Context.png" alt="Technical Context" width="800">
+<img src="./images/images/Technical%20Context.png" alt="Technical Context" width="800">
 </div>
 </div>
 <div style="page-break-after: always;"></div>
@@ -892,16 +887,57 @@ Our system scope is the implementation and testing of a descentralized chat usin
 <div class="sect1">
 <h2 id="section-building-block-view">5. Building Block View</h2>
 <div class="sectionbody">
-<div class="sidebarblock">
-<div class="content">
 <div class="paragraph">
-<div class="title">Disclaimer</div>
-<p>At the current stage of the project, there is not enough information available to complete this section.
-Further decisions are required in order to provide any substantial data on this subject.</p>
+<p>This section consists of a decomposition of our system into building blocks, showcasing their inner dependencies.</p>
+</div>
+<div class="sect2">
+<h3 id="_level_1">5.1. Level 1</h3>
+<div class="paragraph">
+<p>We begin the decomposition by displaying a white box description of the overall system -manifested in section III, Context Diagrams as 'DeChat' black box-.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/images/BBLevel1.png" alt="Building Block Level 1" width="800">
 </div>
 </div>
+<div class="paragraph">
+<p>It can be swiftly perceived that we have chosen a Model-View-Controller pattern for overall system architecture, reasoning being:</p>
 </div>
+<div class="ulist">
+<ul>
+<li>
+<p>It is a fairly suitable and easy-to-grasp architecture for web applications such as ours.</p>
+</li>
+<li>
+<p>We have created a few applications before using this approach.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Black Box descriptions</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Overview</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Performs an operation ordered by the Controller or another Service, working with user-provided data to persist or select information through Repository. Creates, joins and opens a chat, as well as storing and loading messages, either written by the user or received at his POD&#8217;s inbox.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Either persists the data provided by a Service -inserts or updates data in current user&#8217;s private POD folder as well as interlocutors' inbox- or selects stored/received data from current user&#8217;s POD.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -918,16 +954,86 @@ building blocks in form of scenarios.</p>
 <div class="sect2">
 <h3 id="_scenarios">6.1. Scenarios</h3>
 <div class="sect3">
-<h4 id="_first_scenario">6.1.1. First Scenario</h4>
-
+<h4 id="_main_scenario_the_users_journey_flow">6.1.1. Main Scenario : the user&#8217;s journey flow.</h4>
+<div class="sect4">
+<h5 id="_user_journey_flowchart">User journey flowchart</h5>
+<div class="imageblock">
+<div class="content">
+<img src="./images/userJourney.png" alt="user journey" width="800">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_user_journey_in_details">User journey in details</h5>
+<div class="paragraph">
+<p>1 &#8594; Entering the main app</p>
+</div>
+<div class="paragraph">
+<p>2 &#8594; Click on Login</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-&gt; Login or Sign up
+-&gt; Confirm information</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3 &#8594; The app loads all the data necessary including the user&#8217;s friends and invitations and messages.</p>
+</div>
+<div class="paragraph">
+<p>4 &#8594; User wants to send or view messages</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-&gt; Already open conversation</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-&gt; Creating a new conversation
+  -&gt; group
+    - user select the members he wants to add
+    - click on add
+    - the conversation is created and the members are notified
+    - now anyone can join and exchange messages
+  -&gt; individual
+    - user select the friend
+    - click on it
+    - the conversation is created and the friend is notified
+    - now the users can exchange messages</pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect3">
-<h4 id="_second_scenario">6.1.2. Second Scenario</h4>
+<h4 id="_second_scenario_login_process">6.1.2. Second Scenario : Login Process</h4>
+<div class="sect4">
+<h5 id="_login_flowchart">Login flowchart</h5>
+<div class="imageblock">
+<div class="content">
+<img src="./images/login.png" alt="login flowchart" width="800">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_login_runtime_view_in_details">Login runtime view in details</h5>
 
 </div>
+</div>
 <div class="sect3">
-<h4 id="_third_scenario">6.1.3. Third Scenario</h4>
+<h4 id="_third_scenario_send_message_process">6.1.3. Third Scenario : Send Message Process</h4>
+<div class="sect4">
+<h5 id="_sending_messages_flowchart">Sending messages Flowchart</h5>
+<div class="imageblock">
+<div class="content">
+<img src="./images/sendMessages.png" alt="messages flowchart" width="800">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_sending_messages_in_details">sending messages in details</h5>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
