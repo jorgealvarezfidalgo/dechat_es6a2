@@ -42,8 +42,6 @@ Those being the following:
 
 Since there were common imports to all of them, sharing constructor as well, we abstracted a Service superclass to avoid duplicating code.
 
-----
-
 ==== White Box Repository
 
 image::images/BBLevel2Repository.png[Building Block Level 3 - Repository,800]
