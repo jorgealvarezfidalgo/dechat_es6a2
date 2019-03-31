@@ -8,7 +8,7 @@ This section consists of a decomposition of our system into building blocks, sho
 
 We begin the decomposition by displaying a white box description of the overall system -manifested in section III, Context Diagrams as 'DeChat' black box-.
 
-image::images/BBLevel1.png[Building Block Level 1,800]
+image:images/BBLevel1.png[Building Block Level 1,800]
 
 It can be swiftly perceived that we have chosen a Model-View-Controller pattern for overall system architecture, reasoning being:
 * It is a fairly suitable and easy-to-grasp architecture for web applications such as ours.
@@ -29,7 +29,7 @@ It can be swiftly perceived that we have chosen a Model-View-Controller pattern 
 
 ==== White Box Service
 
-image::images/BBLevel2Service.png[Building Block Level 2 - Service,800]
+image:images/BBLevel2Service.png[Building Block Level 2 - Service,800]
 
 It was determined that, in order to make the main logic more sustainable as well as comfortable to work with, it would be decomposed into 5 classes -services, since we opted for MVC-, which encapsulate the main features needed for basic chat communication.
 Those being the following:
@@ -44,7 +44,7 @@ Since there were common imports to all of them, sharing constructor as well, we 
 
 ==== White Box Repository
 
-image::images/BBLevel2Repository.png[Building Block Level 3 - Repository,800]
+image:images/BBLevel2Repository.png[Building Block Level 3 - Repository,800]
 
 There are three main clases conforming persistance functionality:
 
@@ -53,6 +53,3 @@ There are three main clases conforming persistance functionality:
 * SolidUploaderRepository. Executes SPARQL updates and insertions. Capable of deleting files, also.
 
 The objective of this block is to provide CRUD operations for all of the Services, so that any chat-related information may be recovered or persisted. It plays a rather significant role, since it is the responsible of handling POD usage in both directions.
-
-
-

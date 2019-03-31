@@ -1,4 +1,4 @@
-[[section-runtime-view]]
+image:images/[[section-runtime-view]]
 == Runtime View
 
 ****
@@ -10,7 +10,7 @@ building blocks in form of scenarios.
 
 ==== Main Scenario : the user's journey flow.
 ===== User journey flowchart
-image::userJourney.png[user journey,800]
+image:images/userJourney.png[user journey,800]
 
 ===== User journey in details
 1 -> Entering the main app
@@ -41,7 +41,7 @@ image::userJourney.png[user journey,800]
 ==== Second Scenario : Login Process
 
 ===== Login flowchart
-image::loginProcess.png[login flowchart,800]
+image:images/loginProcess.png[login flowchart,800]
 
 ===== Login runtime view in details
 When entering the webpage, there are two possibilities :

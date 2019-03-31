@@ -7,7 +7,7 @@ relevant in multiple parts of our system.
 
 === Concepts Mind Map
 
-image::concepts.png[concepts.png,800]
+image:images/concepts.png[concepts.png,800]
 
 === Concepts Detailed
 

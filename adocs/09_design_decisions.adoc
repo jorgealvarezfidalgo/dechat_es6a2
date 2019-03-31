@@ -6,7 +6,7 @@ This section describes all the decisions made to develop our decentralized chat 
 
 === Design Decisions Mind Map
 
-image::DesDesicions.png[DesDesicions.png,800]
+image:images/DesDesicions.png[DesDesicions.png,800]
 
 === Design Decisions Detailed
 
