@@ -13,6 +13,9 @@ Jorge Álvarez Fidalgo & Othmane Bakhtaoui
 
 Developed on *Notepad++* and *Atom*.
 
+== Documentation
+Documentation can be accessed at https://arquisoft.github.io/dechat_es6a2/documentation.html
+
 == Getting started
 
 In order to run the app locally, you have to https://github.com/Arquisoft/dechat_es6a2/wiki[install Nodes.js®]
