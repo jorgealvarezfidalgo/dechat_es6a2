@@ -62,8 +62,17 @@ When entering the webpage, there are two possibilities :
 4 -> now the user is in the main UI.
 
 
-==== Third Scenario : Send Message Process
+==== Third Scenario : *User A* Sends Message to *User B*
 ===== Sending messages Flowchart
 image::sendMessages.png[messages flowchart,800]
 
 ===== sending messages in details
+In the case of an already open conversation, the user *User A* selects it and decides to send a message to his friend *User B*
+
+1 -> *User A* send the messages.
+
+2 -> The app places this conversation for *User A* in the *first* place.
+
+3 -> *User B* receives it and the app places the conversation in the *first* place with a notification.
+
+4 -> The UI view is updated for *User A* and *User B* with the message sent.
