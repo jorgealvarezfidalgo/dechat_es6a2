@@ -8,8 +8,12 @@ building blocks in form of scenarios.
 
 === Scenarios
 
-==== First Scenario
+==== Main Scenario : the user's journey flow.
+image::userJourney.png[quality tree,800]
 
-==== Second Scenario
+****
+****
 
-==== Third Scenario
+==== Second Scenario : Login Process
+
+==== Third Scenario : Send Message Process
