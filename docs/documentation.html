@@ -901,17 +901,9 @@ For documentation of your own system you use better the <em>plain</em> version.<
 </div>
 </div>
 <div class="paragraph">
-<p>It can be swiftly perceived that we have chosen a Model-View-Controller pattern for overall system architecture, reasoning being:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>It is a fairly suitable and easy-to-grasp architecture for web applications such as ours.</p>
-</li>
-<li>
-<p>We have created a few applications before using this approach.</p>
-</li>
-</ul>
+<p>It can be swiftly perceived that we have chosen a Model-View-Controller pattern for overall system architecture, reasoning being:
+* It is a fairly suitable and easy-to-grasp architecture for web applications such as ours.
+* We have created a few applications before using this approach.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 8. Black Box descriptions</caption>
@@ -922,7 +914,7 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Name</th>
-<th class="tableblock halign-left valign-top">Overview</th>
+<th class="tableblock halign-left valign-top">Responsibility</th>
 </tr>
 </thead>
 <tbody>
@@ -936,7 +928,71 @@ For documentation of your own system you use better the <em>plain</em> version.<
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_level_2">5.2. Level 2</h3>
+<div class="sect3">
+<h4 id="_white_box_service">5.2.1. White Box Service</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./images/images/BBLevel2Service.png" alt="Building Block Level 2 - Service" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>It was determined that, in order to make the main logic more sustainable as well as comfortable to work with, it would be decomposed into 5 classes -services, since we opted for MVC-, which encapsulate the main features needed for basic chat communication.
+Those being the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BaseService. Contains basic functionality which is commonly needed and doesn&#8217;t fall under any category.</p>
+</li>
+<li>
+<p>CreateService. Creates chats/groups, storing in user&#8217;s POD whatever information is needed and sending invites to all participants.</p>
+</li>
+<li>
+<p>JoinService. Processes invitations to create a replica of the chat in invited user&#8217;s POD.</p>
+</li>
+<li>
+<p>OpenService. Loads all information about stored chats and any messages it contains-.</p>
+</li>
+<li>
+<p>MessageService. Looks for new messages in inbox to store them if necessary, as well as stores new messages created at current session and sends them to any participants' inboxes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Since there were common imports to all of them, sharing constructor as well, we abstracted a Service superclass to avoid duplicating code.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_white_box_repository">5.2.2. White Box Repository</h4>
+<div class="imageblock">
+<div class="content">
+<img src="./images/images/BBLevel2Repository.png" alt="Building Block Level 3 - Repository" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>There are three main clases conforming persistance functionality:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>RDFJSSourceFactory. Given an URL, provides a RDFJS Source to make queries with Engine.</p>
+</li>
+<li>
+<p>SolidLoaderRepository. Through the source provided by the latter, it collects chat info from any accesible URL to form a domain object, which will be used by whatever Service has required it.</p>
+</li>
+<li>
+<p>SolidUploaderRepository. Executes SPARQL updates and insertions. Capable of deleting files, also.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The objective of this block is to provide CRUD operations for all of the Services, so that any chat-related information may be recovered or persisted. It plays a rather significant role, since it is the responsible of handling POD usage in both directions.</p>
+</div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 </div>
@@ -1011,17 +1067,44 @@ building blocks in form of scenarios.</p>
 <h5 id="_login_flowchart">Login flowchart</h5>
 <div class="imageblock">
 <div class="content">
-<img src="./images/login.png" alt="login flowchart" width="800">
+<img src="./images/loginProcess.png" alt="login flowchart" width="800">
 </div>
 </div>
 </div>
 <div class="sect4">
 <h5 id="_login_runtime_view_in_details">Login runtime view in details</h5>
-
+<div class="paragraph">
+<p>When entering the webpage, there are two possibilities :</p>
+</div>
+<div class="paragraph">
+<p>1 &#8594; the user&#8217;s already logged in or connected in <strong>solid.community/</strong> for example</p>
+</div>
+<div class="paragraph">
+<p>2 &#8594; the user&#8217;s not logged in, the user nust <strong>click</strong> on <strong>Login</strong></p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-&gt; If the user has an account
+  - click on the provider and fill the login form.</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>-&gt; If the user doesn't have an account
+  - there is the possibility to register and create a personal POD.
+  - Login using the entered informatin in the register process.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>3 &#8594; the app will load automatically all the user&#8217;s data including the conversations, friends and invitations.</p>
+</div>
+<div class="paragraph">
+<p>4 &#8594; now the user is in the main UI.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_third_scenario_send_message_process">6.1.3. Third Scenario : Send Message Process</h4>
+<h4 id="_third_scenario_user_a_sends_message_to_user_b">6.1.3. Third Scenario : <strong>User A</strong> Sends Message to <strong>User B</strong></h4>
 <div class="sect4">
 <h5 id="_sending_messages_flowchart">Sending messages Flowchart</h5>
 <div class="imageblock">
@@ -1032,6 +1115,21 @@ building blocks in form of scenarios.</p>
 </div>
 <div class="sect4">
 <h5 id="_sending_messages_in_details">sending messages in details</h5>
+<div class="paragraph">
+<p>In the case of an already open conversation, the user <strong>User A</strong> selects it and decides to send a message to his friend <strong>User B</strong></p>
+</div>
+<div class="paragraph">
+<p>1 &#8594; <strong>User A</strong> send the messages.</p>
+</div>
+<div class="paragraph">
+<p>2 &#8594; The app places this conversation for <strong>User A</strong> in the <strong>first</strong> place.</p>
+</div>
+<div class="paragraph">
+<p>3 &#8594; <strong>User B</strong> receives it and the app places the conversation in the <strong>first</strong> place with a notification.</p>
+</div>
+<div class="paragraph">
+<p>4 &#8594; The UI view is updated for <strong>User A</strong> and <strong>User B</strong> with the message sent.</p>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
