@@ -32,6 +32,7 @@ let openChat = false;
 let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
+let contactsToOpen = false;
 
 $(document).ready(function () {
     $("[data-toggle='tooltip']").tooltip();
@@ -458,6 +459,11 @@ $("#close-contact-information").click(async () => {
 });
 
 $("#show-contacts").click(async () => {
+	if(contactsToOpen) {
+		contactsToOpen = false;
+	} else {
+		contactsToOpen = true;
+	}
     await displayContacts(openContact);
 });
 
@@ -633,6 +639,7 @@ $("#create-group").click(async () => {
 		$(".writegroup").removeClass("hidden");
 		$(".addcontact").removeClass("hidden");
 		$(".writecontact").removeClass("hidden");
+		contactsToOpen = false;
     } else {
         $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
@@ -705,7 +712,7 @@ $("#addcontact").click(async () => {
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
-            document.getElementById("openchatwindow" + contact).addEventListener("click", $(".creategroup").hasClass("hidden") ? openContact : markContactForGroup, false);
+            document.getElementById("openchatwindow" + contact).addEventListener("click", contactsToOpen ? openContact : markContactForGroup, false);
         } else {
             alert("No user found with web id " + contact);
         }
