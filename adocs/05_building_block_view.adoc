@@ -2,14 +2,13 @@
 
 == Building Block View
 
-****
 This section consists of a decomposition of our system into building blocks, showcasing their inner dependencies.
 
 === Level 1
 
 We begin the decomposition by displaying a white box description of the overall system -manifested in section III, Context Diagrams as 'DeChat' black box-.
 
-image::BBLevel1.png[Building Block Level 1,800]
+image::./images/BBLevel1.png[Building Block Level 1,800]
 
 It can be swiftly perceived that we have chosen a Model-View-Controller pattern for overall system architecture, reasoning being:
 * It is a fairly suitable and easy-to-grasp architecture for web applications such as ours.
@@ -26,4 +25,3 @@ It can be swiftly perceived that we have chosen a Model-View-Controller pattern 
 |Either persists the data provided by a Service -inserts or updates data in current user's private POD folder as well as interlocutors' inbox- or selects stored/received data from current user's POD.
 |===
 
-****
