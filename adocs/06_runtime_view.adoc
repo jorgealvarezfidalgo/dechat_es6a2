@@ -1,4 +1,4 @@
-image:images/[[section-runtime-view]]
+[[section-runtime-view]]
 == Runtime View
 
 ****
