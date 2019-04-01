@@ -325,7 +325,7 @@ async function checkKey(e) {
         const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
         //console.log(currentChat);
         if (currentChat.interlocutorWebId.includes("Group"))
-            await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, time, message, interlocWebId, true, currentChat.members);
+            await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
         $("#write-chat").val("");
