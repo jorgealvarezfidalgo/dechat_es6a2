@@ -21,7 +21,7 @@ In order to run the app locally, you have to https://github.com/Arquisoft/dechat
 
 == Build documentation
 
-You can checkout our project's documentation file:///D:/Documents/S6/ASW/Practicas/dechat_es6a2/docs/documentation.html[here].
+You can checkout our project's documentation https://arquisoft.github.io/dechat_es6a2/documentation.html[here].
 
 The documentation is done in http://asciidoc.org/[AsciiDoc]
 using the https://arc42.org/[arc42] templates.
