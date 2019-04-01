@@ -21,10 +21,13 @@ In order to run the app locally, you have to https://github.com/Arquisoft/dechat
 
 == Build documentation
 
+You can checkout our project's documentation file:///D:/Documents/S6/ASW/Practicas/dechat_es6a2/docs/documentation.html[here].
+
 The documentation is done in http://asciidoc.org/[AsciiDoc]
 using the https://arc42.org/[arc42] templates.
 The source documents are located at
- https://github.com/Arquisoft/dechat_es6a/tree/master/src/docs[src/docs].
+ https://github.com/Arquisoft/dechat_es6a2/tree/master/adocs[adocs].
+ 
 
 To generate the documentation, you have to install gulp:
 
