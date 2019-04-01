@@ -7,7 +7,7 @@ relevant in multiple parts of our system.
 
 === Concepts Mind Map
 
-image:images/concepts.png[concepts.png,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/concepts.png[concepts.png,800]
 
 === Concepts Detailed
 

@@ -10,7 +10,7 @@ building blocks in form of scenarios.
 
 ==== Main Scenario : the user's journey flow.
 ===== User journey flowchart
-image:images/userJourney.png[user journey,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/userJourney.png[user journey,800]
 
 ===== User journey in details
 1 -> Entering the main app
@@ -41,7 +41,7 @@ image:images/userJourney.png[user journey,800]
 ==== Second Scenario : Login Process
 
 ===== Login flowchart
-image:images/loginProcess.png[login flowchart,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/loginProcess.png[login flowchart,800]
 
 ===== Login runtime view in details
 When entering the webpage, there are two possibilities :
@@ -64,7 +64,7 @@ When entering the webpage, there are two possibilities :
 
 ==== Third Scenario : *User A* Sends Message to *User B*
 ===== Sending messages Flowchart
-image::sendMessages.png[messages flowchart,800]
+image::https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/sendMessages.png[messages flowchart,800]
 
 ===== sending messages in details
 In the case of an already open conversation, the user *User A* selects it and decides to send a message to his friend *User B*

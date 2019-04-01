@@ -29,7 +29,7 @@ It can be swiftly perceived that we have chosen a Model-View-Controller pattern 
 
 ==== White Box Service
 
-image:images/BBLevel2Service.png[Building Block Level 2 - Service,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/BBLevel2Service.png[Building Block Level 2 - Service,800]
 
 It was determined that, in order to make the main logic more sustainable as well as comfortable to work with, it would be decomposed into 5 classes -services, since we opted for MVC-, which encapsulate the main features needed for basic chat communication.
 Those being the following:
@@ -44,7 +44,7 @@ Since there were common imports to all of them, sharing constructor as well, we 
 
 ==== White Box Repository
 
-image:images/BBLevel2Repository.png[Building Block Level 3 - Repository,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/BBLevel2Repository.png[Building Block Level 3 - Repository,800]
 
 There are three main clases conforming persistance functionality:
 

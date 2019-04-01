@@ -4,7 +4,7 @@
 == Deployment View
 
 .Infrastructure overview
-image::images/DeploymentView.png[Deployment View - Service,800]
+image::https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/DeploymentView.png[Deployment View - Service,800]
 
 === Motivation
 

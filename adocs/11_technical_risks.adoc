@@ -7,7 +7,7 @@ In this document we will be talking about risks and technical debts we faced or 
 
 === Problems Mind Map
 
-image:images/problems.png[quality tree,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/problems.png[quality tree,800]
 
 === Problems Detailed
 

@@ -6,7 +6,7 @@ This section describes all the decisions made to develop our decentralized chat 
 
 === Design Decisions Mind Map
 
-image:images/DesDesicions.png[DesDesicions.png,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/DesDesicions.png[DesDesicions.png,800]
 
 === Design Decisions Detailed
 

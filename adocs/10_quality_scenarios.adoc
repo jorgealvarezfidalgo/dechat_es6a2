@@ -11,7 +11,7 @@ At the end, you can see more details.
 
 === Quality Tree
 
-image:images/qualityTree.png[quality tree,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/qualityTree.png[quality tree,800]
 
 === Quality Scenarios
 

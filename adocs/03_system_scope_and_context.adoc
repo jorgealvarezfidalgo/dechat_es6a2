@@ -9,10 +9,10 @@ Chats created by an user may be either individual or groupal; following diagrams
 
 **Business Context diagram**
 
-image:images/Business%20Context.png[Business Context,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/Business%20Context.png[Business Context,800]
 
 === Technical Context
 
 **Technical Context diagram**
 
-image:images/Technical%20Context.png[Technical Context,800]
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/Technical%20Context.png[Technical Context,800]
