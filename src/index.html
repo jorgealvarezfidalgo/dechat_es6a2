@@ -73,16 +73,21 @@
            	--> 
             <!--ADD IMAGES AND VIDEOS-->
             <label for="join-media">
-               <input id="join-media" type="file" accept="image/*" style="display: none;"/>
+               <input id="join-media" multiple type="file" accept="image/*" style="display: none;" />
                <img alt="paperclip" id="img-clp" src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/paperclip-icon.png" style="height:39px; width:22px; cursor: pointer;"/> 
 			 </label>          
             <!-- -->           
-            <i class="fa fa-bars fa-lg" aria-hidden="true" id="show-contact-information" style="cursor: pointer;" data-toggle="tooltip" title="Display Contact Info"> </i> <i class="fa fa-times fa-lg" aria-hidden="true" id="close-contact-information"  style="cursor: pointer;" data-toggle="tooltip" title="Close Contact Info"></i> </div>
+            <i class="fa fa-bars fa-lg" aria-hidden="true" id="show-contact-information" style="cursor: pointer;" data-toggle="tooltip" title="Display Contact Info"> </i> 
+			 <i class="fa fa-times fa-lg" aria-hidden="true" id="close-contact-information"  style="cursor: pointer;" data-toggle="tooltip" title="Close Contact Info"></i> 
+		  </div>
          <div class="wrap-chat">
             <div id="chatdiv" class="chat"></div>
             <div class="information"></div>
          </div>
          <div class="wrap-message"> <i class="fa fa-smile-o fa-lg" aria-hidden="true"></i>
+			 <div class="gallery hidden">
+				 <i class="fa fa-times fa-lg" aria-hidden="true" id="close-gallery-information"  style="cursor: pointer;" data-toggle="tooltip" title="Close Gallery Info"></i> 
+			 </div>
             <div class="message">
                <input id="write-chat" type="text" class="input-message" placeholder="Write a message">
             </div>

@@ -357,8 +357,65 @@ async function checkKey(e) {
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
         }
     }
-
 }
+
+$('#join-media').on('change', function() {
+  $(".gallery").show();
+    console.log("entrando");
+    var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+    var $w = $(w.document.body);
+    $w.append("<p> the images that will be sent are :</p> <br/> ");
+    var toSend = this;
+    imagesPreview(this, $w);
+    $(w).on("unload", function(e) {
+      imagesToSend(toSend, ".chat");
+    });
+
+});
+
+function imagesToSend(input, placeToInsertImagePreview) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i=0;
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              var now = new Date();
+                var dateFormat = require("date-fns");
+              const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+               var img = "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>";
+               console.log("img is:" + img);
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+  };
+
+
+function imagesPreview(input, placeToInsertImagePreview) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i=0;
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                console.log("url is" + event.target.result);
+                $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+            }
+            reader.readAsDataURL(input.files[i]);
+            //console.log("url is" + reader.readAsDataURL(input.files[i]));
+        }
+    }
+  };
+
+$("#close-gallery-information").click(async () => {
+    $(".chat-head i").show();
+    $("#close-gallery-information").hide();
+    //$("div.gallery").remove();
+    $(".gallery").hide();
+});
 
 async function showAndStoreMessages() {
     var i = 0;
