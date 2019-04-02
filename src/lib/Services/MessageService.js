@@ -1,5 +1,6 @@
 const Service = require("./Service");
 const BaseService = require("./BaseService");
+const CryptoJS = require("crypto-js");
 
 class MessageService  extends Service {
     constructor(fetch) {
