@@ -36,9 +36,9 @@ class EncryptionService {
 * WHEEL POSITIONS [ 3RD, 2ND, 1ST, REFLECTOR]
 *
 * WHEELS 
-*   ROTORS['i','ii','iii','iv','v','vi','vii,'viii']
-*   REFLECTORS['ukw-b','ukw-c','b-thin','c-thin']
-*   GREEK['beta', 'gamma']
+*   ROTORS["i","ii","iii","iv","v","vi","vii,"viii"]
+*   REFLECTORS["ukw-b","ukw-c","b-thin","c-thin"]
+*   GREEK["beta", "gamma"]
 */
 	rotorSchlusselmaschineCodierung(txt) {
 		var result = txt.split(/[,:;\?\(\)\.\-\_!¿ ]+/);
@@ -46,10 +46,11 @@ class EncryptionService {
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
+		var tx = txt;
 		for(i = 0; i < result.length; i++) {
-			txt.replace(result[i], m4.encode(result[i]));
+			tx = tx.replace(result[i], m4.encode(result[i]));
 		}
-		return txt;
+		return tx;
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
@@ -58,10 +59,56 @@ class EncryptionService {
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
+		var tx = txt;
 		for(i = 0; i < result.length; i++) {
-			txt.replace(result[i], m4.decode(result[i]));
+			tx = tx.replace(result[i], m4.decode(result[i]));
 		}	
-		return txt;
+		return tx;
+	}
+	
+	static randomNumber(range) {
+		return Math.floor(Math.random() * range);
+	}
+	
+	static randomizeConfiguration() {
+		var rotors = ["i","ii","iii","iv","v","vi","vii","viii"];
+		var reflectors = ["ukw-b","ukw-c","b-thin","c-thin"];
+		var greeks = ["beta", "gamma"];
+		var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+		var count, last;
+		count = 0;
+		var pluggins = [];
+		last = EncryptionService.randomNumber(26);
+		while(pluggins.length < 6) {
+			if(pluggins.indexOf(alphabet[last])===-1) {
+				pluggins[count] = alphabet[last];
+				count += 1;
+			}
+			last = EncryptionService.randomNumber(26);
+		}
+		var selrotors = [];
+		last = EncryptionService.randomNumber(8);
+		count = 0;
+		while(selrotors.length < 3) {
+			if(selrotors.indexOf(last)===-1) {
+			selrotors[count] = last;
+			count += 1;
+			}
+			last = EncryptionService.randomNumber(8);
+		}
+		return {
+			"code": [alphabet[EncryptionService.randomNumber(26)], alphabet[EncryptionService.randomNumber(26)], alphabet[EncryptionService.randomNumber(26)]],
+			"plugboard": {
+				[pluggins[0]] : pluggins[1],
+				[pluggins[2]] : pluggins[3],
+				[pluggins[4]] : pluggins[5]
+			},
+			"greek": greeks[EncryptionService.randomNumber(1)],
+			"rotor1": rotors[selrotors[0]],
+			"rotor2": rotors[selrotors[1]],
+			"rotor3": rotors[selrotors[2]],
+			"reflector": reflectors[EncryptionService.randomNumber(4)]
+		};
 	}
 	
 }
