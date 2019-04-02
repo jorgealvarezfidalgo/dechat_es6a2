@@ -2,8 +2,15 @@ const CryptoJS = require("crypto-js");
 const Enigma = require("node-enigma");
 
 class EncryptionService {
-    constructor() {
+    constructor(code, plugboard, greek, rotor1, rotor2, rotor3, reflector) {
 		this.key = "";
+		this.code = code;
+		this.plugboard = plugboard;
+		this.greek = greek;
+		this.rotor1 = rotor1;
+		this.rotor2 = rotor2;
+		this.rotor3 = rotor3;
+		this.reflector = reflector;
 	}
 	
 	encrypt(txt) {
@@ -33,11 +40,11 @@ class EncryptionService {
 *   REFLECTORS['ukw-b','ukw-c','b-thin','c-thin']
 *   GREEK['beta', 'gamma']
 */
-	rotorSchlusselmaschineCodierung(txt, code, plugboard, greek, rotor1, rotor2, rotor3, reflector) {
+	rotorSchlusselmaschineCodierung(txt) {
 		var result = txt.split(/[,:;\?\(\)\.\-\_!¿ ]+/);
-		const m4 = new Enigma(greek, rotor1, rotor2,rotor3, reflector);
-		m4.setCode(code);
-		m4.setPlugboard(plugboard);
+		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
+		m4.setCode(this.code);
+		m4.setPlugboard(this.plugboard);
 		var i;
 		for(i = 0; i < result.length; i++) {
 			txt.replace(result[i], m4.encode(result[i]));
@@ -45,11 +52,11 @@ class EncryptionService {
 		return txt;
 	}
 	
-	rotorSchlusselmaschineDekodierung(txt, code, plugboard, greek, rotor1, rotor2, rotor3, reflector) {
+	rotorSchlusselmaschineDekodierung(txt) {
 		var result = txt.split(/[,:;\?\(\)\.\-\_!¿ ]+/);
-		const m4 = new Enigma(greek, rotor1, rotor2, rotor3, reflector);
-		m4.setCode(code);
-		m4.setPlugboard(plugboard);
+		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
+		m4.setCode(this.code);
+		m4.setPlugboard(this.plugboard);
 		var i;
 		for(i = 0; i < result.length; i++) {
 			txt.replace(result[i], m4.decode(result[i]));
