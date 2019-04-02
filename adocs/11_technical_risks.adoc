@@ -29,5 +29,4 @@ We have never used *Cucumber* and we are new to the *Behavior-Driven Development
 so it took us a few days to learn how to use it with **_Node_** and adapting it to Travis to build our app.
 
 ==== Deployment
-We have never used *Docker*. Thus, in these few remaining weeks, we will learn about it and use it
-to deploy our chat web application.
+We were gonna use *Docker* to deploy our app, but ,at the end, we decided to use *gh-pages* for simplicity.

@@ -1,16 +1,11 @@
 [[section-runtime-view]]
 == Runtime View
 
-****
-In this section, we will describe the behavior and interactions of the system’s
-building blocks in form of scenarios.
-****
-
 === Scenarios
 
 ==== Main Scenario : the user's journey flow.
-===== User journey flowchart
-image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/userJourney.png[user journey,800]
+===== User journey **link:https://creately.com/blog/diagrams/flowchart-guide-flowchart-tutorial/[Flowchart]**
+image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/images/userJourney.png[user journey,950]
 
 ===== User journey in details
 1 -> Entering the main app
