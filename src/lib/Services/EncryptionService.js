@@ -2,46 +2,41 @@ const CryptoJS = require("crypto-js");
 const Enigma = require("node-enigma");
 
 class EncryptionService {
-    constructor(code, plugboard, greek, rotor1, rotor2, rotor3, reflector) {
-		this.key = "";
-		this.code = code;
-		this.plugboard = plugboard;
-		this.greek = greek;
-		this.rotor1 = rotor1;
-		this.rotor2 = rotor2;
-		this.rotor3 = rotor3;
-		this.reflector = reflector;
+	
+	constructor() {
+		var config = EncryptionService.randomizeConfiguration();
+		this.code = config.code;
+		this.plugboard = config.plugboard;
+		this.greek = config.greek;
+		this.rotor1 = config.rotor1;
+		this.rotor2 = config.rotor2;
+		this.rotor3 = config.rotor3;
+		this.reflector = config.reflector;
+		var keySize = 256;
+		var iterations = 100;
+		var salt = CryptoJS.lib.WordArray.random(128/8);
+		this.key = CryptoJS.PBKDF2("ElquienhasacadodevosotrosestegritodeguerraDiosloquiere", salt, {
+			keySize,
+			iterations: iterations
+		}).toString();
 	}
 	
-	encrypt(txt) {
-		// var salt = CryptoJS.lib.WordArray.random(128/8);
-  
-  // var key = CryptoJS.PBKDF2(pass, salt, {
-      // keySize: keySize/32,
-      // iterations: iterations
-    // });
+	setKey(key) {
+		this.key = key;
+	}
+	
+	encryptAES(txt) {
+		console.log(this.key);
 		return CryptoJS.AES.encrypt(txt,this.key);
 	}
 	
-	decrypt(txt) {
+	decryptAES(txt) {
 		var bytes  = CryptoJS.AES.decrypt(txt, this.key);																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
         return bytes.toString(CryptoJS.enc.Utf8);
 	}
 	
-	/**
-* M4 CONFIGURATION
-* WHEEL POSITIONS [4TH, 3RD, 2ND, 1ST, REFLECTOR]
-*
-* M3 CONFIGURATION
-* WHEEL POSITIONS [ 3RD, 2ND, 1ST, REFLECTOR]
-*
-* WHEELS 
-*   ROTORS["i","ii","iii","iv","v","vi","vii,"viii"]
-*   REFLECTORS["ukw-b","ukw-c","b-thin","c-thin"]
-*   GREEK["beta", "gamma"]
-*/
 	rotorSchlusselmaschineCodierung(txt) {
-		var result = txt.split(/[,:;\?\(\)\.\-\_!\|¿0-9 ]+/);
+		var result = txt.split(/[,:;\?\(\)\.\-\_!\|'¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -55,7 +50,7 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[,:;\?\(\)\.\-\_!\|¿0-9 ]+/);
+		var result = txt.split(/[,:;\?\(\)\.\-\_!\|'¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -115,6 +110,36 @@ class EncryptionService {
 			"rotor3": rotors[selrotors[2]],
 			"reflector": reflectors[EncryptionService.randomNumber(4)]
 		};
+	}
+	
+	/*
+		TRUBIA Encrypting Algorithm
+	*/
+	encrypt(txt) {
+		var enc = this.rotorSchlusselmaschineCodierung(txt);
+		var enigmaConf = this.code[0] + "//" + this.code[1] + "//" + this.code[2] + "//" 
+						+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
+						+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
+		var enigmaEnc = enigmaConf + enc;
+		return this.key + "|" + this.encryptAES(enigmaEnc);
+	}
+	
+	/* 
+		TRUBIA Decrypting
+	*/
+	decrypt(txt) {
+		this.key = txt.split("|")[0];
+		var desAes = this.decryptAES(txt.replace(this.key + "|", ""));
+		
+		var enigmaConf = desAes.split("//");
+		this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];
+		this.plugboard = JSON.parse(enigmaConf[3]);
+		this.greek = enigmaConf[4];
+		this.rotor1 = enigmaConf[5];
+		this.rotor2 = enigmaConf[6];
+		this.rotor3 = enigmaConf[7];
+		this.reflector = enigmaConf[8];
+		return this.rotorSchlusselmaschineDekodierung(enigmaConf[9]);
 	}
 	
 	
