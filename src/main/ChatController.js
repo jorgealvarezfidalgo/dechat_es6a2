@@ -167,6 +167,7 @@ $("#enterpwd").click(async() => {
 	$("#pwd2").val("");
 	if(pw1===pw2) {
 		encrypter.setPassword(pwd1);
+		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
 		await sleep(4000);
         await loadChats();

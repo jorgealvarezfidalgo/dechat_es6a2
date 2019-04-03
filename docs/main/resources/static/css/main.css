@@ -122,6 +122,40 @@ code {
   text-shadow: 0px 0px 3px #333333; 
 }
 
+.button {
+    padding: 10px 20px;
+    font-size: 19px;
+	font-family: "vcr";
+    text-align: center;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    margin-left: 43%;
+	margin-bottom: 10px;
+}
+
+.button:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+input#pwd1, input#pwd2 {
+    margin: 10px;
+    width: 66%;
+    margin-left: 20%;
+    border-style: outset;
+}
+
+.white-no-blur     { 
+  font-family: "vcr";
+  color: #FFFFFF; 
+  text-shadow: 0px 0px 3px #333333; 
+  text-align:center;
+}
+
 .red       { color: #a30901; top: 5px; left: 15px; }
 .pink      { color: #d50bcf }
 .dark-blue { color: #31e3e7 }
