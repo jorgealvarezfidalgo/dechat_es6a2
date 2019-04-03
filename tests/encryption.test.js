@@ -47,6 +47,18 @@ describe("Encryption", function() {
 	
   });
   
+  it("Hash", async function() {
+    const encrypter = new Encrypter();
+	var txt1 = "Memories broken, the truth goes unspoken, i've even forgotten my name";
+	var txt2 = "Only love is with us now, Something warm and pure; $Find the beast within 92ourselves, No need for a cure";
+	var enc1 = encrypter.hash(txt1);
+	var enc2 = encrypter.hash(txt2);	
+	assert.notEqual(enc1, enc2, "Hashes cannot be equal");
+	assert.notEqual(enc1, txt1, "Hash1 cannot be equal to his origin");
+	assert.notEqual(enc2, txt2, "Hash2 cannot be equal to his origin");
+	
+  });
+  
   
 });
 
