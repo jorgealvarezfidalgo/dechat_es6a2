@@ -41,12 +41,13 @@ class EncryptionService {
 *   GREEK["beta", "gamma"]
 */
 	rotorSchlusselmaschineCodierung(txt) {
-		var result = txt.split(/[,:;\?\(\)\.\-\_!¿ ]+/);
+		var result = txt.split(/[,:;\?\(\)\.\-\_!\|¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
-		var tx = txt;
+		var tx = txt.replace(/([A-Z])/g, "_|$1");
+		console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.encode(result[i]));
 		}
@@ -54,16 +55,21 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[,:;\?\(\)\.\-\_!¿ ]+/);
+		var result = txt.split(/[,:;\?\(\)\.\-\_!\|¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
 		var tx = txt;
+		console.log(tx);
 		for(i = 0; i < result.length; i++) {
-			tx = tx.replace(result[i], m4.decode(result[i]));
+			tx = tx.replace(result[i], m4.decode(result[i]).toLowerCase());
 		}	
-		return tx;
+		console.log(tx);
+		return tx.replace(/\_\|([a-z])/g,
+			function(m, m1, p) {
+			  return m1.replace("_|", "").toUpperCase();
+			});
 	}
 	
 	static randomNumber(range) {
@@ -110,6 +116,8 @@ class EncryptionService {
 			"reflector": reflectors[EncryptionService.randomNumber(4)]
 		};
 	}
+	
+	
 	
 }
 

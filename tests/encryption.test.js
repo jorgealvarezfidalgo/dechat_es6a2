@@ -24,17 +24,17 @@ describe("Encryption", function() {
 	var enc = encrypter.rotorSchlusselmaschineCodierung("Doktorturnoffmypaininhibitors");
 	assert.notEqual(enc, "Doktorturnoffmypaininhibitors", "The encryption is not correct:" + enc);
 	var desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
-    assert.equal(desenc.toLowerCase(), "doktorturnoffmypaininhibitors", "The desencryption is not correct:" + desenc);
+    assert.equal(desenc, "Doktorturnoffmypaininhibitors", "The desencryption is not correct:" + desenc);
 	
 	enc = encrypter.rotorSchlusselmaschineCodierung("Doktor turn off my pain inhibitors");
 	assert.notEqual(enc, "Doktor turn off my pain inhibitors", "The encryption is not correct:" + enc);
 	desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
-    assert.equal(desenc.toLowerCase(), "doktor turn off my pain inhibitors", "The desencryption is not correct:" + desenc);
+    assert.equal(desenc, "Doktor turn off my pain inhibitors", "The desencryption is not correct:" + desenc);
 	
 	enc = encrypter.rotorSchlusselmaschineCodierung("Doktor, turn off; my pain? inhibitors.");
 	assert.notEqual(enc, "Doktor, turn off; my pain? inhibitors.", "The desencryption is not correct:" + enc);
 	desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
-    assert.equal(desenc.toLowerCase(), "doktor, turn off; my pain? inhibitors.", "The desencryption is not correct:" + desenc);
+    assert.equal(desenc, "Doktor, turn off; my pain? inhibitors.", "The desencryption is not correct:" + desenc);
   });
   
   it("Encrypting and desencrypting with Enigma; random configuration", async function() {
@@ -54,10 +54,11 @@ describe("Encryption", function() {
 	
     const encrypter = new Encrypter(config.code, config.plugboard, config.greek,config.rotor1,config.rotor2,config.rotor3,config.reflector);
 
-	var enc = encrypter.rotorSchlusselmaschineCodierung("Only love is with us now, something warm and pure; find the beast within ourselves, no need for a cure");
+	var enc = encrypter.rotorSchlusselmaschineCodierung("Only love is with us now, Something warm and pure; Find the beast within ourselves, No need for a cure");
 	console.log("Encrypted is " + enc);
 	var desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
-    //assert.equal(desenc.toLowerCase(), "only love is with us now, something warm and pure; find the beast within ourselves, no need for a cure", "The desencryption is not correct:" + desenc);
+	console.log("Desencrypted is " + desenc);
+    assert.equal(desenc, "Only love is with us now, Something warm and pure; Find the beast within ourselves, No need for a cure", "The desencryption is not correct:" + desenc);
 	
   });
   
