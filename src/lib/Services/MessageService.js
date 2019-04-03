@@ -33,11 +33,8 @@ class MessageService  extends Service {
             result = result.toObject();
             const messageUrl = result["?message"].value;
             console.log("msg url in messageService is: " + messageUrl);
-            console.log("msg 35 is:" + result["?msgtext"].value.split("/inbox/")[1]);
             var messageT;
             if(result["?msgtext"].value.includes("data:image")){
-              console.log("msg Text in msg service that will be shown is:" + result["?msgtext"].value);
-                console.log("alternative msg Text in msg service that will be shown is:" +  result["?msgtext"].value.split("/inbox/")[1]);
               messageT = result["?msgtext"].value;
             }
             else{
@@ -73,17 +70,19 @@ class MessageService  extends Service {
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
     var messageT;
     if(message.includes("data:image")){
-      console.log("msg Text in msg service store is:" + message);
       messageT = message;
     }
     else{
       messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     }
     const messageTx = messageT;
-    console.log("msg that will be stored is: " + messageTx );
+
     const psUsername = username.replace(/ /g, "U+0020");
 
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
+
+    console.log("msg that will  for user:" +messageUrl + " -<is:>-" + messageTx );
+
     const sparqlUpdate = `
 		<${messageUrl}> a <${this.namespaces.schema}Message>;
 		  <${this.namespaces.schema}dateSent> <${time}>;

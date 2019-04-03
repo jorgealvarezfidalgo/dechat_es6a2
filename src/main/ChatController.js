@@ -303,9 +303,6 @@ async function loadMessages(id) {
     $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
 
     currentChat.getMessages().forEach(async (message) => {
-        if (message.messagetext.includes("data:image")) {
-            console.log("msg in line 307 is:" + message.messagetext);
-        }
         showMessage(message);
 
     });
@@ -329,6 +326,7 @@ async function checkKey(e) {
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
+
         $("#write-chat").val("");
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
         if (index == -1)
@@ -395,7 +393,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 $("#write-chat").val("");
 
                 $("#chatwindow" + index).remove();
-                console.log("src to be saved is:" + event.target.result);
+                //console.log("src to be saved is:" + event.target.result);
                 semanticChats[index].loadMessage({
                     messagetext: event.target.result,
                     url: null,
@@ -413,9 +411,8 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
-                    console.log("entrando por 416" + img);
-                    console.log(img);
-
+                  //  console.log("entrando por 416" + img);
+                  //  console.log(img);
                     $(".contact-list").prepend(html);
                     document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 }
@@ -491,8 +488,9 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
-    if (message.messagetext.includes("image")) {
-        console.log("msg in 496 is:" + message.messagetext);
+    console.log("message in controller that will be shown is:" + message.messagetext);
+    if (message.messagetext.includes("data:image")) {
+        console.log("image in 493 in controller that will be shown is:" + message.messagetext);
         var img = "<img alt = 'uploaded' src = '" + message.messagetext + "'" + "/>";
         if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
             $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
