@@ -32,7 +32,19 @@ class MessageService  extends Service {
             messageFound = true;
             result = result.toObject();
             const messageUrl = result["?message"].value;
-            const messagetext = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
+            console.log("msg url in messageService is: " + messageUrl);
+            console.log("msg 35 is:" + result["?msgtext"].value.split("/inbox/")[1]);
+            var messageT;
+            if(result["?msgtext"].value.includes("data:image")){
+              console.log("msg Text in msg service that will be shown is:" + result["?msgtext"].value);
+                console.log("alternative msg Text in msg service that will be shown is:" +  result["?msgtext"].value.split("/inbox/")[1]);
+              messageT = result["?msgtext"].value;
+            }
+            else{
+              messageT = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
+            }
+            const messagetext = messageT;
+            console.log("msg in 44 is: " + messagetext);
             const author = result["?username"].value.replace(/U\+0020/g, " ");
             const time = result["?time"].value.split("/")[4];
             const inboxUrl = fileurl;
@@ -59,7 +71,16 @@ class MessageService  extends Service {
   }
 
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
-    const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
+    var messageT;
+    if(message.includes("data:image")){
+      console.log("msg Text in msg service store is:" + message);
+      messageT = message;
+    }
+    else{
+      messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
+    }
+    const messageTx = messageT;
+    console.log("msg that will be stored is: " + messageTx );
     const psUsername = username.replace(/ /g, "U+0020");
 
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);

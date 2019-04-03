@@ -303,7 +303,9 @@ async function loadMessages(id) {
     $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
 
     currentChat.getMessages().forEach(async (message) => {
-
+        if (message.messagetext.includes("data:image")) {
+            console.log("msg in line 307 is:" + message.messagetext);
+        }
         showMessage(message);
 
     });
@@ -358,8 +360,6 @@ async function checkKey(e) {
 }
 
 $('#join-media').on('change', function () {
-    $(".gallery").show();
-    console.log("entrando");
     var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
     var $w = $(w.document.body);
     $w.append("<p> the images that will be sent are :</p> <br/> ");
@@ -367,7 +367,7 @@ $('#join-media').on('change', function () {
     var toSend = this;
     imagesPreview(this, $w);
     //$(w).on("unload", function (e) {
-        imagesToSend(toSend,userDataUrl, username, userWebId, interlocWebId,  currentChat, semanticChats);
+    imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
     //});
 
 });
@@ -389,7 +389,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 var img = "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>";
                 //SENDING MESSAGE
                 if (currentChat.interlocutorWebId.includes("Group"))
-                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime,event.target.result, interlocWebId, true, currentChat.members);
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
                 else
                     await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
                 $("#write-chat").val("");
@@ -408,15 +408,17 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
                     ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
-                    toScrollDown();
+                toScrollDown();
 
-                    if (!showingContacts) {
-                        var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
-                        +"</p></div></div>";
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    console.log("entrando por 416" + img);
+                    console.log(img);
 
-                        $(".contact-list").prepend(html);
-                        document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
-                    }
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
             }
             reader.readAsDataURL(input.files[i]);
         }
@@ -443,15 +445,6 @@ function imagesPreview(input, placeToInsertImagePreview) {
 function imagesPreview(input, placeToInsertImagePreview) {
     placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
 }
-
-
-
-$("#close-gallery-information").click(async () => {
-    $(".chat-head i").show();
-    $("#close-gallery-information").hide();
-    //$("div.gallery").remove();
-    $(".gallery").hide();
-});
 
 async function showAndStoreMessages() {
     var i = 0;
@@ -498,24 +491,37 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
-    if(message.messagetext.includes("data:image")){
-      console.log(message.messagetext);
-    }
-    const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-    if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
-            message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
-    } else {
-        if (currentChat.interlocutorWebId.includes("Group")) {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+    if (message.messagetext.includes("image")) {
+        console.log("msg in 496 is:" + message.messagetext);
+        var img = "<img alt = 'uploaded' src = '" + message.messagetext + "'" + "/>";
+        if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
+            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            if (currentChat.interlocutorWebId.includes("Group")) {
+                $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + img + "</div><div class='time'>" +
+                    message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            } else {
+                $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
+                    message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            }
+        }
+    } else {
+        const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+        if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
+            $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+        } else {
+            if (currentChat.interlocutorWebId.includes("Group")) {
+                $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+                    message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            } else {
+                $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+                    message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+            }
         }
     }
     $(".fa fa-bars fa-lg").removeClass("hidden");
-
     toScrollDown();
 }
 
