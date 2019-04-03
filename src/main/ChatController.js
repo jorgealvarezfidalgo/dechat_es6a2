@@ -165,7 +165,7 @@ $("#enterpwd").click(async() => {
 	const pwd2 = encrypter.hash($("#pwd2").val());
 	$("#pwd1").val("");
 	$("#pwd2").val("");
-	if(pw1===pw2) {
+	if(pwd1===pwd2) {
 		encrypter.setPassword(pwd1);
 		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
