@@ -11,8 +11,9 @@ const {
     default: data
 } = require("@solid/query-ldflex");
 const namespaces = require("../lib/namespaces");
+const Encrypter = require("../lib/Services/EncryptionService");
 
-
+let encrypter = new Encrypter();
 let baseService = new BaseService(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
@@ -158,6 +159,27 @@ async function loadMessagesToWindow() {
     //console.log(userDataUrl);
 }
 
+$("#enterpwd").click(async() => {
+	
+    const pwd1 = encrypter.hash($("#pwd1").val());
+	const pwd2 = encrypter.hash($("#pwd2").val());
+	$("#pwd1").val("");
+	$("#pwd2").val("");
+	if(pw1===pw2) {
+		encrypter.setPassword(pwd1);
+		$(".loading").removeClass("hidden");
+		await sleep(4000);
+        await loadChats();
+        checkForNotifications();
+        $(".wrap").removeClass("hidden");
+        $(".loading").addClass("hidden");
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
+	} else {
+		$("#pwderror").val("Las contraseñas no coinciden.");
+	}
+});
+
 /**
  *    This method is in charge of the user"s login
  */
@@ -170,7 +192,7 @@ auth.trackSession(async (session) => {
         $("#nav-login-btn").addClass("hidden");
         $("#login-required").modal("hide");
         $(".mustlogin").addClass("hidden");
-        $(".loading").removeClass("hidden");
+		$(".unblockage").removeClass("hidden");
 
 
         userWebId = session.webId;
@@ -189,13 +211,6 @@ auth.trackSession(async (session) => {
 		}
 
         await startChat();
-        await sleep(8000);
-        await loadChats();
-        checkForNotifications();
-        $(".wrap").removeClass("hidden");
-        $(".loading").addClass("hidden");
-        // refresh every 3sec
-        refreshIntervalId = setInterval(checkForNotifications, 3000);
     } else {
         //alert("you"re not logged in");
         $("#nav-login-btn").removeClass("hidden");
