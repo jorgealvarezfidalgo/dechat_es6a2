@@ -12,7 +12,6 @@ const {
 } = require("@solid/query-ldflex");
 const namespaces = require("../lib/namespaces");
 
-
 let baseService = new BaseService(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
@@ -128,16 +127,26 @@ async function loadChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
+          if(lastMsg.includes("data:image"){
+            lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+          }else{
             lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+          }
             //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 
         const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter
+                + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName
+                + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -258,7 +267,11 @@ async function checkForNotifications() {
                 var index = contactsWithChat.indexOf(authorUrl);
                 $("#chatwindow" + index).remove();
                 var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                    + index + "'>" + parsedmessage
+                    + "</p></div></div><div class='contact-time'><p>"
+                    + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1)
+                    + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
                 $(".contact-list").prepend(html);
                 document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 interlocutorMessages.push(message);
@@ -342,13 +355,17 @@ async function checkKey(e) {
         });
 
         const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+            + parsedmessage + "</div><div class='time'>" +
             ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                + parsedmessage + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
             +"</p></div></div>";
 
             $(".contact-list").prepend(html);
@@ -390,10 +407,9 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                     await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
                 else
                     await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
-                $("#write-chat").val("");
 
                 $("#chatwindow" + index).remove();
-                //console.log("src to be saved is:" + event.target.result);
+
                 semanticChats[index].loadMessage({
                     messagetext: event.target.result,
                     url: null,
@@ -401,18 +417,17 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                     time: ttime
                 });
 
-                //console.log("msg in sc is:" +   semanticChats[index].messagetext);
-
                 $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
                     ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
                 toScrollDown();
 
                 if (!showingContacts) {
-                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
-                  //  console.log("entrando por 416" + img);
-                  //  console.log(img);
                     $(".contact-list").prepend(html);
                     document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 }
@@ -422,22 +437,6 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
     }
 };
 
-/*
-function imagesPreview(input, placeToInsertImagePreview) {
-    if (input.files) {
-        var filesAmount = input.files.length;
-        var i = 0;
-        for (i = 0; i < filesAmount; i++) {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                console.log("url is" + event.target.result);
-                $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-            }
-            reader.readAsDataURL(input.files[i]);
-            //console.log("url is" + reader.readAsDataURL(input.files[i]));
-        }
-    }
-};*/
 
 function imagesPreview(input, placeToInsertImagePreview) {
     placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
@@ -470,8 +469,20 @@ async function showAndStoreMessages() {
             });
             baseService.deleteFileForUser(interlocutorMessages[i].inboxUrl);
             $("#chatwindow" + index).remove();
-            const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+
+            var msgToShow;
+            if(interlocutorMessages[i].messagetext.includes("data:image"){
+              msgToShow = "<img alt = 'uploaded' src = '" + = interlocutorMessages[i].messagetext + "'" + "/>";
+            }
+            else{
+              msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
+            const parsedmessage = msgToShow;
+
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage
+                + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
             interlocutorMessages[i] = "D";
@@ -617,10 +628,21 @@ async function showChats() {
         }
 
         const newmsg = 0;
+
         if (newmsg === 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html;
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+             + chatCounter + "'>"
+             + lastMsg
+             + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow"
+            + chatCounter + "'><img src='" + chat.photo
+            + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+            + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+            + lastMsg
+            + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
+            + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
