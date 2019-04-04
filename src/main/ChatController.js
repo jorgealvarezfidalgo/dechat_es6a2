@@ -375,16 +375,15 @@ async function checkKey(e) {
 }
 
 $('#join-media').on('change', function () {
-    var w = window.open("", "popupWindow", "width=600, height=400, scrollbars=yes");
+    var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
     var $w = $(w.document.body);
     $w.append("<p> the images that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    imagesPreview(this, $w);
+    videosPreview(this, $w);
     //$(w).on("unload", function (e) {
-    imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+    //imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
     //});
-
 });
 
 function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
@@ -440,6 +439,11 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
 function imagesPreview(input, placeToInsertImagePreview) {
     placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
+}
+
+function videosPreview(input, placeToInsertVideoPreview) {
+    placeToInsertVideoPreview.append("<video width='400' height='400' controls> <source src= '" + URL.createObjectURL(input.files[0])
+                                      + "'> Your browser does not support HTML5 video. </video>");
 }
 
 async function showAndStoreMessages() {
