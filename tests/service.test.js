@@ -8,6 +8,7 @@ const BaseService = require("../src/lib/Services/BaseService");
 const CreateService = require("../src/lib/Services/CreateService");
 const MessageService = require("../src/lib/Services/MessageService");
 const JoinService = require("../src/lib/Services/JoinService");
+const Encrypter = require("../src/lib/Services/EncryptionService");
 
 const namespaces = require("../src/lib/namespaces");
 const auth = require("solid-auth-client");
@@ -16,10 +17,21 @@ const baseService = new BaseService(auth.fetch);
 const joinService = new JoinService(auth.fetch);
 const messageService = new MessageService(auth.fetch);
 const createService = new CreateService(auth.fetch);
+const encrypter = new Encrypter();
 
 const loader = new Loader(auth.fetch);
 
 describe("Services", function () {
+	
+	it("Initialization", async function () { 
+		encrypter.setPassword("jkkjdskj834843bub8frb");
+		baseService.setEncrypter(encrypter);
+		joinService.setEncrypter(encrypter);
+		messageService.setEncrypter(encrypter);
+		openService.setEncrypter(encrypter);
+		createService.setEncrypter(encrypter);
+		loader.setEncrypter(encrypter);
+	});
 
 	it("base Service tests", async function () {
 		const chat = await loader.loadChatFromUrl("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl", "https://othbak.solid.community/profile/card#me", "https://othbak.solid.community/public/unittest_201903201125.ttl");

@@ -62,6 +62,7 @@ class OpenService extends Service {
   }
 
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
+	this.loader.setEncrypter(this.encrypter);
 	if(interloc.includes("Group")) {
 		return await this.loader.loadGroupFromUrl(url, userWebId, userDataUrl);
 	} else {

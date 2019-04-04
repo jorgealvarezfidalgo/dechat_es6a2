@@ -141,6 +141,7 @@ class EncryptionService {
 		TRUBIA Decrypting
 	*/
 	decrypt(txt, inbox) {
+		console.log(txt);
 		var key = "";
 		var salt = "";
 		if(inbox) {

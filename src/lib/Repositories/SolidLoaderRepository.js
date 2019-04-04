@@ -69,6 +69,7 @@ class SolidLoaderRepository {
 
         const rdfjsSource = await this._getRDFjsSourceFromUrl(messageUrl);
         let nextMessageFound = false;
+		const self = this;
         this.engine.query(`SELECT * {
 		?message a <${namespaces.schema}Message>;
 		<${namespaces.schema}dateSent> ?time;
@@ -82,14 +83,17 @@ class SolidLoaderRepository {
             .then(function(result) {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
-                    if (data["?msgtext"]) {																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																										
-                        var messageText = data["?msgtext"].value.split("/")[4];
-                        var author = data["?username"].value.split("/").pop();
+                    if (data["?msgtext"]) {						
+						console.log(data["?msgtext"].value.split("/")[4]);
+						console.log(data["?username"].value.split("/").pop());
+						console.log(data["?time"].value.split("/")[4]);
+                        var messageText = self.encrypter.decrypt(data["?msgtext"].value.split("/")[4], false);
+                        var authorr = self.encrypter.decrypt(data["?username"].value.split("/").pop(), false);
                         results.push({
-                            messagetext: messageText.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":"),
+                            messagetext: messageText,
                             url: data["?message"].value,
-                            author: author.replace(/U\+0020/g, " "),
-                            time: data["?time"].value.split("/")[4]
+                            author: authorr,
+                            time: self.encrypter.decrypt(data["?time"].value.split("/")[4], false)
                         });
                     }
                 });
@@ -109,6 +113,7 @@ class SolidLoaderRepository {
         const deferred = Q.defer();
 		let results = [];
         const rdfjsSource = await this._getRDFjsSourceFromUrl(chatUrl);
+		const self = this;
 
         this.engine.query(`SELECT * {
       ?invitation a <${namespaces.schema}InviteAction>;
@@ -124,7 +129,7 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?recipient"]) {
-                        results.push(data["?recipient"]);
+                        results.push(self.encrypter.decrypt(data["?recipient"], false));
                     }
                 });
 
@@ -172,6 +177,10 @@ class SolidLoaderRepository {
 
         return deferred.promise;
     }
+	
+	setEncrypter(encrypter) {
+		this.encrypter = encrypter;
+	}
 }
 
 module.exports = SolidLoaderRepository;
