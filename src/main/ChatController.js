@@ -179,15 +179,19 @@ $("#enterpwd").click(async() => {
 		createService.setEncrypter(encrypter);
 		console.log("C");
 		openChats = [];
-		console.log("D");
-        const chats = await openService.getChatsToOpen(userWebId);
-		console.log("E");
-		if(chats) {
-        chats.forEach(async (chat) => {
-            openChats.push(chat);
-        });
+		console.log(openService);
+		console.log(userWebId);
+		try {
+			const chats = await openService.getChatsToOpen(userWebId);
+
+			if(chats) {
+			chats.forEach(async (chat) => {
+				openChats.push(chat);
+			});
+			}
+		} catch(e) {
+			console.log(e);
 		}
-		console.log("F");
 
         await startChat();
 		console.log("G");
