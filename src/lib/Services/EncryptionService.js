@@ -154,9 +154,12 @@ class EncryptionService {
 			}).toString();
 		}
 		var desAes = this.decryptAES(txt.replace((inbox ? key : salt)+ "=", ""));
-		
+		console.log(key);
+		console.log(desAes);
 		var enigmaConf = desAes.split("//");
+		console.log(enigmaConf);
 		this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];
+		
 		this.plugboard = JSON.parse(enigmaConf[3]);
 		this.greek = enigmaConf[4];
 		this.rotor1 = enigmaConf[5];
