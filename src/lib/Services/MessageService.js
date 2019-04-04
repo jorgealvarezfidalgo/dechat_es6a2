@@ -15,7 +15,7 @@ class MessageService  extends Service {
     if (rdfjsSource) {
       const engine = this.newEngine();
       let messageFound = false;
-	  const self = this;
+	    const self = this;
       engine.query(`SELECT * {
   				?message a <${self.namespaces.schema}Message>;
   					<${self.namespaces.schema}dateSent> ?time;
@@ -35,6 +35,7 @@ class MessageService  extends Service {
             console.log("msg url in messageService is: " + messageUrl);
             var messageT;
             if(result["?msgtext"].value.includes("data:image")){
+              console.log(result["?msgtext"].value);
               messageT = result["?msgtext"].value;
             }
             else{
