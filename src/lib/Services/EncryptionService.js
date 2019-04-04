@@ -153,20 +153,28 @@ class EncryptionService {
 				iterations: this.iterations
 			}).toString();
 		}
-		var desAes = this.decryptAES(txt.replace((inbox ? key : salt)+ "=", ""));
 		console.log(key);
+		var msg = txt.replace((inbox ? key : salt)+ "=", "");
+		console.log(msg)
+		var desAes = this.decryptAES(msg);
+		
 		console.log(desAes);
 		var enigmaConf = desAes.split("//");
 		console.log(enigmaConf);
-		this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];
+		if(enigmaConf.length) {
 		
-		this.plugboard = JSON.parse(enigmaConf[3]);
-		this.greek = enigmaConf[4];
-		this.rotor1 = enigmaConf[5];
-		this.rotor2 = enigmaConf[6];
-		this.rotor3 = enigmaConf[7];
-		this.reflector = enigmaConf[8];
-		return this.rotorSchlusselmaschineDekodierung(enigmaConf[9]);
+			this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];
+			
+			this.plugboard = JSON.parse(enigmaConf[3]);
+			this.greek = enigmaConf[4];
+			this.rotor1 = enigmaConf[5];
+			this.rotor2 = enigmaConf[6];
+			this.rotor3 = enigmaConf[7];
+			this.reflector = enigmaConf[8];
+			return this.rotorSchlusselmaschineDekodierung(enigmaConf[9]);
+		} else {
+			return null;
+		}
 	}
 	
 	
