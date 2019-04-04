@@ -83,13 +83,19 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?msgtext"]) {
-                      if(data["?msgtext"].value.includes("data:image")
-                              || data["?msgtext"].value.includes("data:video")){
-                                if(data["?msgtext"].value.includes("data:video")){
-                                  console.log(data["?msgtext"].value);
-                                }
-                        //console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
+                      if(data["?msgtext"].value.includes("data:image")){
                         var messageText = data["?msgtext"].value;
+                        var author = data["?username"].value.split("/").pop();
+                        results.push({
+                            messagetext: messageText,
+                            url: data["?message"].value,
+                            author: author.replace(/U\+0020/g, " "),
+                            time: data["?time"].value.split("/")[4]
+                        });
+                      }
+                      else if(data["?msgtext"].value.includes("data:video")){
+                        var messageText = data["?msgtext"].value;
+                        console.log("msg in loader is: " + messageText)
                         var author = data["?username"].value.split("/").pop();
                         results.push({
                             messagetext: messageText,

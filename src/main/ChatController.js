@@ -444,12 +444,12 @@ function imagesPreview(input, placeToInsertImagePreview) {
 }
 
 $('#join-video').on('change', function () {
-    var w = window.open("", "popupWindow", "width=700, height=650, scrollbars=yes");
-    var $w = $(w.document.body);
-    $w.append("<p> the videos that will be sent are :</p> <br/> ");
+    var z = window.open("", "popupWindow", "width=700, height=650, scrollbars=yes");
+    var $z = $(z.document.body);
+    $z.append("<p> the videos that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    //videosPreview(this, $w);
+    //videosPreview(this, $z);
     videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
@@ -457,6 +457,7 @@ function videosPreview(input, placeToInsertVideoPreview) {
     placeToInsertVideoPreview.append("<video width='400' height='400' controls> <source src= '" + URL.createObjectURL(input.files[0])
                                       + "'> Your browser does not support HTML5 video. </video>");
 }
+
 
 function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
     if (input.files) {
@@ -511,6 +512,8 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
 
 
+
+
 async function showAndStoreMessages() {
     var i = 0;
     ////console.log("interloc WEBID is :" + interlocWebId); //Decker.solid.community/....
@@ -544,8 +547,8 @@ async function showAndStoreMessages() {
                 msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
             }
             else if(interlocutorMessages[i].messagetext.includes("data:video")){
-                msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext
-                                                + "'> Your browser does not support HTML5 video. </video>";
+                msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext + "'> Your browser does not support HTML5 video. </video>";
+                console.log("showing video : " + interlocutorMessages[i].messagetext);
             }
             else {
                 msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
@@ -590,6 +593,7 @@ function showMessage(message) {
         }
     }
     else if(message.messagetext.includes("data:video")){
+      console.log("showing video in showMessage : " + message.messagetext);
       var video = "<video width='200' height='200' controls> <source src= '" + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
       if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
           $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
@@ -717,6 +721,7 @@ async function showChats() {
             }
             else if(lastMsg.includes("data:video")){
                 lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+                console.log("showChatslastMsg in showChats" + lastMsg);
             }
             else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
