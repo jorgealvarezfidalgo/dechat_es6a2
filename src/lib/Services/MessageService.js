@@ -32,17 +32,17 @@ class MessageService  extends Service {
             messageFound = true;
             result = result.toObject();
             const messageUrl = result["?message"].value;
-            console.log("msg url in messageService is: " + messageUrl);
+            //console.log("msg url in messageService is: " + messageUrl);
             var messageT;
             if(result["?msgtext"].value.includes("data:image")){
-              console.log("38 is " + result["?msgtext"]);
+              //console.log("38 is " + result["?msgtext"]);
               messageT = result["?msgtext"].value;
             }
             else{
               messageT = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
             }
             const messagetext = messageT;
-            console.log("msg in 44 is: " + messagetext);
+            //console.log("msg in 44 is: " + messagetext);
             const author = result["?username"].value.replace(/U\+0020/g, " ");
             const time = result["?time"].value.split("/")[4];
             const inboxUrl = fileurl;
@@ -82,7 +82,7 @@ class MessageService  extends Service {
 
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
 
-    console.log("msg that will  for user:" +messageUrl + " -<is:>-" + messageTx );
+    //console.log("msg that will  for user:" +messageUrl + " -<is:>-" + messageTx );
 
     const sparqlUpdate = `
 		<${messageUrl}> a <${this.namespaces.schema}Message>;

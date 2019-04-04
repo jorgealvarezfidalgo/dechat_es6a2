@@ -84,7 +84,7 @@ class SolidLoaderRepository {
                     data = data.toObject();
                     if (data["?msgtext"]) {
                       if(data["?msgtext"].value.includes("data:image")){
-                        console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
+                        //console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
                         var messageText = data["?msgtext"].value;
                         var author = data["?username"].value.split("/").pop();
                         results.push({
