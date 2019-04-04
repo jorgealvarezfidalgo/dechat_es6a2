@@ -134,7 +134,7 @@ class EncryptionService {
 						+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
 						+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
 		var enigmaEnc = enigmaConf + enc;
-		return (inbox ? this.salt.toString() : this.defaultkey) + "|" + this.encryptAES(enigmaEnc);
+		return (inbox ? this.salt.toString() : this.defaultkey) + "=" + this.encryptAES(enigmaEnc);
 	}
 	
 	/* 
@@ -145,15 +145,15 @@ class EncryptionService {
 		var key = "";
 		var salt = "";
 		if(inbox) {
-			key = txt.split("|")[0];
+			key = txt.split("=")[0];
 		} else {
-			salt = txt.split("|")[0];
+			salt = txt.split("=")[0];
 			key = CryptoJS.PBKDF2(this.pass, salt, {
 				keySize: this.keySize,
 				iterations: this.iterations
 			}).toString();
 		}
-		var desAes = this.decryptAES(txt.replace((inbox ? key : salt)+ "|", ""));
+		var desAes = this.decryptAES(txt.replace((inbox ? key : salt)+ "=", ""));
 		
 		var enigmaConf = desAes.split("//");
 		this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];

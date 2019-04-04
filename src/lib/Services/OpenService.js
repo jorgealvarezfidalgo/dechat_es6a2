@@ -15,19 +15,14 @@ class OpenService extends Service {
    */
   async getChatsToOpen(webid) {
 	var url = webid.replace("profile/card#me","private/chatsStorage.ttl");
-	console.log(url);
 	this.baseService.writePermission(url);
-	console.log("A");
     const deferred = this.Q.defer();
-	console.log("B");
     const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
-	console.log("C");
     if (rdfjsSource) {
       const engine = this.newEngine();
       const chatUrls = [];
       const promises = [];
 	  const self = this;
-	  console.log("D");
 
       engine.query(`SELECT ?chat ?int ?url {
   			 ?chat <${self.namespaces.schema}contributor> <${webid}>;
@@ -40,12 +35,10 @@ class OpenService extends Service {
           }]
         })
         .then((result) => {
-		  console.log(result);
           result.bindingsStream.on("data", async (data) => {
             const deferred = this.Q.defer();
             promises.push(deferred.promise);
             data = data.toObject();
-			console.log(self.encrypter);
             chatUrls.push({
               chatUrl: self.encrypter.decrypt(data["?chat"].value, false),
               storeUrl: self.encrypter.decrypt(data["?url"].value, false),
@@ -65,7 +58,6 @@ class OpenService extends Service {
       deferred.resolve(null);
     }
 	
-	console.log("F");
     return deferred.promise;
   }
 
