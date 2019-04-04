@@ -18,6 +18,7 @@ class OpenService extends Service {
 	this.baseService.writePermission(url);
     const deferred = this.Q.defer();
     const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
+	console.log(rdfjsSource);
     if (rdfjsSource) {
       const engine = this.newEngine();
       const chatUrls = [];
@@ -35,6 +36,7 @@ class OpenService extends Service {
           }]
         })
         .then((result) => {
+			console.log(result);
           result.bindingsStream.on("data", async (data) => {
             const deferred = this.Q.defer();
             promises.push(deferred.promise);

@@ -8,7 +8,6 @@ const Q = require("q");
  */
 function fromUrl(url, fetch) {
     const deferred = Q.defer();
-	console.log("fromUrl");
     fetch(url)
         .then(async res => {
             if (res.status === 404) {
@@ -31,7 +30,6 @@ function fromUrl(url, fetch) {
                                 return require("streamify-array")(store.getQuads(s, p, o, g));
                             }
                         };
-						console.log(source);
                         deferred.resolve(source);
                     }
                 });
