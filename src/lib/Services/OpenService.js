@@ -54,7 +54,9 @@ class OpenService extends Service {
               deferred.resolve(chatUrls);
             });
           });
-        });
+        }).catch(e => {
+			console.log(e);
+		});
     } else {
       deferred.resolve(null);
     }
