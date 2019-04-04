@@ -167,7 +167,7 @@ class EncryptionService {
 			this.rotor2 = enigmaConf[6];
 			this.rotor3 = enigmaConf[7];
 			this.reflector = enigmaConf[8];
-			return this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join(""));
+			return this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join("//"));
 		} else {
 			return null;
 		}
