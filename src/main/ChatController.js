@@ -170,33 +170,25 @@ $("#enterpwd").click(async() => {
 		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
 		//await sleep(4000);
-		console.log("A");
 		baseService.setEncrypter(encrypter);
 		joinService.setEncrypter(encrypter);
-		console.log("B");
 		messageService.setEncrypter(encrypter);
 		openService.setEncrypter(encrypter);
 		createService.setEncrypter(encrypter);
-		console.log("C");
 		openChats = [];
-		console.log(openService);
-		console.log(userWebId);
 		try {
 			const chats = await openService.getChatsToOpen(userWebId);
-
 			if(chats) {
-			chats.forEach(async (chat) => {
-				openChats.push(chat);
-			});
+				chats.forEach(async (chat) => {
+					openChats.push(chat);
+				});
 			}
 		} catch(e) {
 			console.log(e);
 		}
 
         await startChat();
-		console.log("G");
         await loadChats();
-		console.log("H");
         checkForNotifications();
         $(".wrap").removeClass("hidden");
         $(".loading").addClass("hidden");
