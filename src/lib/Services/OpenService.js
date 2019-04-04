@@ -42,7 +42,7 @@ class OpenService extends Service {
             promises.push(deferred.promise);
             data = data.toObject();
             chatUrls.push({
-              chatUrl: self.encrypter.decrypt(data["?chat"].value, false),
+              chatUrl: data["?chat"].value,
               storeUrl: self.encrypter.decrypt(data["?url"].value, false),
               interlocutor: self.encrypter.decrypt(data["?int"].value, false)
             });
