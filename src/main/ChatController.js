@@ -176,12 +176,22 @@ $("#enterpwd").click(async() => {
 		messageService.setEncrypter(encrypter);
 		openService.setEncrypter(encrypter);
 		createService.setEncrypter(encrypter);
+		openChats = [];
+        const chats = await openService.getChatsToOpen(userWebId);
+		if(chats) {
+        chats.forEach(async (chat) => {
+            openChats.push(chat);
+        });
+		}
+
+        await startChat();
         await loadChats();
         checkForNotifications();
         $(".wrap").removeClass("hidden");
         $(".loading").addClass("hidden");
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
+		
 	} else {
 		$("#pwderror").text("Las contraseñas no coinciden.");
 	}
@@ -209,15 +219,7 @@ auth.trackSession(async (session) => {
             $("#user-name").removeClass("hidden");
             $("#user-name").text(name);
         }
-        openChats = [];
-        const chats = await openService.getChatsToOpen(userWebId);
-		if(chats) {
-        chats.forEach(async (chat) => {
-            openChats.push(chat);
-        });
-		}
-
-        await startChat();
+        
     } else {
         //alert("you"re not logged in");
         $("#nav-login-btn").removeClass("hidden");
