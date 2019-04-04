@@ -37,7 +37,7 @@ class MessageService  extends Service {
             const messagetext = self.encrypter.decrypt(result["?msgtext"].value.split("/inbox/")[1], true);
             const author = self.encrypter.decrypt(result["?username"].value, true);
 			var tmFields = data["?time"].value.split("/");
-            const time = self.encrypter.decrypt(tmFields.splice(4, tmFields.length), true);
+            const time = self.encrypter.decrypt(tmFields.splice(4, tmFields.length).join("/"), true);
             const inboxUrl = fileurl;
             deferred.resolve({
               inboxUrl,

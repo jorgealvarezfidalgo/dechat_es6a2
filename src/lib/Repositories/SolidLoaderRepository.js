@@ -87,13 +87,13 @@ class SolidLoaderRepository {
 						var txFields = data["?msgtext"].value.split("/");
 						var auFields = data["?username"].value.split("/");
 						var tmFields = data["?time"].value.split("/");
-                        var messageText = self.encrypter.decrypt(txFields.splice(4, txFields.length), false);
-                        var authorr = self.encrypter.decrypt(auFields.splice(4, auFields.length), false);
+                        var messageText = self.encrypter.decrypt(txFields.splice(4, txFields.length).join("/"), false);
+                        var authorr = self.encrypter.decrypt(auFields.splice(4, auFields.length).join("/"), false);
                         results.push({
                             messagetext: messageText,
                             url: data["?message"].value,
                             author: authorr,
-                            time: self.encrypter.decrypt(tmFields.splice(4, tmFields.length), false)
+                            time: self.encrypter.decrypt(tmFields.splice(4, tmFields.length).join("/"), false)
                         });
                     }
                 });
