@@ -162,7 +162,12 @@ class BaseService extends Service {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-                        deferred.resolve({interlocutor: result["?interlocutor"].value, url: result["?invitation"].value, agent: result["?sender"].value, ievent: result["?chaturl"].value});
+                        deferred.resolve({
+							interlocutor: self.encrypter.decrypt(result["?interlocutor"].value, true), 
+							url: self.encrypter.decrypt(result["?invitation"].value, true), 
+							agent: self.encrypter.decrypt(result["?sender"].value, true), 
+							ievent: self.encrypter.decrypt(result["?chaturl"].value, true)
+							});
 						});
                     result.bindingsStream.on("end", function () {
                         if (!invitationFound) {

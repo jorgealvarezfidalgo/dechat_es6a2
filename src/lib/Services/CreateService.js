@@ -51,11 +51,14 @@ class CreateService extends Service {
     async setUpNew(chatUrl, userDataUrl, userWebId, interlocutorWebIds, semanticChat, firstId) {
 
         //console.log("Setting up new");
+		var encuser = this.encrypter.encrypt(userWebId, false);
+		var encfirst = this.encrypter.encrypt(firstId, false);
+		var encdata = this.encrypter.encrypt(userDataUrl, false);
 
         try {
-            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${chatUrl}> <${this.namespaces.schema}contributor> <${userWebId}>;
-			<${this.namespaces.schema}recipient> <${firstId}>;
-			<${this.namespaces.storage}storeIn> <${userDataUrl}>.}`);
+            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me","private/chatsStorage.ttl"), `INSERT DATA { <${chatUrl}> <${this.namespaces.schema}contributor> <${encuser}>;
+			<${this.namespaces.schema}recipient> <${encfirst}>;
+			<${this.namespaces.storage}storeIn> <${encdata}>.}`);
         } catch (e) {
             this.logger.error("Could not add chat to WebId.");
             this.logger.error(e);
@@ -70,7 +73,8 @@ class CreateService extends Service {
 
             if (interlocutorWebIds.length > 1) {
                 //console.log("Procesando");
-                id = "Group/" + semanticChat.interlocutorName.replace(/ /g, "U+0020") + "----" + userWebId;
+				//.replace(/ /g, "U+0020") shouldnt be necessary
+                id = "Group/" + semanticChat.interlocutorName + "----" + userWebId;
                 interlocutorWebIds.forEach(async interlocWebId => {
                     if (interlocWebId !== interlocutorWebId) {
 						//console.log(interlocWebId);
@@ -86,14 +90,14 @@ class CreateService extends Service {
             var invitation = await this.generateInvitation(userDataUrl, semanticChat.getUrl(), id, (interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId));
             //console.log(invitation);
             try {
-                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation.forprivate}}`);
             } catch (e) {
                 //console.log("?");
                 logger.error("Could not add chat to WebId.");
                 logger.error(e);
             }
             try {
-                await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId), invitation);
+                await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(interlocutorWebId.id ? interlocutorWebId.id : interlocutorWebId), invitation.forinbox);
             } catch (e) {
                 this.logger.error("Could not send invitation to interlocutor.");
                 this.logger.error(e);
@@ -104,15 +108,30 @@ class CreateService extends Service {
 
     async generateInvitation(baseUrl, chatUrl, userWebId, interlocutorWebId) {
         const invitationUrl = await this.baseService.generateUniqueUrlForResource(baseUrl);
+		
+		var encurl = this.encrypter.encrypt(chatUrl, false);
+		var encuser = this.encrypter.encrypt(userWebId, false);
+		var encint = this.encrypter.encrypt(interlocutorWebId, false);
         ////console.log(invitationUrl);
-        const sparqlUpdate = `
+        const i1 = `
     <${invitationUrl}> a <${this.namespaces.schema}InviteAction>;
-      <${this.namespaces.schema}event> <${chatUrl}>;
-      <${this.namespaces.schema}agent> <${userWebId}>;
-      <${this.namespaces.schema}recipient> <${interlocutorWebId}>.
+      <${this.namespaces.schema}event> <${encurl}>;
+      <${this.namespaces.schema}agent> <${encuser}>;
+      <${this.namespaces.schema}recipient> <${encint}>.
+  `;
+  
+		encurl = this.encrypter.encrypt(chatUrl, true);
+		encuser = this.encrypter.encrypt(userWebId, true);
+		encint = this.encrypter.encrypt(interlocutorWebId, true);
+  
+		const i2 = `
+    <${invitationUrl}> a <${this.namespaces.schema}InviteAction>;
+      <${this.namespaces.schema}event> <${encurl}>;
+      <${this.namespaces.schema}agent> <${encuser}>;
+      <${this.namespaces.schema}recipient> <${encint}>.
   `;
 
-        return sparqlUpdate;
+        return {"forprivate": i1, "forinbox": i2};
     }
 
 

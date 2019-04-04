@@ -25,16 +25,21 @@ class JoinChatService extends Service {
             var invitation = await this.createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             //console.log(invitation);
             try {
-                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
+                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation.forprivate}}`);
             } catch (e) {
                 logger.error("Could not add chat to WebId.");
             }
         });
         //console.log(recipient);
+		
+		var encuser = this.encrypter.encrypt(userWebId, false);
+		var encrec = this.encrypter.encrypt(recipient, false);
+		var encdata = this.encrypter.encrypt(userDataUrl, false);
+		
         try {
-            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${userWebId}>;
-    			<${this.namespaces.schema}recipient> <${recipient}>;
-    			<${this.namespaces.storage}storeIn> <${userDataUrl}>.}`);
+            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${encuser}>;
+    			<${this.namespaces.schema}recipient> <${encrec}>;
+    			<${this.namespaces.storage}storeIn> <${encdata}>.}`);
         } catch (e) {
             logger.error("Could not add chat to WebId.");
         }

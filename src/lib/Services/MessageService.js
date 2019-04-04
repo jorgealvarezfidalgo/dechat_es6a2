@@ -30,12 +30,13 @@ class MessageService  extends Service {
         })
         .then(function(result) {
           result.bindingsStream.on("data", async function(result) {
+			  //.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":") for text
             messageFound = true;
             result = result.toObject();
             const messageUrl = result["?message"].value;
-            const messagetext = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
-            const author = result["?username"].value.replace(/U\+0020/g, " ");
-            const time = result["?time"].value.split("/")[4];
+            const messagetext = self.encrypter.decrypt(result["?msgtext"].value.split("/inbox/")[1], true);
+            const author = self.encrypter.decrypt(result["?username"].value, true);
+            const time = self.encrypter.decrypt(result["?time"].value.split("/")[4], true);
             const inboxUrl = fileurl;
             deferred.resolve({
               inboxUrl,
@@ -60,17 +61,32 @@ class MessageService  extends Service {
   }
 
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
-    const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
-    const psUsername = username.replace(/ /g, "U+0020");
+    //const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
+    //const psUsername = username.replace(/ /g, "U+0020");
+	
+	var enctime = this.encrypter.encrypt(time, false);
+	var encuser = this.encrypter.encrypt(username, false);
+	var enctx = this.encrypter.encrypt(message, false);
 
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
-    const sparqlUpdate = `
+    const forpriv = `
 		<${messageUrl}> a <${this.namespaces.schema}Message>;
-		  <${this.namespaces.schema}dateSent> <${time}>;
-		  <${this.namespaces.schema}givenName> <${psUsername}>;
-		  <${this.namespaces.schema}text> <${messageTx}>.`;
+		  <${this.namespaces.schema}dateSent> <${enctime}>;
+		  <${this.namespaces.schema}givenName> <${encuser}>;
+		  <${this.namespaces.schema}text> <${enctx}>.`;
+		  
+	enctime = this.encrypter.encrypt(time, true);
+	encuser = this.encrypter.encrypt(username, true);
+	enctx = this.encrypter.encrypt(message, true);
+	
+	const forinbox = `
+		<${messageUrl}> a <${this.namespaces.schema}Message>;
+		  <${this.namespaces.schema}dateSent> <${enctime}>;
+		  <${this.namespaces.schema}givenName> <${encuser}>;
+		  <${this.namespaces.schema}text> <${enctx}>.`;
+	
     try {
-      await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${sparqlUpdate}}`);
+      await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${forpriv}}`);
     } catch (e) {
       this.logger.error("Could not save new message.");
       this.logger.error(e);
@@ -85,16 +101,16 @@ class MessageService  extends Service {
 		}
 		//console.log(ids);
 		if(ids.length < 2) {
-			await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(ids[0]), sparqlUpdate);
+			await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(ids[0]), forinbox);
 		}
 		else {
 			ids.forEach(async (id) => {
 			try {
 				if(id.value) {
-  					await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id.value), sparqlUpdate);
+  					await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id.value), forinbox);
 				}
   				else {
-  				  await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id), sparqlUpdate);
+  				  await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id), forinbox);
 				}
 			} catch (e) {
 			this.logger.error("Could not send message to interlocutor.");

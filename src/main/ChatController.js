@@ -170,6 +170,12 @@ $("#enterpwd").click(async() => {
 		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
 		await sleep(4000);
+		encrypter.setPassword(pwd1);
+		baseService.setEncrypter(encrypter);
+		joinService.setEncrypter(encrypter);
+		messageService.setEncrypter(encrypter);
+		openService.setEncrypter(encrypter);
+		createService.setEncrypter(encrypter);
         await loadChats();
         checkForNotifications();
         $(".wrap").removeClass("hidden");
@@ -177,7 +183,7 @@ $("#enterpwd").click(async() => {
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
 	} else {
-		$("#pwderror").val("Las contraseñas no coinciden.");
+		$("#pwderror").text("Las contraseñas no coinciden.");
 	}
 });
 
