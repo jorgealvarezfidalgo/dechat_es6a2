@@ -39,6 +39,7 @@ class OpenService extends Service {
             const deferred = this.Q.defer();
             promises.push(deferred.promise);
             data = data.toObject();
+			console.log(self.encrypter);
             chatUrls.push({
               chatUrl: self.encrypter.decrypt(data["?chat"].value, false),
               storeUrl: self.encrypter.decrypt(data["?url"].value, false),
@@ -49,7 +50,7 @@ class OpenService extends Service {
 
           result.bindingsStream.on("end", function() {
             self.Q.all(promises).then(() => {
-              ////console.log(chatUrls);
+              console.log(chatUrls);
               deferred.resolve(chatUrls);
             });
           });

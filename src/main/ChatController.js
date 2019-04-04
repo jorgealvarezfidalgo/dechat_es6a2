@@ -216,9 +216,7 @@ auth.trackSession(async (session) => {
         $("#nav-login-btn").addClass("hidden");
         $("#login-required").modal("hide");
         $(".mustlogin").addClass("hidden");
-		$(".unblockage").removeClass("hidden");
-
-
+	
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
 
@@ -226,6 +224,8 @@ auth.trackSession(async (session) => {
             $("#user-name").removeClass("hidden");
             $("#user-name").text(name);
         }
+		
+		$(".unblockage").removeClass("hidden");
         
     } else {
         //alert("you"re not logged in");
