@@ -5,10 +5,11 @@ describe("Encryption", function() {
 	
   it("Encrypting and desencrypting with AES", async function() {
     const encrypter = new Encrypter();
+	encrypter.setPassword("wololo");
 	var txt = "God only knows, men of honor.";
 	var enc = encrypter.encryptAES(txt);
 	console.log("Encrypted is " + enc);
-	var desenc = encrypter.decryptAES(enc);
+	var desenc = encrypter.decryptAES(enc, encrypter.key);
     assert.equal(desenc, "God only knows, men of honor.", "The desencryption is not correct:" + desenc);
   });
   
@@ -38,11 +39,13 @@ describe("Encryption", function() {
   });
   
   it("TRUBIA Encryption Algorithm: private", async function() {
-    const encrypter = new Encrypter();
+    var encrypter = new Encrypter();
 	encrypter.setPassword("dsfudsu6743t77gr94");
 	var txt = "Memories broken, the truth goes unspoken, i've even forgotten my name";
 	var enc = encrypter.encrypt(txt, false);
 	console.log(enc);
+	encrypter = new Encrypter();
+	encrypter.setPassword("dsfudsu6743t77gr94");
 	var dec = encrypter.decrypt(enc, false);
 	assert.equal(dec, "Memories broken, the truth goes unspoken, i've even forgotten my name", "The desencryption is not correct:" + dec);
 	
@@ -65,6 +68,7 @@ describe("Encryption", function() {
 	var txt2 = "Only love is with us now, Something warm and pure; $Find the beast within 92ourselves, No need for a cure";
 	var enc1 = encrypter.hash(txt1);
 	var enc2 = encrypter.hash(txt2);	
+	assert.equal(encrypter.hash(txt1), encrypter.hash(txt1), "Same result");
 	assert.notEqual(enc1, enc2, "Hashes cannot be equal");
 	assert.notEqual(enc1, txt1, "Hash1 cannot be equal to his origin");
 	assert.notEqual(enc2, txt2, "Hash2 cannot be equal to his origin");
