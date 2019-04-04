@@ -2,9 +2,10 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 
 class MessageService  extends Service {
+
     constructor(fetch) {
         super(fetch);
-		this.baseService = new BaseService(this.auth.fetch);
+		    this.baseService = new BaseService(this.auth.fetch);
     }
 
 
@@ -32,17 +33,15 @@ class MessageService  extends Service {
             messageFound = true;
             result = result.toObject();
             const messageUrl = result["?message"].value;
-            //console.log("msg url in messageService is: " + messageUrl);
             var messageT;
-            if(result["?msgtext"].value.includes("data:image")){
-              //console.log("38 is " + result["?msgtext"]);
+            if(result["?msgtext"].value.includes("data:image")
+                  || result["?msgtext"].value.includes("data:video")){
               messageT = result["?msgtext"].value;
             }
             else{
               messageT = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
             }
             const messagetext = messageT;
-            //console.log("msg in 44 is: " + messagetext);
             const author = result["?username"].value.replace(/U\+0020/g, " ");
             const time = result["?time"].value.split("/")[4];
             const inboxUrl = fileurl;
@@ -70,19 +69,18 @@ class MessageService  extends Service {
 
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
     var messageT;
-    if(message.includes("data:image")){
+
+    if(message.includes("data:image")
+          || message.includes("data:video")){
       messageT = message;
     }
     else{
       messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     }
     const messageTx = messageT;
-
+    
     const psUsername = username.replace(/ /g, "U+0020");
-
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
-
-    //console.log("msg that will  for user:" +messageUrl + " -<is:>-" + messageTx );
 
     const sparqlUpdate = `
 		<${messageUrl}> a <${this.namespaces.schema}Message>;
