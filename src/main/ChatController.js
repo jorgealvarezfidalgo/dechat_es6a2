@@ -127,11 +127,11 @@ async function loadChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-          if(lastMsg.includes("data:image"){
-            lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
-          }else{
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-          }
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
@@ -471,11 +471,10 @@ async function showAndStoreMessages() {
             $("#chatwindow" + index).remove();
 
             var msgToShow;
-            if(interlocutorMessages[i].messagetext.includes("data:image"){
-              msgToShow = "<img alt = 'uploaded' src = '" + = interlocutorMessages[i].messagetext + "'" + "/>";
-            }
-            else{
-              msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (interlocutorMessages[i].messagetext.includes("data:image")) {
+                msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
+            } else {
+                msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             const parsedmessage = msgToShow;
 
@@ -623,7 +622,11 @@ async function showChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
         }
 
@@ -632,17 +635,17 @@ async function showChats() {
         if (newmsg === 0) {
             var html;
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
-             + chatCounter + "'>"
-             + lastMsg
-             + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+                + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
             var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow"
-            + chatCounter + "'><img src='" + chat.photo
-            + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
-            + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
-            + lastMsg
-            + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
-            + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+                + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
+                + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
