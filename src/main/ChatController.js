@@ -129,7 +129,11 @@ async function loadChats() {
         } else {
             if (lastMsg.includes("data:image")) {
                 lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
-            } else {
+            }
+            else if(lastMsg.includes("data:video")){
+              lastMsg  = "<video controls> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+            }
+            else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             //console.log(chat.getNumberOfMsgs() - 1);
@@ -469,7 +473,7 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 var dateFormat = require("date-fns");
                 const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
                 var video = "<video width='200' height='200' controls> <source src= '" + event.target.result
-                                                  + "'> Your browser does not support HTML5 video. </video>"
+                                                  + "'> Your browser does not support HTML5 video. </video>";
                 //SENDING MESSAGE
                 if (currentChat.interlocutorWebId.includes("Group"))
                     await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
@@ -538,7 +542,12 @@ async function showAndStoreMessages() {
             var msgToShow;
             if (interlocutorMessages[i].messagetext.includes("data:image")) {
                 msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
-            } else {
+            }
+            else if(interlocutorMessages[i].messagetext.includes("data:video")){
+                msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext
+                                                + "'> Your browser does not support HTML5 video. </video>";
+            }
+            else {
                 msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             const parsedmessage = msgToShow;
@@ -579,7 +588,23 @@ function showMessage(message) {
                     message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
             }
         }
-    } else {
+    }
+    else if(message.messagetext.includes("data:video")){
+      var video = "<video width='200' height='200' controls> <source src= '" + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
+      if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
+          $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
+              message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+      } else {
+          if (currentChat.interlocutorWebId.includes("Group")) {
+              $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + video + "</div><div class='time'>" +
+                  message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+          } else {
+              $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
+                  message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
+          }
+      }
+    }
+    else {
         const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
         if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
             $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
@@ -689,7 +714,11 @@ async function showChats() {
         } else {
             if (lastMsg.includes("data:image")) {
                 lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
-            } else {
+            }
+            else if(lastMsg.includes("data:video")){
+                lastMsg  = "<video controls> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+            }
+            else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
