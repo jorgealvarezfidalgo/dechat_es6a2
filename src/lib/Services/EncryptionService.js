@@ -12,30 +12,39 @@ class EncryptionService {
 		this.rotor2 = config.rotor2;
 		this.rotor3 = config.rotor3;
 		this.reflector = config.reflector;
-		var keySize = 256;
-		var iterations = 100;
-		var salt = CryptoJS.lib.WordArray.random(128/8);
-		this.key = CryptoJS.PBKDF2("ElquienhasacadodevosotrosestegritodeguerraDiosloquiere", salt, {
-			keySize,
-			iterations: iterations
+		this.keySize = 256;
+		this.iterations = 100;
+		this.salt = CryptoJS.lib.WordArray.random(128/8);
+		this.defaultkey = CryptoJS.PBKDF2("ElquienhasacadodevosotrosestegritodeguerraDiosloquiere", this.salt, {
+			keySize: this.keySize,
+			iterations: this.iterations
 		}).toString();
 	}
 	
-	setKey(key) {
-		this.key = key;
+	setPassword(pass) {
+		this.pass = pass;
+		this.salt = CryptoJS.lib.WordArray.random(128/8);
+		this.key = CryptoJS.PBKDF2(pass, this.salt, {
+			keySize: this.keySize,
+			iterations: this.iterations
+		}).toString();
 	}
 	
 	encryptAES(txt) {
 		console.log(this.key);
-		return CryptoJS.AES.encrypt(txt,this.key);
+		return CryptoJS.AES.encrypt(txt,this.key ? this.key : this.defaultkey);
 	}
 	
 	hash(txt) {
-		return CryptoJS.SHA256(txt).toString();
+		if(txt!=="") {
+			return CryptoJS.SHA256(txt).toString();
+		} else {
+			return "";
+		}
 	}
 	
 	decryptAES(txt) {
-		var bytes  = CryptoJS.AES.decrypt(txt, this.key);																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
+		var bytes  = CryptoJS.AES.decrypt(txt, this.key ? this.key : this.defaultkey);																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
         return bytes.toString(CryptoJS.enc.Utf8);
 	}
 	
@@ -119,21 +128,31 @@ class EncryptionService {
 	/*
 		TRUBIA Encrypting Algorithm
 	*/
-	encrypt(txt) {
+	encrypt(txt, inbox) {
 		var enc = this.rotorSchlusselmaschineCodierung(txt);
 		var enigmaConf = this.code[0] + "//" + this.code[1] + "//" + this.code[2] + "//" 
 						+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
 						+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
 		var enigmaEnc = enigmaConf + enc;
-		return this.key + "|" + this.encryptAES(enigmaEnc);
+		return (inbox ? this.salt.toString() : this.defaultkey) + "|" + this.encryptAES(enigmaEnc);
 	}
 	
 	/* 
 		TRUBIA Decrypting
 	*/
-	decrypt(txt) {
-		this.key = txt.split("|")[0];
-		var desAes = this.decryptAES(txt.replace(this.key + "|", ""));
+	decrypt(txt, inbox) {
+		var key = "";
+		var salt = "";
+		if(inbox) {
+			key = txt.split("|")[0];
+		} else {
+			salt = txt.split("|")[0];
+			key = CryptoJS.PBKDF2(this.pass, salt, {
+				keySize: this.keySize,
+				iterations: this.iterations
+			}).toString();
+		}
+		var desAes = this.decryptAES(txt.replace((inbox ? key : salt)+ "|", ""));
 		
 		var enigmaConf = desAes.split("//");
 		this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];

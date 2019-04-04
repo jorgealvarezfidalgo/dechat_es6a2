@@ -37,12 +37,24 @@ describe("Encryption", function() {
 	
   });
   
-  it("TRUBIA Encryption Algorithm", async function() {
+  it("TRUBIA Encryption Algorithm: private", async function() {
     const encrypter = new Encrypter();
+	encrypter.setPassword("dsfudsu6743t77gr94");
 	var txt = "Memories broken, the truth goes unspoken, i've even forgotten my name";
-	var enc = encrypter.encrypt(txt);
+	var enc = encrypter.encrypt(txt, false);
 	console.log(enc);
-	var dec = encrypter.decrypt(enc);
+	var dec = encrypter.decrypt(enc, false);
+	assert.equal(dec, "Memories broken, the truth goes unspoken, i've even forgotten my name", "The desencryption is not correct:" + dec);
+	
+  });
+  
+  it("TRUBIA Encryption Algorithm: inbox", async function() {
+    const encrypter = new Encrypter();
+	encrypter.setPassword("kdfuo23488hfh82uhf");
+	var txt = "Memories broken, the truth goes unspoken, i've even forgotten my name";
+	var enc = encrypter.encrypt(txt, true);
+	console.log(enc);
+	var dec = encrypter.decrypt(enc, true);
 	assert.equal(dec, "Memories broken, the truth goes unspoken, i've even forgotten my name", "The desencryption is not correct:" + dec);
 	
   });
@@ -56,6 +68,8 @@ describe("Encryption", function() {
 	assert.notEqual(enc1, enc2, "Hashes cannot be equal");
 	assert.notEqual(enc1, txt1, "Hash1 cannot be equal to his origin");
 	assert.notEqual(enc2, txt2, "Hash2 cannot be equal to his origin");
+	
+	assert.equal("", encrypter.hash(""), "Should be empty");
 	
   });
   
