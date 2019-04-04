@@ -26,7 +26,7 @@ class OpenService extends Service {
 	  const self = this;
 
       engine.query(`SELECT ?chat ?int ?url {
-  			 ?chat <${self.namespaces.schema}contributor> <${webid}>;
+  			 ?chat <${self.namespaces.schema}contributor> ?id;
   				<${self.namespaces.schema}recipient> ?int;
   				<${self.namespaces.storage}storeIn> ?url.
   		  }`, {
