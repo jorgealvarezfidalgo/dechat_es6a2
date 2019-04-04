@@ -169,7 +169,7 @@ $("#enterpwd").click(async() => {
 		encrypter.setPassword(pwd1);
 		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
-		await sleep(4000);
+		//await sleep(4000);
 		console.log("A");
 		baseService.setEncrypter(encrypter);
 		joinService.setEncrypter(encrypter);
