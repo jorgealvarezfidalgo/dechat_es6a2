@@ -49,7 +49,7 @@ class SolidLoaderRepository {
      * This method loads the messages from the url passed through the parameter
      */
     async loadFromUrl(chat, chatUrl) {
-		
+
 		//console.log("Loading from url");
 
         const messages = await this._findMessage(chatUrl);
@@ -83,6 +83,18 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?msgtext"]) {
+                      if(data["?msgtext"].value.includes("data:image")){
+                        console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
+                        var messageText = data["?msgtext"].value;
+                        var author = data["?username"].value.split("/").pop();
+                        results.push({
+                            messagetext: messageText,
+                            url: data["?message"].value,
+                            author: author.replace(/U\+0020/g, " "),
+                            time: data["?time"].value.split("/")[4]
+                        });
+                      }
+                      else {
                         var messageText = data["?msgtext"].value.split("/")[4];
                         var author = data["?username"].value.split("/").pop();
                         results.push({
@@ -91,6 +103,7 @@ class SolidLoaderRepository {
                             author: author.replace(/U\+0020/g, " "),
                             time: data["?time"].value.split("/")[4]
                         });
+                      }
                     }
                 });
 

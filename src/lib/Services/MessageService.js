@@ -35,7 +35,7 @@ class MessageService  extends Service {
             console.log("msg url in messageService is: " + messageUrl);
             var messageT;
             if(result["?msgtext"].value.includes("data:image")){
-              console.log(result["?msgtext"].value);
+              console.log("38 is " + result["?msgtext"]);
               messageT = result["?msgtext"].value;
             }
             else{
