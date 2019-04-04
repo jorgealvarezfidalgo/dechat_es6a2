@@ -18,14 +18,14 @@ class EncryptionService {
 	
 	setPassword(pass) {
 		this.pass = pass;
-		console.log("SALOR: " +this.salt.toString());
-		console.log("PASSOR: " +pass);
-		console.log("Contraseñaor_: " + pass + this.salt.toString());
+		//console.log("SALOR: " +this.salt.toString());
+		//console.log("PASSOR: " +pass);
+		//console.log("Contraseñaor_: " + pass + this.salt.toString());
 		this.key = this.hash(pass + this.salt.toString());
 	}
 	
 	encryptAES(txt) {
-		console.log("Clave or: " + this.key);
+		//console.log("Clave or: " + this.key);
 		return CryptoJS.AES.encrypt(txt,this.inbox ? this.defaultkey : this.key);
 	}
 	
@@ -44,13 +44,13 @@ class EncryptionService {
 	
 	rotorSchlusselmaschineCodierung(txt) {
 		var result = txt.split(/[\/\#,:;\?\(\)\.\-\_!\|'¿0-9 ]+/);
-		console.log(result);
+		//console.log(result);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
 		var tx = txt.replace(/([A-Z])/g, "_|$1");
-		console.log(tx);
+		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.encode(result[i]));
 		}
@@ -64,11 +64,11 @@ class EncryptionService {
 		m4.setPlugboard(this.plugboard);
 		var i;
 		var tx = txt;
-		console.log(tx);
+		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.decode(result[i]).toLowerCase());
 		}	
-		console.log(tx);
+		//console.log(tx);
 		return tx.replace(/\_\|([a-z])/g,
 			function(m, m1, p) {
 			  return m1.replace("_|", "").toUpperCase();
@@ -137,26 +137,26 @@ class EncryptionService {
 		TRUBIA Decrypting
 	*/
 	decrypt(txt, inbox) {
-		console.log(txt);
+		//console.log(txt);
 		var key = "";
 		var salt = "";
 		if(inbox) {
 			key = txt.split("=")[0];
 		} else {
 			salt = txt.split("=")[0];
-			console.log("SALDEC: " + salt);
-			console.log("PASSDEC:" + this.pass);
-			console.log("Contraseñadec_: " + this.pass+salt);
+			//console.log("SALDEC: " + salt);
+			//console.log("PASSDEC:" + this.pass);
+			//console.log("Contraseñadec_: " + this.pass+salt);
 			key = this.hash(this.pass + salt);
 		}
-		console.log("Clavedec: " + key);
+		//console.log("Clavedec: " + key);
 		var msg = txt.replace((inbox ? key : salt)+ "=", "");
-		console.log(msg)
+		//console.log(msg)
 		var desAes = this.decryptAES(msg, key);
 		
-		console.log(desAes);
+		//console.log(desAes);
 		var enigmaConf = desAes.split("//");
-		console.log(enigmaConf);
+		//console.log(enigmaConf);
 		if(enigmaConf.length) {
 		
 			this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];

@@ -169,7 +169,6 @@ $("#enterpwd").click(async() => {
 		encrypter.setPassword(pwd1);
 		$(".unblockage").addClass("hidden");
 		$(".loading").removeClass("hidden");
-		//await sleep(4000);
 		baseService.setEncrypter(encrypter);
 		joinService.setEncrypter(encrypter);
 		messageService.setEncrypter(encrypter);
@@ -188,6 +187,7 @@ $("#enterpwd").click(async() => {
 		}
 
         await startChat();
+		await sleep(4000);
         await loadChats();
         checkForNotifications();
         $(".wrap").removeClass("hidden");
