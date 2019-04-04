@@ -85,6 +85,9 @@ class SolidLoaderRepository {
                     if (data["?msgtext"]) {
                       if(data["?msgtext"].value.includes("data:image")
                               || data["?msgtext"].value.includes("data:video")){
+                                if(data["?msgtext"].value.includes("data:video")){
+                                  console.log(data["?msgtext"].value);
+                                }
                         //console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
                         var messageText = data["?msgtext"].value;
                         var author = data["?username"].value.split("/").pop();

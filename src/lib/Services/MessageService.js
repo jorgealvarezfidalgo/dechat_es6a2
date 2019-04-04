@@ -36,6 +36,9 @@ class MessageService  extends Service {
             var messageT;
             if(result["?msgtext"].value.includes("data:image")
                   || result["?msgtext"].value.includes("data:video")){
+                    if(result["?msgtext"].value.includes("data:video")){
+                        console.log("getting new video");
+                    }
               messageT = result["?msgtext"].value;
             }
             else{
@@ -72,13 +75,18 @@ class MessageService  extends Service {
 
     if(message.includes("data:image")
           || message.includes("data:video")){
+            if( message.includes("data:video")){
+              console.log("uploading video to pod");
+            }
       messageT = message;
     }
     else{
       messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     }
     const messageTx = messageT;
-    
+    if( messageTx.includes("data:video")){
+      console.log(messageTx);
+    }
     const psUsername = username.replace(/ /g, "U+0020");
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
 

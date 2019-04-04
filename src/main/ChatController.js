@@ -131,7 +131,7 @@ async function loadChats() {
                 lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
             }
             else if(lastMsg.includes("data:video")){
-              lastMsg  = "<video controls> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+                lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
             }
             else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
@@ -449,7 +449,7 @@ $('#join-video').on('change', function () {
     $w.append("<p> the videos that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    videosPreview(this, $w);
+    //videosPreview(this, $w);
     videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
@@ -496,7 +496,7 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
-                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +   "<video controls> <source src= '" + event.target.result  + "'> Your browser does not support HTML5 video. </video>"
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +   "<video width='20' height='20'> <source src= '" + event.target.result  + "'> Your browser does not support HTML5 video. </video>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
@@ -716,7 +716,7 @@ async function showChats() {
                 lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
             }
             else if(lastMsg.includes("data:video")){
-                lastMsg  = "<video controls> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+                lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
             }
             else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
