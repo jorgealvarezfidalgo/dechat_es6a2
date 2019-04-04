@@ -8,9 +8,10 @@ const Q = require("q");
  */
 function fromUrl(url, fetch) {
     const deferred = Q.defer();
-
+	console.log("fromUrl");
     fetch(url)
         .then(async res => {
+			console.log(res);
             if (res.status === 404) {
                 deferred.reject(404);
             } else {
@@ -19,11 +20,13 @@ function fromUrl(url, fetch) {
                 const parser = N3.Parser({
                     baseIRI: res.url
                 });
-
+				console.log(body);
                 parser.parse(body, (err, quad, prefixes) => {
                     if (err) {
+						console.log(err);
                         deferred.reject();
                     } else if (quad) {
+						console.log(quad);
                         store.addQuad(quad);
                     } else {
                         const source = {
@@ -31,7 +34,7 @@ function fromUrl(url, fetch) {
                                 return require("streamify-array")(store.getQuads(s, p, o, g));
                             }
                         };
-
+						console.log(source);
                         deferred.resolve(source);
                     }
                 });
