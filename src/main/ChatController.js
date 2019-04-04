@@ -128,7 +128,7 @@ async function loadChats() {
             lastMsg = "Sin mensajes";
         } else {
             if (lastMsg.includes("data:image")) {
-                lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+                lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
             } else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
@@ -401,7 +401,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 var now = new Date();
                 var dateFormat = require("date-fns");
                 const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
-                var img = "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>";
+                var img = "<img alt = 'uploaded'  style='height:200px; width:200px;' src = '" + event.target.result + "'" + "/>";
                 //SENDING MESSAGE
                 if (currentChat.interlocutorWebId.includes("Group"))
                     await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
@@ -424,7 +424,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
-                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + img
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +  "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>";
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
@@ -498,10 +498,10 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
-    console.log("message in controller that will be shown is:" + message.messagetext);
+    //console.log("message in controller that will be shown is:" + message.messagetext);
     if (message.messagetext.includes("data:image")) {
-        console.log("image in 493 in controller that will be shown is:" + message.messagetext);
-        var img = "<img alt = 'uploaded' src = '" + message.messagetext + "'" + "/>";
+        //console.log("image in 493 in controller that will be shown is:" + message.messagetext);
+        var img = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "'" + "/>";
         if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
             $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
