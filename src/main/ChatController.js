@@ -380,10 +380,8 @@ $('#join-media').on('change', function () {
     $w.append("<p> the images that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    videosPreview(this, $w);
-    //$(w).on("unload", function (e) {
-    //imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
-    //});
+    imagesPreview(this, $w);
+    imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
 function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
@@ -423,7 +421,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
-                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +  "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>";
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +  "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
@@ -441,10 +439,73 @@ function imagesPreview(input, placeToInsertImagePreview) {
     placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
 }
 
+$('#join-video').on('change', function () {
+    var w = window.open("", "popupWindow", "width=700, height=650, scrollbars=yes");
+    var $w = $(w.document.body);
+    $w.append("<p> the videos that will be sent are :</p> <br/> ");
+    const username = $("#user-name").text();
+    var toSend = this;
+    videosPreview(this, $w);
+    videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
 function videosPreview(input, placeToInsertVideoPreview) {
     placeToInsertVideoPreview.append("<video width='400' height='400' controls> <source src= '" + URL.createObjectURL(input.files[0])
                                       + "'> Your browser does not support HTML5 video. </video>");
 }
+
+function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var video = "<video width='200' height='200' controls> <source src= '" + event.target.result
+                                                  + "'> Your browser does not support HTML5 video. </video>"
+                //SENDING MESSAGE
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +   "<video controls> <source src= '" + event.target.result  + "'> Your browser does not support HTML5 video. </video>"
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+
+
 
 async function showAndStoreMessages() {
     var i = 0;
