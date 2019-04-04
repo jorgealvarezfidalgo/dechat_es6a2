@@ -36,6 +36,13 @@ describe("Encryption", function() {
 	console.log("Desencrypted is " + desenc);
     assert.equal(desenc, "Only love is with us now, Something warm and pure; Find the beast within ourselves, No need for a cure", "The desencryption is not correct:" + desenc);
 	
+	
+	var enc = encrypter.rotorSchlusselmaschineCodierung("https://rokivulovic/profile/card#me");
+	console.log("Encrypted is " + enc);
+	var desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
+	console.log("Desencrypted is " + desenc);
+    assert.equal(desenc, "https://rokivulovic/profile/card#me", "The desencryption is not correct:" + desenc);
+	
   });
   
   it("TRUBIA Encryption Algorithm: private", async function() {
