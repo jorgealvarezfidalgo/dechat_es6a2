@@ -84,16 +84,16 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?msgtext"]) {						
-						console.log(data["?msgtext"].value.split("/")[4]);
-						console.log(data["?username"].value.split("/").pop());
-						console.log(data["?time"].value.split("/")[4]);
-                        var messageText = self.encrypter.decrypt(data["?msgtext"].value.split("/")[4], false);
-                        var authorr = self.encrypter.decrypt(data["?username"].value.split("/").pop(), false);
+						var txFields = data["?msgtext"].value.split("/");
+						var auFields = data["?username"].value.split("/");
+						var tmFields = data["?time"].value.split("/");
+                        var messageText = self.encrypter.decrypt(txFields.splice(4, txFields.length), false);
+                        var authorr = self.encrypter.decrypt(auFields.splice(4, auFields.length), false);
                         results.push({
                             messagetext: messageText,
                             url: data["?message"].value,
                             author: authorr,
-                            time: self.encrypter.decrypt(data["?time"].value.split("/")[4], false)
+                            time: self.encrypter.decrypt(tmFields.splice(4, tmFields.length), false)
                         });
                     }
                 });

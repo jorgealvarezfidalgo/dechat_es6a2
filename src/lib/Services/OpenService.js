@@ -36,7 +36,6 @@ class OpenService extends Service {
           }]
         })
         .then((result) => {
-			console.log(result);
           result.bindingsStream.on("data", async (data) => {
             const deferred = this.Q.defer();
             promises.push(deferred.promise);
