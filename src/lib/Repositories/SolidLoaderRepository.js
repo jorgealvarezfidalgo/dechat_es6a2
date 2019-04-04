@@ -83,7 +83,8 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?msgtext"]) {
-                      if(data["?msgtext"].value.includes("data:image")){
+                      if(data["?msgtext"].value.includes("data:image")
+                              || data["?msgtext"].value.includes("data:video")){
                         //console.log("full msg in solid loader line 87 is: " + data["?msgtext"].value);
                         var messageText = data["?msgtext"].value;
                         var author = data["?username"].value.split("/").pop();
