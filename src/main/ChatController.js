@@ -604,6 +604,7 @@ function showMessage(message) {
 
 $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
+    $(".chat-head label").hide();
     $(".information").css("display", "flex");
     $("#close-contact-information").show();
     //console.log(currentChat);
@@ -632,6 +633,7 @@ $("#show-contact-information").click(async () => {
 
 $("#close-contact-information").click(async () => {
     $(".chat-head i").show();
+    $(".chat-head label").show();
     $("#close-contact-information").hide();
     $(".information >").remove();
     $(".information").hide();
