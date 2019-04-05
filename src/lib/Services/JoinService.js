@@ -15,7 +15,7 @@ class JoinChatService extends Service {
         var participants = [];
         //console.log("A");
         if (interlocutorWebId.includes("Group")) {
-            recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
+            recipient = userWebId.split("card")[0] + "Group/" + name;
             participants = members;
         } else {
             participants.push(recipient);

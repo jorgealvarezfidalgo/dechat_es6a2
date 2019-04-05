@@ -59,6 +59,17 @@ describe("Encryption", function() {
 	var dec = encrypter.decrypt("Texto plano", false);
 	assert.equal(dec, "Texto plano", "Should return the same text:" + dec);
 	
+	encrypter.setPassword(encrypter.hash("Srpska"));
+	
+	//Grupos
+	var dec = encrypter.decrypt("b3685ee5a399f635b72d50f94408a4219baa5aab96380875d4f416c0b21bff4c54a0bf76b3c89d404cf81f7350db656dbeb2a807a8d14146316882cab15a40254f7510e29a53d328312659fd9f1c82e29610f335691580e6aa7d530354820fb0306e9223b8d227ee660c5025cc831ccbb7cc8cecaa0a3f2d2b6d54c3af681ef34878be27701fde5b386ec0bb4d30c826bef9f58ac1d643b1c1bf7c26d2ee3f66428024af48ec22be3c91eeba3893644f45f518a865fa08ee3fbf28b3c98e76185415272298e7466bca38f125321cdfda6fa78f02cf43381a3a4306e06d872fa233b738ed4dfac9e56802e508303193d266fff2e7b7a0fcf94b580376ae996984=U2FsdGVkX1/ElRR4W51sATSXyq9dyVXoQ3T1U1KntO+YeShmje5fw2tO5dHtg9am5XolLC9sTKpF+QylXoEsuRsCMNWg4fUkstABQK2mQF4V8jVXkBBHbUXUSYo39QHB/HapUn3YELsID0sRNz4dFgOmq1pYkHW1XsApRG/FZQhzMECLr3F0VFZmZeRsaHwpi86y4f9y5mHIw9bIFQIn3w==", false);
+	assert.equal(dec, "https://rokivulovic.solid.community/private/dechat_201904050622.ttl", "Store in :" + dec);
+	
+	var dec = encrypter.decrypt("b3685ee5a399f635b72d50f94408a4219baa5aab96380875d4f416c0b21bff4c54a0bf76b3c89d404cf81f7350db656dbeb2a807a8d14146316882cab15a40254f7510e29a53d328312659fd9f1c82e29610f335691580e6aa7d530354820fb0306e9223b8d227ee660c5025cc831ccbb7cc8cecaa0a3f2d2b6d54c3af681ef34878be27701fde5b386ec0bb4d30c826bef9f58ac1d643b1c1bf7c26d2ee3f66428024af48ec22be3c91eeba3893644f45f518a865fa08ee3fbf28b3c98e76185415272298e7466bca38f125321cdfda6fa78f02cf43381a3a4306e06d872fa233b738ed4dfac9e56802e508303193d266fff2e7b7a0fcf94b580376ae996984=U2FsdGVkX19PD2XZxzur+0RiRAGxHBcDOSBGUqa1SzeR+SHwjtD7gqddqHiFu1LZwGdxgVsBmlVdqdGeHAp/WjhnmBHlYCXPO41o5db8Seei/Bm8Y0XQ0R//DShDGupiNU58WTGUmuTzfBnyJm439uisWDnH39RLFkl9Z+l18ohljFb4qYOQ2qAlNh7Ui6hg", false);
+	assert.equal(dec, "https://rokivulovic.solid.community/profile/card#me", "Contributor:" + dec);
+	
+	
+	
   });
   
   it("TRUBIA Encryption Algorithm: inbox", async function() {

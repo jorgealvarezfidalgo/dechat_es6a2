@@ -49,7 +49,7 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineCodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\(\)\.\-\_!\|'¿0-9 ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|'¿0-9 ]+/);
 		//console.log(result);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
@@ -64,7 +64,7 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\(\)\.\-\_!\|'¿0-9 ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|'¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
