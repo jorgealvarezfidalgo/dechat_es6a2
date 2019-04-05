@@ -385,6 +385,8 @@ $('#join-media').on('change', function () {
     const username = $("#user-name").text();
     var toSend = this;
     imagesPreview(this, $w);
+    alert("This feature only works if you have enough storage in your pod."
+          + "So if you don't find the image stored in it, it's because you have low storage capacity.");
     imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
@@ -438,26 +440,18 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
     }
 };
 
-
 function imagesPreview(input, placeToInsertImagePreview) {
     placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
 }
 
 $('#join-video').on('change', function () {
-    var z = window.open("", "popupWindow", "width=700, height=650, scrollbars=yes");
-    var $z = $(z.document.body);
-    $z.append("<p> the videos that will be sent are :</p> <br/> ");
+    alert("This feature only works if you have enough storage in your pod."
+          + "So if you don't find the video stored in it, it's because you have low storage capacity.");
     const username = $("#user-name").text();
+    //videosPreview(this, $z);
     var toSend = this;
-    videosPreview(this, $z);
     videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
-
-function videosPreview(input, placeToInsertVideoPreview) {
-    placeToInsertVideoPreview.append("<video width='400' height='400' controls> <source src= '" + URL.createObjectURL(input.files[0])
-                                      + "'> Your browser does not support HTML5 video. </video>");
-}
-
 
 function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
     if (input.files) {
