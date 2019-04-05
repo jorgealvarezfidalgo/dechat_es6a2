@@ -35,12 +35,9 @@ class MessageService  extends Service {
             const messageUrl = result["?message"].value;
             var messageT;
             if(result["?msgtext"].value.includes("data:image")
-                  || result["?msgtext"].value.includes("data:video")){
-                    if(result["?msgtext"].value.includes("data:video")){
-                        console.log("getting new video");
-                        console.log("url is:" + messageUrl);
-                    }
-              messageT = result["?msgtext"].value;
+                  || result["?msgtext"].value.includes("data:video")
+            ){
+                      messageT = result["?msgtext"].value;
             }
             else{
               messageT = result["?msgtext"].value.split("/inbox/")[1].replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
@@ -74,17 +71,17 @@ class MessageService  extends Service {
   async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
     var messageT;
 
-    if(message.includes("data:image")){
-      messageT = message;
-    } else if(message.includes("data:video")){
+    if(message.includes("data:image")
+        || message.includes("data:video")
+    ){
       messageT = message;
     } else{
       messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
     }
     const messageTx = messageT;
-    if( messageTx.includes("data:video")){
-      console.log("msg stored in msg service is" + messageTx);
-    }
+    /*if( messageTx.includes("data:video")){
+        console.log("msg stored in msg service is" + messageTx);
+    }*/
     const psUsername = username.replace(/ /g, "U+0020");
     const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
 
@@ -117,11 +114,9 @@ class MessageService  extends Service {
 			try {
 				if(id.value) {
   					await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id.value), sparqlUpdate);
-            console.log("OK");
 				}
   				else {
   				  await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(id), sparqlUpdate);
-            console.log("OK");
 				}
 			} catch (e) {
 			this.logger.error("Could not send message to interlocutor.");
