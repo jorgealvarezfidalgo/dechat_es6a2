@@ -400,7 +400,7 @@ async function showAndStoreMessages() {
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
-            nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
+            nameThroughUrl = interlocutorMessages[i].author.split("/")[1];
         //console.log("nombre de authorUrl is:" + nameThroughUrl);
         //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
         if (nameThroughUrl === $("#interlocutorw-name").text()) {

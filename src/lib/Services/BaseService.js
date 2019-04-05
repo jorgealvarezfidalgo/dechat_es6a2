@@ -166,6 +166,7 @@ class BaseService extends Service {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
+						console.log(result);
 						var inFields = result["?interlocutor"].value.split("/");
 						var agFields = result["?sender"].value.split("/");
 						var ieFields = result["?chaturl"].value.split("/");
