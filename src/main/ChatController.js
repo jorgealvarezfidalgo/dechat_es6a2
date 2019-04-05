@@ -656,7 +656,7 @@ async function joinChat() {
 }
 
 function randomPhrase() {
-	phrases = [
+	const phrases = [
 		"For those who seek perfection there can be no rest on this side of the grave.",
 		"Success is commemorated; Failure merely remembered.",
 		"Even a man who has nothing can still offer his time.",

@@ -166,12 +166,14 @@ class BaseService extends Service {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-						console.log(result);
+						var inFields = result["?interlocutor"].value.split("/");
+						var agFields = result["?sender"].value.split("/");
+						var ieFields = result["?chaturl"].value.split("/");
                         deferred.resolve({
-							interlocutor: self.encrypter.decrypt(result["?interlocutor"].value, true), 
+							interlocutor: self.encrypter.decrypt(inFields.splice(4, inFields.length).join("/"), true), 
 							url: self.encrypter.decrypt(result["?invitation"].value, true), 
-							agent: self.encrypter.decrypt(result["?sender"].value, true), 
-							ievent: self.encrypter.decrypt(result["?chaturl"].value, true)
+							agent: self.encrypter.decrypt(agFields.splice(4, agFields.length).join("/"), true), 
+							ievent: self.encrypter.decrypt(ieFields.splice(4, ieFields.length).join("/"), true)
 							});
 						});
                     result.bindingsStream.on("end", function () {

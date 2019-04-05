@@ -160,9 +160,9 @@ class EncryptionService {
 		//console.log(msg)
 		var desAes = this.decryptAES(msg, key);
 		
-		console.log(desAes);
+		//console.log(desAes);
 		var enigmaConf = desAes.split("//");
-		console.log(enigmaConf);
+		//console.log(enigmaConf);
 		if(enigmaConf.length > 8) {
 		
 			this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];

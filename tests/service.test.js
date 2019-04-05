@@ -249,9 +249,23 @@ describe("Services", function () {
     });
 
 	it("Get Invitation test", async function () {
-		const invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
+		var invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
 		//console.log(invite);
 		assert.notEqual(invite, null, "the invitation url is not correct: ->" + invite);
+		//Encrypted
+		var invite = await baseService.getInvitation("https://rokivulovic.solid.community/public/dechat_201903161213.ttl");
+		//console.log(invite);
+		assert.equal(invite.interlocutor, "https://rokivulovic.solid.community/profile/card#me", "the interlocutor is not correct: ->" + invite.interlocutor);
+		assert.equal(invite.url, "https://takumi.solid.community/private/dechat_201904050438.ttl#ju46by2l", "the url is not correct: ->" + invite.url);
+		assert.equal(invite.agent, "https://takumi.solid.community/profile/card#me", "the agent is not correct: ->" + invite.agent);
+		assert.equal(invite.ievent, "https://takumi.solid.community/private/dechat_201904050438.ttl#ju46bxwz", "the ievent is not correct: ->" + invite.ievent);
+		
+		//Invite along with message
+		var message = await messageService.getNewMessage("https://rokivulovic.solid.community/public/dechat_201903150728.ttl");
+		console.log(message);
+		assert.equal(message.messagetext, "Eyyy roki que hay", "the text is not correct: ->" + message.messagetext);
+		assert.equal(message.author, "Takumi", "the author is not correct: ->" + message.author);
+		assert.equal(message.time, "2119-04-05T16-38-15", "the time is not correct: ->" + message.time);
     });
 
 	it("Process chat to join", async function () {
