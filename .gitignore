@@ -65,3 +65,9 @@ local.properties
 
 # Node Dependencies
 node_modules
+
+#coverage
+.nyc_output
+reports
+coverage
+coverage.lcov
