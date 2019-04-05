@@ -67,7 +67,7 @@ local.properties
 node_modules
 
 #coverage
-.nyc_output
-reports
-coverage
-coverage.lcov
+.nyc_output/
+reports/
+coverage/
+*.lcov
