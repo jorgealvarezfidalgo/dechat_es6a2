@@ -129,15 +129,12 @@ async function loadChats() {
         } else {
             if (lastMsg.includes("data:image")) {
                 lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
-            }
-            else if(lastMsg.includes("data:video")){
-                lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
-            }
-            else if(lastMsg.includes("data:text")){
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
+            } else if (lastMsg.includes("data:text")) {
                 lastMsg = "<a class='disable' href='" + lastMsg + "'>"
-                                + "Click to view text file</a>";
-            }
-            else {
+                    + "Text File</a>";
+            } else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             //console.log(chat.getNumberOfMsgs() - 1);
@@ -382,15 +379,13 @@ async function checkKey(e) {
     }
 }
 
+//_____________________________IMAGE_UPLOADS__________________//
+
 $('#join-media').on('change', function () {
-    var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
-    var $w = $(w.document.body);
-    $w.append("<p> the images that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    imagesPreview(this, $w);
     alert("This feature only works if you have enough storage in your pod."
-          + "So if you don't find the image stored in it, it's because you have low storage capacity.");
+        + "So if you don't find the image stored in it, it's because you have low storage capacity.");
     imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
@@ -431,7 +426,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
-                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +  "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
@@ -443,14 +438,14 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
         }
     }
 };
+//__________________________________________-_______________//
 
-function imagesPreview(input, placeToInsertImagePreview) {
-    placeToInsertImagePreview.append("<img alt='pic' src= '" + URL.createObjectURL(input.files[0]) + "'/> ");
-}
+
+//_____________________________VIDEO_UPLOADS__________________//
 
 $('#join-video').on('change', function () {
     alert("This feature only works if you have enough storage in your pod."
-          + "So if you don't find the video stored in it, it's because you have low storage capacity.");
+        + "So if you don't find the video stored in it, it's because you have low storage capacity.");
     const username = $("#user-name").text();
     //videosPreview(this, $z);
     var toSend = this;
@@ -472,7 +467,7 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 var dateFormat = require("date-fns");
                 const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
                 var video = "<video width='200' height='200' controls> <source src= '" + event.target.result
-                                                  + "'> Your browser does not support HTML5 video. </video>";
+                    + "'> Your browser does not support HTML5 video. </video>";
                 //SENDING MESSAGE
                 if (currentChat.interlocutorWebId.includes("Group"))
                     await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
@@ -495,7 +490,7 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 
                 if (!showingContacts) {
                     var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
-                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" +   "<video width='20' height='20'> <source src= '" + event.target.result  + "'> Your browser does not support HTML5 video. </video>"
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<video width='20' height='20'> <source src= '" + event.target.result + "'> Your browser does not support HTML5 video. </video>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
                     +"</p></div></div>";
@@ -507,34 +502,17 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
         }
     }
 };
+//_________________________________________________________________//
 
+
+//_____________________________TEXT_UPLOADS__________________//
 $('#join-text').on('change', function () {
-    //var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
-    //var $w = $(w.document.body);
-    //$w.append("<p> the files that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    //textsPreview(this, $w);
     alert("This feature only works if you have enough storage in your pod."
-          + "So if you don't find the text file stored in it, it's because you have low storage capacity.");
+        + "So if you don't find the text file stored in it, it's because you have low storage capacity.");
     textsToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
-/*
-function textsPreview(input, placeToInsertImagePreview) {
-  if (input.files) {
-      var filesAmount = input.files.length;
-      var i = 0;
-      for (i = 0; i < filesAmount; i++) {
-          var reader = new FileReader();
-          reader.onload = async function (event) {
-            var lnk = "<a target='_blank' href='" + event.target.result  + "'>" + $('#join-text').val().split('\\').pop() + "</a>";
-              placeToInsertImagePreview.append(lnk);
-              //console.log(event.target);
-          }
-          reader.readAsDataURL(input.files[i]);
-      }
-  }
-}*/
 
 function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
     if (input.files) {
@@ -551,8 +529,8 @@ function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, cur
                 var dateFormat = require("date-fns");
                 const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
                 var lnk = "<a target='_blank' href='" + event.target.result
-                + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
-                 + $('#join-text').val().split('\\').pop() + "</a>";                //SENDING MESSAGE
+                    + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+                    + $('#join-text').val().split('\\').pop() + "</a>";                //SENDING MESSAGE
 
                 if (currentChat.interlocutorWebId.includes("Group"))
                     await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
@@ -569,7 +547,7 @@ function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, cur
                 });
 
                 $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
-                  + lnk + "</div><div class='time'>" +
+                    + lnk + "</div><div class='time'>" +
                     ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
                 toScrollDown();
@@ -590,7 +568,7 @@ function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, cur
     }
 };
 
-
+//_____________________________________________//
 
 async function showAndStoreMessages() {
     var i = 0;
@@ -623,14 +601,11 @@ async function showAndStoreMessages() {
             var msgToShow;
             if (interlocutorMessages[i].messagetext.includes("data:image")) {
                 msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
-            }
-            else if(interlocutorMessages[i].messagetext.includes("data:video")){
+            } else if (interlocutorMessages[i].messagetext.includes("data:video")) {
                 msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext + "'> Your browser does not support HTML5 video. </video>";
-            }
-            else if(interlocutorMessages[i].messagetext.includes("data:text")){
-                msgToShow = "<a class='disable' href='" + interlocutorMessages[i].messagetext  + "'>" + "Click to view text file</a>";
-            }
-            else {
+            } else if (interlocutorMessages[i].messagetext.includes("data:text")) {
+                msgToShow = "<a class='disable' href='" + interlocutorMessages[i].messagetext + "'>" + "Click to view text file</a>";
+            } else {
                 msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             const parsedmessage = msgToShow;
@@ -658,35 +633,30 @@ function showMessage(message) {
     var msgToBeShown;
     if (message.messagetext.includes("data:image")) {
         msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "'" + "/>";
-    }
-    else if(message.messagetext.includes("data:video")){
+    } else if (message.messagetext.includes("data:video")) {
         msgToBeShown = "<video width='200' height='200' controls> <source src= '"
-                      + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
-    }
-    else if(message.messagetext.includes("data:text")){
-        msgToBeShown = "<a href='" + message.messagetext
-                        + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
-                        + "Click to view text file</a>";
-    }
-    else {
+            + message.messagetext + "'> Your browser does not support HTML5 video. </video>";
+    } else if (message.messagetext.includes("data:text")) {
+        msgToBeShown = "<a target='_blank' href='" + message.messagetext
+            + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+            + "Click to view text file</a>";
+    } else {
         msgToBeShown = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
     }
     console.log(msgToBeShown);
     if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
-          + msgToBeShown + "</div><div class='time'>" +
+            + msgToBeShown + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
-    }
-    else {
+    } else {
         if (currentChat.interlocutorWebId.includes("Group")) {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>"
-            + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>"
-            + msgToBeShown + "</div><div class='time'>" +
+                + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>"
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
-        }
-        else {
+        } else {
             $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>"
-            + msgToBeShown + "</div><div class='time'>" +
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
@@ -762,7 +732,10 @@ async function displayContacts(func) {
                 friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
-            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='"
+                + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0]
+                + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
@@ -787,16 +760,13 @@ async function showChats() {
         } else {
             if (lastMsg.includes("data:image")) {
                 lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
-            }
-            else if(lastMsg.includes("data:video")){
-                lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
                 console.log("showChatslastMsg in showChats" + lastMsg);
-            }
-            else if(lastMsg.includes("data:text")){
+            } else if (lastMsg.includes("data:text")) {
                 lastMsg = "<a class='disable' href='" + lastMsg + "'>"
-                                + "Click to view text file</a>";
-            }
-            else {
+                    + "Text File</a>";
+            } else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
@@ -806,7 +776,9 @@ async function showChats() {
 
         if (newmsg === 0) {
             var html;
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
                 + chatCounter + "'>"
                 + lastMsg
                 + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";

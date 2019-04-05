@@ -12,8 +12,10 @@ i {
 	margin: auto;
 }
 a.disable {
-  pointer-events: none;
-  cursor: default;
+	pointer-events: none;
+	cursor: default;
+	margin : 1px;
+	padding: 1px;
 }
 /* ------ FONTS ------ */
 .font-name {
