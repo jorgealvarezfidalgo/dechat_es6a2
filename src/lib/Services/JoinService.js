@@ -10,6 +10,7 @@ class JoinChatService extends Service {
     }
 
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
+		this.createService.setEncrypter(this.encrypter);
         var recipient = interlocutorWebId;
         var participants = [];
         //console.log("A");
@@ -76,6 +77,7 @@ class JoinChatService extends Service {
     }
     async getJoinRequest(fileurl, userWebId) {
         //console.log(fileurl);
+		this.baseService.setEncrypter(this.encrypter);
         var chat = await this.baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
         console.log(chatUrl);
