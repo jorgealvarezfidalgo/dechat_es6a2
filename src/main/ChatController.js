@@ -265,6 +265,7 @@ async function checkForNotifications() {
             newMessageFound = true;
             var nameThroughUrl;
             var authorUrl;
+			console.log(message.author);
             if (!message.author.includes("Group")) {
                 nameThroughUrl = message.author.split("/").pop();
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
