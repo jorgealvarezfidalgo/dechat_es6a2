@@ -56,6 +56,9 @@ describe("Encryption", function() {
 	var dec = encrypter.decrypt(enc, false);
 	assert.equal(dec, "Memories broken, the truth goes unspoken, i've even forgotten my name", "The desencryption is not correct:" + dec);
 	
+	var dec = encrypter.decrypt("Texto plano", false);
+	assert.equal(dec, "Texto plano", "Should return the same text:" + dec);
+	
   });
   
   it("TRUBIA Encryption Algorithm: inbox", async function() {

@@ -156,12 +156,17 @@ class BaseService extends Service {
             const engine = this.newEngine();
             let invitationFound = false;
             const self = this;
-			var sselect = `SELECT * {?invitation a <${this.namespaces.schema}InviteAction>; <${this.namespaces.schema}agent> ?sender; <${this.namespaces.schema}event> ?chaturl;<${this.namespaces.schema}recipient> ?interlocutor.}`;
+			var sselect = `SELECT * {
+				?invitation a <${this.namespaces.schema}InviteAction>; 
+					<${this.namespaces.schema}agent> ?sender; 
+					<${this.namespaces.schema}event> ?chaturl;
+					<${this.namespaces.schema}recipient> ?interlocutor.}`;
             engine.query(sselect, { sources: [{ type: "rdfjsSource", value: rdfjsSource }]
             }).then(function (result) {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
+						console.log(result);
                         deferred.resolve({
 							interlocutor: self.encrypter.decrypt(result["?interlocutor"].value, true), 
 							url: self.encrypter.decrypt(result["?invitation"].value, true), 

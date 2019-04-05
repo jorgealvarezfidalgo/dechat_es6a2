@@ -37,6 +37,7 @@ let contactsToOpen = false;
 
 $(document).ready(function () {
     $("[data-toggle='tooltip']").tooltip();
+	randomPhrase();
 });
 
 /**
@@ -652,6 +653,28 @@ async function joinChat() {
     await showChats();
     await loadMessages(index);
     await showAndStoreMessages();
+}
+
+function randomPhrase() {
+	phrases = [
+		"For those who seek perfection there can be no rest on this side of the grave.",
+		"Success is commemorated; Failure merely remembered.",
+		"Even a man who has nothing can still offer his time.",
+		"It is better to code for the Emperor than to live for yourself.",
+		"True Happiness stems only from Duty.",
+		"Work earns salvation.",
+		"Without Javascript there is nothing.",
+		"Victory need no explanation, defeat allows none.",
+		"Walk softly, and make an intricate encryption.",
+		"The Emperor guides my blade.",
+		"He who stands with JS shall be my brother.",
+		"Heresy grows from idleness.",
+		"A suspicious mind is a healthy mind.",
+		"Foolish are those who fear nothing, yet claim to know everything.",
+		"We win this day or we die trying! There is no retreat!",
+		"To each of us falls a task, and all the Emperor requires of us Engineers is that we stand the line."	
+	];
+	$(".phrase").text(phrases[Encrypter.randomNumber(phrases.length)]);
 }
 
 function toScrollDown() {

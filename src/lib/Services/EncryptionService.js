@@ -38,8 +38,14 @@ class EncryptionService {
 	}
 	
 	decryptAES(txt, key) {
-		var bytes  = CryptoJS.AES.decrypt(txt, key);																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
-        return bytes.toString(CryptoJS.enc.Utf8);
+		console.log("AESD: " + txt);
+		var bytes;
+		try {
+			bytes = CryptoJS.AES.decrypt(txt, key);																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																											
+			return bytes.toString(CryptoJS.enc.Utf8);
+		} catch(e) {
+			return "";
+		}
 	}
 	
 	rotorSchlusselmaschineCodierung(txt) {
@@ -137,27 +143,27 @@ class EncryptionService {
 		TRUBIA Decrypting
 	*/
 	decrypt(txt, inbox) {
-		//console.log(txt);
+		console.log(txt);
 		var key = "";
 		var salt = "";
 		if(inbox) {
 			key = txt.split("=")[0];
 		} else {
-			salt = txt.split("=")[0];
+			salt = txt.value ? txt.value.split("=")[0] : txt.split("=")[0];
 			//console.log("SALDEC: " + salt);
 			//console.log("PASSDEC:" + this.pass);
 			//console.log("Contraseñadec_: " + this.pass+salt);
 			key = this.hash(this.pass + salt);
 		}
 		//console.log("Clavedec: " + key);
-		var msg = txt.replace((inbox ? key : salt)+ "=", "");
+		var msg = txt.value ? txt.value.replace((inbox ? key : salt)+ "=", "") : txt.replace((inbox ? key : salt)+ "=", "");
 		//console.log(msg)
 		var desAes = this.decryptAES(msg, key);
 		
-		//console.log(desAes);
+		console.log(desAes);
 		var enigmaConf = desAes.split("//");
-		//console.log(enigmaConf);
-		if(enigmaConf.length) {
+		console.log(enigmaConf);
+		if(enigmaConf.length > 8) {
 		
 			this.code = [enigmaConf[0],enigmaConf[1],enigmaConf[2]];
 			
@@ -169,7 +175,7 @@ class EncryptionService {
 			this.reflector = enigmaConf[8];
 			return this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join("//"));
 		} else {
-			return null;
+			return txt.value ? txt.value : txt;
 		}
 	}
 	
