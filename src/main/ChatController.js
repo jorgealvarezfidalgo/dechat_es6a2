@@ -146,8 +146,8 @@ async function loadChats() {
         chatCounter += 1;
     });
 
-    ////console.log(semanticChats);
-    ////console.log(contactsWithChat);
+    console.log(semanticChats);
+    console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
@@ -265,7 +265,7 @@ async function checkForNotifications() {
             newMessageFound = true;
             var nameThroughUrl;
             var authorUrl;
-			console.log(message.author);
+			console.log(message);
             if (!message.author.includes("Group")) {
                 nameThroughUrl = message.author.split("/").pop();
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
@@ -396,6 +396,7 @@ async function showAndStoreMessages() {
     while (i < interlocutorMessages.length) {
         ////console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
         var nameThroughUrl;
+		console.log(interlocutorMessages[i].author);
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
