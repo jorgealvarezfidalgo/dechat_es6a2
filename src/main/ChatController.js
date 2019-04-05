@@ -509,17 +509,17 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
 };
 
 $('#join-text').on('change', function () {
-    var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
-    var $w = $(w.document.body);
-    $w.append("<p> the files that will be sent are :</p> <br/> ");
+    //var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
+    //var $w = $(w.document.body);
+    //$w.append("<p> the files that will be sent are :</p> <br/> ");
     const username = $("#user-name").text();
     var toSend = this;
-    textsPreview(this, $w);
+    //textsPreview(this, $w);
     alert("This feature only works if you have enough storage in your pod."
-          + "So if you don't find the image stored in it, it's because you have low storage capacity.");
+          + "So if you don't find the text file stored in it, it's because you have low storage capacity.");
     textsToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
-
+/*
 function textsPreview(input, placeToInsertImagePreview) {
   if (input.files) {
       var filesAmount = input.files.length;
@@ -534,7 +534,7 @@ function textsPreview(input, placeToInsertImagePreview) {
           reader.readAsDataURL(input.files[i]);
       }
   }
-}
+}*/
 
 function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
     if (input.files) {

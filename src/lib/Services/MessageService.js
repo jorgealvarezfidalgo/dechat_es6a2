@@ -36,6 +36,7 @@ class MessageService  extends Service {
             var messageT;
             if(result["?msgtext"].value.includes("data:image")
                   || result["?msgtext"].value.includes("data:video")
+                    || result["?msgtext"].value.includes("data:text")
             ){
                       messageT = result["?msgtext"].value;
             }
@@ -73,6 +74,7 @@ class MessageService  extends Service {
 
     if(message.includes("data:image")
         || message.includes("data:video")
+          || message.includes("data:text")
     ){
       messageT = message;
     } else{
