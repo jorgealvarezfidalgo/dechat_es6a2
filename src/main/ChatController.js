@@ -504,8 +504,32 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
     }
 };
 
+$('#join-text').on('change', function () {
+    var w = window.open("", "popupWindow", "width=600, height=600, scrollbars=yes");
+    var $w = $(w.document.body);
+    $w.append("<p> the files that will be sent are :</p> <br/> ");
+    const username = $("#user-name").text();
+    var toSend = this;
+    textsPreview(this, $w);
+    alert("This feature only works if you have enough storage in your pod."
+          + "So if you don't find the image stored in it, it's because you have low storage capacity.");
+    //imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
 
-
+function textsPreview(input, placeToInsertImagePreview) {
+  if (input.files) {
+      var filesAmount = input.files.length;
+      var i = 0;
+      for (i = 0; i < filesAmount; i++) {
+          var reader = new FileReader();
+          reader.onload = async function (event) {
+              placeToInsertImagePreview.append("<a target='_blank' href='" + event.target.result  + "'>" + $('#join-text').val().split('\\').pop() + "</a>");
+              console.log(event.target);
+          }
+          reader.readAsDataURL(input.files[i]);
+      }
+  }
+}
 
 
 async function showAndStoreMessages() {
