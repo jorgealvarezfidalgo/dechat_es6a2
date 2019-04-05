@@ -20,7 +20,7 @@ class SolidLoaderRepository {
         this.fetch = fetch;
     }
 
-	async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
+    async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
         const chat = new SemanticChat({
             url: chatUrl,
             chatBaseUrl,
@@ -29,19 +29,19 @@ class SolidLoaderRepository {
         return await this.loadFromUrl(chat, chatUrl);
     }
 
-	async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
+    async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
 
-		//console.log("Interlocutor group");
-		var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
+        //console.log("Interlocutor group");
+        var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
 
         const chat = new Group({
             url: chatUrl,
             chatBaseUrl,
             userWebId,
-			      members: ids
+            members: ids
         });
 
-		//console.log(chat);
+        //console.log(chat);
         return await this.loadFromUrl(chat, chatUrl);
     }
 
@@ -49,8 +49,8 @@ class SolidLoaderRepository {
      * This method loads the messages from the url passed through the parameter
      */
     async loadFromUrl(chat, chatUrl) {
-		
-		//console.log("Loading from url");
+
+        //console.log("Loading from url");
 
         const messages = await this._findMessage(chatUrl);
 
@@ -69,36 +69,55 @@ class SolidLoaderRepository {
 
         const rdfjsSource = await this._getRDFjsSourceFromUrl(messageUrl);
         let nextMessageFound = false;
-		const self = this;
+        const self = this;
         this.engine.query(`SELECT * {
 		?message a <${namespaces.schema}Message>;
 		<${namespaces.schema}dateSent> ?time;
 		<${namespaces.schema}givenName> ?username;
 		<${namespaces.schema}text> ?msgtext. }`, {
-                sources: [{
-                    type: "rdfjsSource",
-                    value: rdfjsSource
-                }]
-            })
-            .then(function(result) {
+            sources: [{
+                type: "rdfjsSource",
+                value: rdfjsSource
+            }]
+        })
+            .then(function (result) {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
-                    if (data["?msgtext"]) {						
-						var txFields = data["?msgtext"].value.split("/");
-						var auFields = data["?username"].value.split("/");
-						var tmFields = data["?time"].value.split("/");
-                        var messageText = self.encrypter.decrypt(txFields.splice(4, txFields.length).join("/"), false);
-                        var authorr = self.encrypter.decrypt(auFields.splice(4, auFields.length).join("/"), false);
-                        results.push({
-                            messagetext: messageText,
-                            url: data["?message"].value,
-                            author: authorr,
-                            time: self.encrypter.decrypt(tmFields.splice(4, tmFields.length).join("/"), false)
-                        });
+
+                    if (data["?msgtext"]) {
+                        if (data["?msgtext"].value.includes("data:image")
+                            || data["?msgtext"].value.includes("data:video")
+                            || data["?msgtext"].value.includes("data:text")
+                        ) {
+                            var messageText = data["?msgtext"].value;
+                            var author = data["?username"].value.split("/").pop();
+                            results.push({
+                                messagetext: messageText,
+                                url: data["?message"].value,
+                                author: author.replace(/U\+0020/g, " "),
+                                time: data["?time"].value.split("/")[4]
+                            });
+                        } else {
+                            //var messageText = data["?msgtext"].value.split("/")[4];
+                            //var author = data["?username"].value.split("/").pop();
+                            //  if (data["?msgtext"]) {
+                            var txFields = data["?msgtext"].value.split("/");
+                            var auFields = data["?username"].value.split("/");
+                            var tmFields = data["?time"].value.split("/");
+                            var messageText = self.encrypter.decrypt(txFields.splice(4, txFields.length).join("/"), false);
+                            var authorr = self.encrypter.decrypt(auFields.splice(4, auFields.length).join("/"), false);
+
+                            results.push({
+                                messagetext: messageText,
+                                url: data["?message"].value,
+                                author: authorr,
+                                time: self.encrypter.decrypt(tmFields.splice(4, tmFields.length).join("/"), false)
+                            });
+                        }
                     }
                 });
 
-                result.bindingsStream.on("end", function() {
+                result.bindingsStream.on("end", function () {
                     deferred.resolve(results);
                 });
             });
@@ -111,21 +130,22 @@ class SolidLoaderRepository {
      */
     async findWebIdOfInterlocutor(chatUrl, userWebId) {
         const deferred = Q.defer();
-		let results = [];
+        let results = [];
         const rdfjsSource = await this._getRDFjsSourceFromUrl(chatUrl);
-		const self = this;
+        const self = this;
 
         this.engine.query(`SELECT * {
       ?invitation a <${namespaces.schema}InviteAction>;
 			<${namespaces.schema}event> ?url;
 			<${namespaces.schema}agent> ?agent;
 			<${namespaces.schema}recipient> ?recipient.
-    }`, {                sources: [{
-                    type: "rdfjsSource",
-                    value: rdfjsSource
-                }]
-            })
-			.then(function(result) {
+    }`, {
+            sources: [{
+                type: "rdfjsSource",
+                value: rdfjsSource
+            }]
+        })
+            .then(function (result) {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?recipient"]) {
@@ -133,7 +153,7 @@ class SolidLoaderRepository {
                     }
                 });
 
-                result.bindingsStream.on("end", function() {
+                result.bindingsStream.on("end", function () {
                     deferred.resolve(results);
                 });
             });
@@ -164,7 +184,7 @@ class SolidLoaderRepository {
                             store.addQuad(quad);
                         } else {
                             const source = {
-                                match: function(s, p, o, g) {
+                                match: function (s, p, o, g) {
                                     return streamify(store.getQuads(s, p, o, g));
                                 }
                             };
@@ -177,10 +197,10 @@ class SolidLoaderRepository {
 
         return deferred.promise;
     }
-	
-	setEncrypter(encrypter) {
-		this.encrypter = encrypter;
-	}
+
+    setEncrypter(encrypter) {
+        this.encrypter = encrypter;
+    }
 }
 
 module.exports = SolidLoaderRepository;

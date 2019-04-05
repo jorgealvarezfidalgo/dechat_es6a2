@@ -11,7 +11,12 @@ i {
 	width: 60px;
 	margin: auto;
 }
-
+a.disable {
+	pointer-events: none;
+	cursor: default;
+	margin : 1px;
+	padding: 1px;
+}
 /* ------ FONTS ------ */
 .font-name {
 	color: #000000;
@@ -365,10 +370,10 @@ p[id^=lastMsg] img {
  0% {
  box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
 }
- 5%,  95% {
+ 5%, 95% {
  box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
 }
- 10%,  59% {
+ 10%, 59% {
  box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
 }
  20% {
@@ -385,10 +390,10 @@ p[id^=lastMsg] img {
  0% {
  box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
 }
- 5%,  95% {
+ 5%, 95% {
  box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
 }
- 10%,  59% {
+ 10%, 59% {
  box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
 }
  20% {

@@ -54,7 +54,7 @@ $(".login-btn").click(() => {
  */
 $("#logout-btn").click(() => {
     auth.logout();
-	location.reload(true);
+    location.reload(true);
     $(".contact-list").html("");
     $(".chat").html("");
     $("#showinvs").hide();
@@ -129,16 +129,31 @@ async function loadChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
+            } else if (lastMsg.includes("data:text")) {
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                    + "Text File</a>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 
         const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter
+                + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName
+                + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -160,7 +175,7 @@ async function loadMessagesToWindow() {
 }
 
 $("#enterpwd").click(async() => {
-	
+
     const pwd1 = encrypter.hash($("#pwd1").val());
 	const pwd2 = encrypter.hash($("#pwd2").val());
 	$("#pwd1").val("");
@@ -195,7 +210,7 @@ $("#enterpwd").click(async() => {
 		$("#interlocutorphoto").attr("src", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Cross-Jerusalem-Potent-Heraldry.svg/800px-Cross-Jerusalem-Potent-Heraldry.svg.png");
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
-		
+
 	} else {
 		$("#pwderror").text("Las contraseñas no coinciden.");
 	}
@@ -213,7 +228,7 @@ auth.trackSession(async (session) => {
         $("#nav-login-btn").addClass("hidden");
         $("#login-required").modal("hide");
         $(".mustlogin").addClass("hidden");
-	
+
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
 
@@ -221,9 +236,9 @@ auth.trackSession(async (session) => {
             $("#user-name").removeClass("hidden");
             $("#user-name").text(name);
         }
-		
+
 		$(".unblockage").removeClass("hidden");
-        
+
     } else {
         //alert("you"re not logged in");
         $("#nav-login-btn").removeClass("hidden");
@@ -287,7 +302,11 @@ async function checkForNotifications() {
                 var index = contactsWithChat.indexOf(authorUrl);
                 $("#chatwindow" + index).remove();
                 var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                    + index + "'>" + parsedmessage
+                    + "</p></div></div><div class='contact-time'><p>"
+                    + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1)
+                    + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
                 $(".contact-list").prepend(html);
                 document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 interlocutorMessages.push(message);
@@ -316,7 +335,6 @@ async function checkForNotifications() {
 }
 
 
-
 async function loadMessages(id) {
     $(".chat").html("");
     $("#nm" + id).remove();
@@ -333,7 +351,6 @@ async function loadMessages(id) {
     $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
 
     currentChat.getMessages().forEach(async (message) => {
-
         showMessage(message);
 
     });
@@ -357,11 +374,12 @@ async function checkKey(e) {
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
+
         $("#write-chat").val("");
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
-		if(index==-1)
-			index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
-		//console.log("Index es " + index);
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+        //console.log("Index es " + index);
         $("#chatwindow" + index).remove();
 
         semanticChats[index].loadMessage({
@@ -372,22 +390,215 @@ async function checkKey(e) {
         });
 
         const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+            + parsedmessage + "</div><div class='time'>" +
             ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
-            +
-                "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                + parsedmessage + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+            +"</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
         }
     }
-
 }
+
+//_____________________________IMAGE_UPLOADS__________________//
+
+$('#join-media').on('change', function () {
+    const username = $("#user-name").text();
+    var toSend = this;
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the image stored in it, it's because you have low storage capacity.");
+    imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var img = "<img alt = 'uploaded'  style='height:200px; width:200px;' src = '" + event.target.result + "'" + "/>";
+                //SENDING MESSAGE
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+//__________________________________________-_______________//
+
+
+//_____________________________VIDEO_UPLOADS__________________//
+
+$('#join-video').on('change', function () {
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the video stored in it, it's because you have low storage capacity.");
+    const username = $("#user-name").text();
+    //videosPreview(this, $z);
+    var toSend = this;
+    videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var video = "<video width='200' height='200' controls> <source src= '" + event.target.result
+                    + "'> Your browser does not support HTML5 video. </video>";
+                //SENDING MESSAGE
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<video width='20' height='20'> <source src= '" + event.target.result + "'> Your browser does not support HTML5 video. </video>"
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+//_________________________________________________________________//
+
+
+//_____________________________TEXT_UPLOADS__________________//
+$('#join-text').on('change', function () {
+    const username = $("#user-name").text();
+    var toSend = this;
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the text file stored in it, it's because you have low storage capacity.");
+    textsToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var lnk = "<a target='_blank' href='" + event.target.result
+                    + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+                    + $('#join-text').val().split('\\').pop() + "</a>";                //SENDING MESSAGE
+
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+                    + lnk + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                        + $('#join-text').val().split('\\').pop()
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+
+//_____________________________________________//
 
 async function showAndStoreMessages() {
     var i = 0;
@@ -407,8 +618,8 @@ async function showAndStoreMessages() {
             showMessage(interlocutorMessages[i]);
             await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, false);
             var index = contactsWithChat.indexOf(interlocWebId);
-			if(index==-1)
-				index = contactsWithChat.indexOf(interlocWebId.replace("Group/", ""));
+            if (index == -1)
+                index = contactsWithChat.indexOf(interlocWebId.replace("Group/", ""));
             semanticChats[index].loadMessage({
                 messagetext: interlocutorMessages[i].messagetext,
                 url: null,
@@ -417,8 +628,23 @@ async function showAndStoreMessages() {
             });
             baseService.deleteFileForUser(interlocutorMessages[i].inboxUrl);
             $("#chatwindow" + index).remove();
-            const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+
+            var msgToShow;
+            if (interlocutorMessages[i].messagetext.includes("data:image")) {
+                msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
+            } else if (interlocutorMessages[i].messagetext.includes("data:video")) {
+                msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext + "'> Your browser does not support HTML5 video. </video>";
+            } else if (interlocutorMessages[i].messagetext.includes("data:text")) {
+                msgToShow = "<a class='disable' href='" + interlocutorMessages[i].messagetext + "'>" + "Click to view text file</a>";
+            } else {
+                msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
+            const parsedmessage = msgToShow;
+
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage
+                + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
             interlocutorMessages[i] = "D";
@@ -435,33 +661,50 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
-    const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+    var msgToBeShown;
+    if (message.messagetext.includes("data:image")) {
+        msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "'" + "/>";
+    } else if (message.messagetext.includes("data:video")) {
+        msgToBeShown = "<video width='200' height='200' controls> <source src= '"
+            + message.messagetext + "'> Your browser does not support HTML5 video. </video>";
+    } else if (message.messagetext.includes("data:text")) {
+        msgToBeShown = "<a target='_blank' href='" + message.messagetext
+            + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+            + "Click to view text file</a>";
+    } else {
+        msgToBeShown = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+    }
+    console.log(msgToBeShown);
     if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+            + msgToBeShown + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
     } else {
         if (currentChat.interlocutorWebId.includes("Group")) {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>"
+                + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>"
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>"
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
     $(".fa fa-bars fa-lg").removeClass("hidden");
-    ;
     toScrollDown();
 }
 
 $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
+    $(".chat-head label").hide();
     $(".information").css("display", "flex");
     $("#close-contact-information").show();
     //console.log(currentChat);
     var note;
     if (!interlocWebId.includes("Group")) {
         note = await baseService.getNote(interlocWebId);
-	}
+    }
     if (!note) {
         note = "Nothing to see here";
     }
@@ -483,17 +726,18 @@ $("#show-contact-information").click(async () => {
 
 $("#close-contact-information").click(async () => {
     $(".chat-head i").show();
+    $(".chat-head label").show();
     $("#close-contact-information").hide();
     $(".information >").remove();
     $(".information").hide();
 });
 
 $("#show-contacts").click(async () => {
-	if(contactsToOpen) {
-		contactsToOpen = false;
-	} else {
-		contactsToOpen = true;
-	}
+    if (contactsToOpen) {
+        contactsToOpen = false;
+    } else {
+        contactsToOpen = true;
+    }
     await displayContacts(openContact);
 });
 
@@ -501,13 +745,13 @@ async function displayContacts(func) {
     $(".contact-list").html("");
     $("#data-url").prop("value", baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
-		$(".search").addClass("hidden");
-		$(".addcontact").removeClass("hidden");
-		$(".writecontact").removeClass("hidden");
+        $(".search").addClass("hidden");
+        $(".addcontact").removeClass("hidden");
+        $(".writecontact").removeClass("hidden");
     } else {
         $(".search").removeClass("hidden");
-		$(".addcontact").addClass("hidden");
-		$(".writecontact").addClass("hidden");
+        $(".addcontact").addClass("hidden");
+        $(".writecontact").addClass("hidden");
     }
 
     if (!showingContacts) {
@@ -519,7 +763,10 @@ async function displayContacts(func) {
                 friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
-            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='"
+                + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0]
+                + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
@@ -542,15 +789,38 @@ async function showChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
+                //console.log("showChatslastMsg in showChats" + lastMsg);
+            } else if (lastMsg.includes("data:text")) {
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                    + "Text File</a>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
         }
 
         const newmsg = 0;
+
         if (newmsg === 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html;
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow"
+                + chatCounter + "'><img src='" + chat.photo
+                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
+                + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -697,16 +967,16 @@ $("#create-group").click(async () => {
     if (!showingContacts) {
         $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
-		$(".writegroup").removeClass("hidden");
-		$(".addcontact").removeClass("hidden");
-		$(".writecontact").removeClass("hidden");
-		contactsToOpen = false;
+        $(".writegroup").removeClass("hidden");
+        $(".addcontact").removeClass("hidden");
+        $(".writecontact").removeClass("hidden");
+        contactsToOpen = false;
     } else {
         $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
-		$(".writegroup").addClass("hidden");
-		$(".addcontact").addClass("hidden");
-		$(".writecontact").addClass("hidden");
+        $(".writegroup").addClass("hidden");
+        $(".addcontact").addClass("hidden");
+        $(".writecontact").addClass("hidden");
     }
     await displayContacts(markContactForGroup);
 });
@@ -747,7 +1017,7 @@ $("#creategroup").click(async () => {
             await showChats();
             showingContacts = false;
             $(".creategroup").addClass("hidden");
-			$(".writegroup").addClass("hidden");
+            $(".writegroup").addClass("hidden");
             $(".search").removeClass("hidden");
             contactsForGroup = [];
         } else {
