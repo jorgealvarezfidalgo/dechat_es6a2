@@ -270,8 +270,8 @@ async function checkForNotifications() {
                 nameThroughUrl = message.author.split("/").pop();
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
             } else {
-                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
-                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+                nameThroughUrl = message.author.split("/")[1];
+                authorUrl = message.author;
             }
             //console.log("nombre de authorUrl is:" + nameThroughUrl);
             //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
