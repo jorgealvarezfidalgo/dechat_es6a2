@@ -11,7 +11,9 @@ const {
     default: data
 } = require("@solid/query-ldflex");
 const namespaces = require("../lib/namespaces");
+const Encrypter = require("../lib/Services/EncryptionService");
 
+let encrypter = new Encrypter();
 let baseService = new BaseService(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
@@ -35,6 +37,7 @@ let contactsToOpen = false;
 
 $(document).ready(function () {
     $("[data-toggle='tooltip']").tooltip();
+	randomPhrase();
 });
 
 /**
@@ -64,7 +67,6 @@ $("#logout-btn").click(() => {
     $(".wrap").addClass("hidden");
     $(".mustlogin").removeClass("hidden");
     $("#interlocutorw-name").text("");
-    $("#interlocutorphoto").attr("src", "");
 });
 
 /**
@@ -158,8 +160,8 @@ async function loadChats() {
         chatCounter += 1;
     });
 
-    ////console.log(semanticChats);
-    ////console.log(contactsWithChat);
+    console.log(semanticChats);
+    console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
@@ -171,6 +173,48 @@ async function loadMessagesToWindow() {
     await showAndStoreMessages();
     //console.log(userDataUrl);
 }
+
+$("#enterpwd").click(async() => {
+
+    const pwd1 = encrypter.hash($("#pwd1").val());
+	const pwd2 = encrypter.hash($("#pwd2").val());
+	$("#pwd1").val("");
+	$("#pwd2").val("");
+	if(pwd1!== "" && pwd1===pwd2) {
+		encrypter.setPassword(pwd1);
+		$(".unblockage").addClass("hidden");
+		$(".loading").removeClass("hidden");
+		baseService.setEncrypter(encrypter);
+		joinService.setEncrypter(encrypter);
+		messageService.setEncrypter(encrypter);
+		openService.setEncrypter(encrypter);
+		createService.setEncrypter(encrypter);
+		openChats = [];
+		try {
+			const chats = await openService.getChatsToOpen(userWebId);
+			if(chats) {
+				chats.forEach(async (chat) => {
+					openChats.push(chat);
+				});
+			}
+		} catch(e) {
+			console.log(e);
+		}
+
+        await startChat();
+		await sleep(4000);
+        await loadChats();
+        checkForNotifications();
+        $(".wrap").removeClass("hidden");
+        $(".loading").addClass("hidden");
+		$("#interlocutorphoto").attr("src", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Cross-Jerusalem-Potent-Heraldry.svg/800px-Cross-Jerusalem-Potent-Heraldry.svg.png");
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
+
+	} else {
+		$("#pwderror").text("Las contraseñas no coinciden.");
+	}
+});
 
 /**
  *    This method is in charge of the user"s login
@@ -184,8 +228,6 @@ auth.trackSession(async (session) => {
         $("#nav-login-btn").addClass("hidden");
         $("#login-required").modal("hide");
         $(".mustlogin").addClass("hidden");
-        $(".loading").removeClass("hidden");
-
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -194,22 +236,9 @@ auth.trackSession(async (session) => {
             $("#user-name").removeClass("hidden");
             $("#user-name").text(name);
         }
-        openChats = [];
-        const chats = await openService.getChatsToOpen(userWebId);
-        if (chats) {
-            chats.forEach(async (chat) => {
-                openChats.push(chat);
-            });
-        }
 
-        await startChat();
-        await sleep(8000);
-        await loadChats();
-        checkForNotifications();
-        $(".wrap").removeClass("hidden");
-        $(".loading").addClass("hidden");
-        // refresh every 3sec
-        refreshIntervalId = setInterval(checkForNotifications, 3000);
+		$(".unblockage").removeClass("hidden");
+
     } else {
         //alert("you"re not logged in");
         $("#nav-login-btn").removeClass("hidden");
@@ -251,12 +280,13 @@ async function checkForNotifications() {
             newMessageFound = true;
             var nameThroughUrl;
             var authorUrl;
+			console.log(message);
             if (!message.author.includes("Group")) {
                 nameThroughUrl = message.author.split("/").pop();
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
             } else {
-                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
-                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+                nameThroughUrl = message.author.split("/")[1];
+                authorUrl = message.author;
             }
             //console.log("nombre de authorUrl is:" + nameThroughUrl);
             //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
@@ -577,10 +607,11 @@ async function showAndStoreMessages() {
     while (i < interlocutorMessages.length) {
         ////console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
         var nameThroughUrl;
+		console.log(interlocutorMessages[i].author);
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
-            nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
+            nameThroughUrl = interlocutorMessages[i].author.split("/")[1];
         //console.log("nombre de authorUrl is:" + nameThroughUrl);
         //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
         if (nameThroughUrl === $("#interlocutorw-name").text()) {
@@ -762,7 +793,7 @@ async function showChats() {
                 lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
             } else if (lastMsg.includes("data:video")) {
                 lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
-                console.log("showChatslastMsg in showChats" + lastMsg);
+                //console.log("showChatslastMsg in showChats" + lastMsg);
             } else if (lastMsg.includes("data:text")) {
                 lastMsg = "<a class='disable' href='" + lastMsg + "'>"
                     + "Text File</a>";
@@ -894,6 +925,37 @@ async function joinChat() {
     await showChats();
     await loadMessages(index);
     await showAndStoreMessages();
+}
+
+function randomPhrase() {
+	const phrases = [
+		"For those who seek perfection there can be no rest on this side of the grave.",
+		"Success is commemorated; Failure merely remembered.",
+		"Even a man who has nothing can still offer his time.",
+		"It is better to code for the Emperor than to live for yourself.",
+		"True Happiness stems only from Duty.",
+		"Without Javascript there is nothing.",
+		"Victory needs no explanation, defeat allows none.",
+		"Walk softly, and make an intricate encryption.",
+		"The Emperor guides my blade.",
+		"He who stands with JS shall be my brother.",
+		"Work earns salvation.",
+		"Heresy grows from idleness.",
+		"A suspicious mind is a healthy mind.",
+		"Foolish are those who fear nothing, yet claim to know everything.",
+		"We win this day or we die trying! There is no retreat!",
+		"To each of us falls a task, and all the Emperor requires of us Engineers is that we stand the line.",
+		"We are all pawns of something even greater: memes, the DNA of the soul.",
+		"Nanomachines, Son. They harden in response to physical trauma.",
+		"Every lone spirit doubts his strength.",
+		"Excuses are the refuge of the weak.",
+		"Facts are chains that bind perception and fetter truth. For a man can remake the world if he has a dream and no facts to cloud his mind.",
+		"Hard work conquers everything.",
+		"He who lives for nothing is nothing.",
+		"Honor is what a pure mind knows about itself.",
+		"Hope is the first step on the road to disappointment."
+	];
+	$(".phrase").text(phrases[Encrypter.randomNumber(phrases.length)]);
 }
 
 function toScrollDown() {

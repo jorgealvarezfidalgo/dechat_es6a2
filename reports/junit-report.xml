@@ -5,51 +5,113 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="4.551058214">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="9.586586538">
         </testcase>
-        <testcase name="And We put the bad credentials username &quot;unexistent&quot; and password &quot;unexistent&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="2.023126932">
+        <testcase name="And We put the bad credentials username &quot;unexistent&quot; and password &quot;unexistent&quot;" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="2.402857404">
         </testcase>
-        <testcase name="Then We click on &quot;login&quot; we will stay on the same page and no messages shown" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="0.480062404">
+        <testcase name="Then We click on &quot;login&quot; we will stay on the same page and no messages shown" classname="dechat-es-6a-ii;bad-credential,-we-don&apos;t-reach-the-home-page" time="0.396787672">
         </testcase>
     </testsuite>
-    <testsuite name="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" tests="3" failures="0" skipped="0">
+    <testsuite name="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" tests="3" failures="1" skipped="0">
         <properties>
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="6.473615387">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="7.560989283">
         </testcase>
-        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="2.447909095">
+        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot;" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="2.432532095">
         </testcase>
-        <testcase name="Then We click and we reach the home page with the messages shown" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="9.334619919">
+        <testcase name="Then We click and we reach the home page with the messages shown" classname="dechat-es-6a-ii;good-credential,-we-reach-the-home-page" time="20.02257424">
+            <failure message="TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)">TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+Wait timed out after 20008ms
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2209:17
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+From: Task: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+    at scheduleWait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2196:20)
+    at ControlFlow.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2525:12)
+    at thenableWebDriverProxy.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\webdriver.js:934:29)
+    at driver.findElement.then (D:\Documents\S6\ASW\Practicas\dechat_es6a2\step-definitions\dechat-steps.js:110:32)
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)</failure>
         </testcase>
     </testsuite>
-    <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" tests="4" failures="0" skipped="0">
+    <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" tests="4" failures="1" skipped="1">
         <properties>
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="4.363935893">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="5.721024965">
         </testcase>
-        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="2.941420596">
+        <testcase name="And We put the good credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="2.909911632">
         </testcase>
-        <testcase name="Then the messages will appear and we an existing conversation" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="9.016551914">
+        <testcase name="Then the messages will appear and we an existing conversation" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="20.019927324">
+            <failure message="TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)">TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+Wait timed out after 20001ms
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2209:17
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+From: Task: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+    at scheduleWait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2196:20)
+    at ControlFlow.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2525:12)
+    at thenableWebDriverProxy.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\webdriver.js:934:29)
+    at driver.wait.then (D:\Documents\S6\ASW\Practicas\dechat_es6a2\step-definitions\dechat-steps.js:162:39)
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)</failure>
         </testcase>
-        <testcase name="Then we send the implicated friend a message &quot;hi friend&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message" time="0.307487848">
+        <testcase name="Then we send the implicated friend a message &quot;hi friend&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-select-a-friend-and-write-a-message">
+            <skipped message="">
+            </skipped>
         </testcase>
     </testsuite>
-    <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" tests="4" failures="0" skipped="0">
+    <testsuite name="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" tests="4" failures="1" skipped="0">
         <properties>
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="4.806273032">
+        <testcase name="Given We visit the &quot;https://arquisoft.github.io/dechat_es6a2&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="5.649505698">
         </testcase>
-        <testcase name="And We put the credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="2.533295039">
+        <testcase name="And We put the credentials username &quot;asw&quot; and password &quot;asw-2018-19&quot; and click on &quot;login&quot;" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="2.387655813">
         </testcase>
-        <testcase name="Then the messages will appear and we select a friend in the friends&apos; section" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="0.028101158">
+        <testcase name="Then the messages will appear and we select a friend in the friends&apos; section" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="0.020743127">
         </testcase>
-        <testcase name="Then we should see friends and add groups and friends menu" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="9.000967112">
+        <testcase name="Then we should see friends and add groups and friends menu" classname="dechat-es-6a-ii;when-the-user-is-logged-in,-we-should-see-friends-and-add-contacts/groups-icons" time="20.01773394">
+            <failure message="TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)">TimeoutError: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+Wait timed out after 20004ms
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2209:17
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+From: Task: Waiting for at least one element to be located By(xpath, //*[@id=&apos;chatwindow0&apos;]/div[1]/div/h1)
+    at scheduleWait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2196:20)
+    at ControlFlow.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2525:12)
+    at thenableWebDriverProxy.wait (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\webdriver.js:934:29)
+    at driver.wait.then (D:\Documents\S6\ASW\Practicas\dechat_es6a2\step-definitions\dechat-steps.js:236:39)
+    at ManagedPromise.invokeCallback_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:1384:14)
+    at TaskQueue.execute_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3092:14)
+    at TaskQueue.executeNext_ (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:3075:27)
+    at asyncRun (D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:2935:27)
+    at D:\Documents\S6\ASW\Practicas\dechat_es6a2\node_modules\selenium-cucumber-js\node_modules\selenium-webdriver\lib\promise.js:676:7
+    at process._tickCallback (internal/process/next_tick.js:68:7)</failure>
         </testcase>
     </testsuite>
     <testsuite name="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" tests="2" failures="0" skipped="0">
@@ -57,9 +119,9 @@
             <property name="URI" value="D:/Documents/S6/ASW/Practicas/dechat_es6a2/features/dechat-es6a-II.feature">
             </property>
         </properties>
-        <testcase name="When I search Google for &quot;dechat_es6a2&quot;" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="5.60405223">
+        <testcase name="When I search Google for &quot;dechat_es6a2&quot;" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="5.409795089">
         </testcase>
-        <testcase name="Then I should see &quot;Arquisoft&quot; in the result" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="0.58988254">
+        <testcase name="Then I should see &quot;Arquisoft&quot; in the result" classname="dechat-es-6a-ii;google-search-for-our-application-es6a-ii" time="0.630917634">
         </testcase>
     </testsuite>
 </testsuites>

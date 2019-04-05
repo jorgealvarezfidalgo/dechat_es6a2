@@ -156,13 +156,26 @@ class BaseService extends Service {
             const engine = this.newEngine();
             let invitationFound = false;
             const self = this;
-			var sselect = `SELECT * {?invitation a <${this.namespaces.schema}InviteAction>; <${this.namespaces.schema}agent> ?sender; <${this.namespaces.schema}event> ?chaturl;<${this.namespaces.schema}recipient> ?interlocutor.}`;
+			var sselect = `SELECT * {
+				?invitation a <${this.namespaces.schema}InviteAction>; 
+					<${this.namespaces.schema}agent> ?sender; 
+					<${this.namespaces.schema}event> ?chaturl;
+					<${this.namespaces.schema}recipient> ?interlocutor.}`;
             engine.query(sselect, { sources: [{ type: "rdfjsSource", value: rdfjsSource }]
             }).then(function (result) {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-                        deferred.resolve({interlocutor: result["?interlocutor"].value, url: result["?invitation"].value, agent: result["?sender"].value, ievent: result["?chaturl"].value});
+						console.log(result);
+						var inFields = result["?interlocutor"].value.split("/");
+						var agFields = result["?sender"].value.split("/");
+						var ieFields = result["?chaturl"].value.split("/");
+                        deferred.resolve({
+							interlocutor: self.encrypter.decrypt(inFields.splice(4, inFields.length).join("/"), true), 
+							url: self.encrypter.decrypt(result["?invitation"].value, true), 
+							agent: self.encrypter.decrypt(agFields.splice(4, agFields.length).join("/"), true), 
+							ievent: self.encrypter.decrypt(ieFields.splice(4, ieFields.length).join("/"), true)
+							});
 						});
                     result.bindingsStream.on("end", function () {
                         if (!invitationFound) {

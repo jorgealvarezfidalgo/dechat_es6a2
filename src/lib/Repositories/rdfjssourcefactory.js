@@ -8,7 +8,6 @@ const Q = require("q");
  */
 function fromUrl(url, fetch) {
     const deferred = Q.defer();
-
     fetch(url)
         .then(async res => {
             if (res.status === 404) {
@@ -19,9 +18,9 @@ function fromUrl(url, fetch) {
                 const parser = N3.Parser({
                     baseIRI: res.url
                 });
-
                 parser.parse(body, (err, quad, prefixes) => {
                     if (err) {
+						console.log(err);
                         deferred.reject();
                     } else if (quad) {
                         store.addQuad(quad);
@@ -31,7 +30,6 @@ function fromUrl(url, fetch) {
                                 return require("streamify-array")(store.getQuads(s, p, o, g));
                             }
                         };
-
                         deferred.resolve(source);
                     }
                 });
@@ -43,31 +41,7 @@ function fromUrl(url, fetch) {
 
     return deferred.promise;
 }
-/*
-function fromString(str) {
-    const deferred = Q.defer();
-    const store = N3.Store();
-    const parser = N3.Parser();
 
-    parser.parse(str, (err, quad, prefixes) => {
-        if (err) {
-            deferred.reject();
-        } else if (quad) {
-            store.addQuad(quad);
-        } else {
-            const source = {
-                match: function(s, p, o, g) {
-                    return require("streamify-array")(store.getQuads(s, p, o, g));
-                }
-            };
-
-            deferred.resolve(source);
-        }
-    });
-
-    return deferred.promise;
-}
-*/
 module.exports = {
     fromUrl
 };
