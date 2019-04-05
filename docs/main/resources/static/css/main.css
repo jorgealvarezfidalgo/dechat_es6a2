@@ -10,8 +10,8 @@ a {
 	display: inline-block;	
 }
 
-a:hover {
-  
+.phrase {
+	margin-top: 10px;
 }
 
 #navbarDropdown:hover {
