@@ -67,7 +67,6 @@ $("#logout-btn").click(() => {
     $(".wrap").addClass("hidden");
     $(".mustlogin").removeClass("hidden");
     $("#interlocutorw-name").text("");
-    $("#interlocutorphoto").attr("src", "");
 });
 
 /**
@@ -193,6 +192,7 @@ $("#enterpwd").click(async() => {
         checkForNotifications();
         $(".wrap").removeClass("hidden");
         $(".loading").addClass("hidden");
+		$("#interlocutorphoto").attr("src", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Cross-Jerusalem-Potent-Heraldry.svg/800px-Cross-Jerusalem-Potent-Heraldry.svg.png");
         // refresh every 3sec
         refreshIntervalId = setInterval(checkForNotifications, 3000);
 		
@@ -664,17 +664,26 @@ function randomPhrase() {
 		"Even a man who has nothing can still offer his time.",
 		"It is better to code for the Emperor than to live for yourself.",
 		"True Happiness stems only from Duty.",
-		"Work earns salvation.",
 		"Without Javascript there is nothing.",
-		"Victory need no explanation, defeat allows none.",
+		"Victory needs no explanation, defeat allows none.",
 		"Walk softly, and make an intricate encryption.",
 		"The Emperor guides my blade.",
 		"He who stands with JS shall be my brother.",
+		"Work earns salvation.",
 		"Heresy grows from idleness.",
 		"A suspicious mind is a healthy mind.",
 		"Foolish are those who fear nothing, yet claim to know everything.",
 		"We win this day or we die trying! There is no retreat!",
-		"To each of us falls a task, and all the Emperor requires of us Engineers is that we stand the line."	
+		"To each of us falls a task, and all the Emperor requires of us Engineers is that we stand the line.",
+		"We are all pawns of something even greater: memes, the DNA of the soul.",
+		"Nanomachines, Son. They harden in response to physical trauma.",
+		"Every lone spirit doubts his strength.",
+		"Excuses are the refuge of the weak.",
+		"Facts are chains that bind perception and fetter truth. For a man can remake the world if he has a dream and no facts to cloud his mind.",
+		"Hard work conquers everything.",
+		"He who lives for nothing is nothing.",
+		"Honor is what a pure mind knows about itself.",
+		"Hope is the first step on the road to disappointment."
 	];
 	$(".phrase").text(phrases[Encrypter.randomNumber(phrases.length)]);
 }
