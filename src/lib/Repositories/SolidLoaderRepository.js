@@ -149,11 +149,13 @@ class SolidLoaderRepository {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?recipient"]) {
-                        results.push(self.encrypter.decrypt(data["?recipient"], false));
+						var rFields = data["?recipient"].value.split("/");
+                        results.push(self.encrypter.decrypt(rFields.splice(4, rFields.length).join("/"), false));
                     }
                 });
 
                 result.bindingsStream.on("end", function () {
+					console.log(results);
                     deferred.resolve(results);
                 });
             });
