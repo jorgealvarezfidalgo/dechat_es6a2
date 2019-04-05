@@ -133,6 +133,10 @@ async function loadChats() {
             else if(lastMsg.includes("data:video")){
                 lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
             }
+            else if(lastMsg.includes("data:text")){
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                                + "Click to view text file</a>";
+            }
             else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
@@ -513,7 +517,7 @@ $('#join-text').on('change', function () {
     textsPreview(this, $w);
     alert("This feature only works if you have enough storage in your pod."
           + "So if you don't find the image stored in it, it's because you have low storage capacity.");
-    //imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+    textsToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
 });
 
 function textsPreview(input, placeToInsertImagePreview) {
@@ -523,13 +527,69 @@ function textsPreview(input, placeToInsertImagePreview) {
       for (i = 0; i < filesAmount; i++) {
           var reader = new FileReader();
           reader.onload = async function (event) {
-              placeToInsertImagePreview.append("<a target='_blank' href='" + event.target.result  + "'>" + $('#join-text').val().split('\\').pop() + "</a>");
-              console.log(event.target);
+            var lnk = "<a target='_blank' href='" + event.target.result  + "'>" + $('#join-text').val().split('\\').pop() + "</a>";
+              placeToInsertImagePreview.append(lnk);
+              //console.log(event.target);
           }
           reader.readAsDataURL(input.files[i]);
       }
   }
 }
+
+function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var lnk = "<a target='_blank' href='" + event.target.result
+                + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+                 + $('#join-text').val().split('\\').pop() + "</a>";                //SENDING MESSAGE
+
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+                  + lnk + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                        + $('#join-text').val().split('\\').pop()
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+
 
 
 async function showAndStoreMessages() {
@@ -567,6 +627,9 @@ async function showAndStoreMessages() {
             else if(interlocutorMessages[i].messagetext.includes("data:video")){
                 msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext + "'> Your browser does not support HTML5 video. </video>";
             }
+            else if(interlocutorMessages[i].messagetext.includes("data:text")){
+                msgToShow = "<a class='disable' href='" + interlocutorMessages[i].messagetext  + "'>" + "Click to view text file</a>";
+            }
             else {
                 msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
             }
@@ -599,6 +662,11 @@ function showMessage(message) {
     else if(message.messagetext.includes("data:video")){
         msgToBeShown = "<video width='200' height='200' controls> <source src= '"
                       + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
+    }
+    else if(message.messagetext.includes("data:text")){
+        msgToBeShown = "<a href='" + message.messagetext
+                        + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+                        + "Click to view text file</a>";
     }
     else {
         msgToBeShown = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
@@ -723,6 +791,10 @@ async function showChats() {
             else if(lastMsg.includes("data:video")){
                 lastMsg  = "<video width='20' height='20'> <source src= '" + lastMsg  + "'> Your browser does not support HTML5 video. </video>";
                 console.log("showChatslastMsg in showChats" + lastMsg);
+            }
+            else if(lastMsg.includes("data:text")){
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                                + "Click to view text file</a>";
             }
             else {
                 lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");

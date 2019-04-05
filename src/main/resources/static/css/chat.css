@@ -11,6 +11,10 @@ i {
 	width: 60px;
 	margin: auto;
 }
+a.disable {
+  pointer-events: none;
+  cursor: default;
+}
 /* ------ FONTS ------ */
 .font-name {
 	color: #000000;
