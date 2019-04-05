@@ -579,14 +579,13 @@ function showMessage(message) {
         msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "'" + "/>";
     }
     else if(message.messagetext.includes("data:video")){
-      msgToBeShown = "<video width='200' height='200' controls> <source src= '"
+        msgToBeShown = "<video width='200' height='200' controls> <source src= '"
                       + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
     }
     else {
         msgToBeShown = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
     }
-    console.log(msgToBeShown);msgToBeShown = "<video width='200' height='200' controls> <source src= '"
-                    + message.messagetext  + "'> Your browser does not support HTML5 video. </video>";
+    console.log(msgToBeShown);
     if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
         $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
           + msgToBeShown + "</div><div class='time'>" +
