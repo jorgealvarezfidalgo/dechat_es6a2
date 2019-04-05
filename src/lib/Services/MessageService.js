@@ -30,14 +30,16 @@ class MessageService  extends Service {
         })
         .then(function(result) {
           result.bindingsStream.on("data", async function(result) {
+			  console.log(result);
 			  //.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":") for text
             messageFound = true;
             result = result.toObject();
             const messageUrl = result["?message"].value;
-            const messagetext = self.encrypter.decrypt(result["?msgtext"].value.split("/inbox/")[1], true);
-            const author = self.encrypter.decrypt(result["?username"].value, true);
-			var tmFields = data["?time"].value.split("/");
+            const messagetext = self.encrypter.decrypt(result["?msgtext"].value.split("/inbox/")[1], true).replace(/U\+0020/g, " ").replace(/U\+003A/g, ":");
+            const author = self.encrypter.decrypt(result["?username"].value, true).replace(/U\+0020/g, " ");
+			var tmFields = result["?time"].value.split("/");
             const time = self.encrypter.decrypt(tmFields.splice(4, tmFields.length).join("/"), true);
+			console.log("Time: " + time);
             const inboxUrl = fileurl;
             deferred.resolve({
               inboxUrl,
