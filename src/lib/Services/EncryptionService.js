@@ -80,7 +80,7 @@ class EncryptionService {
 			//console.log(tx);
 			//console.log(result[i]);
 			tx = tx.replace(result[i], m4.decode(result[i]));
-			console.log(tx);
+			//console.log(tx);
 			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length).toLowerCase();
 			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
 		}
@@ -141,12 +141,18 @@ class EncryptionService {
 	*/
 	encrypt(txt, inbox) {
 		this.inbox = inbox;
-		var enc = this.rotorSchlusselmaschineCodierung(txt);
-		var enigmaConf = this.code[0] + "//" + this.code[1] + "//" + this.code[2] + "//" 
-						+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
-						+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
-		//console.log(enigmaConf);
-		var enigmaEnc = enigmaConf + enc;
+		var enigmaEnc;
+		if(!txt.includes(";base64,")) {
+			var enc = this.rotorSchlusselmaschineCodierung(txt);
+			var enigmaConf = this.code[0] + "//" + this.code[1] + "//" + this.code[2] + "//" 
+							+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
+							+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
+			//console.log(enigmaConf);
+			enigmaEnc = enigmaConf + enc;
+		}
+		else {
+			enigmaEnc = txt;
+		}
 		return (inbox ? this.defaultkey : this.salt.toString()) + "=" + this.encryptAES(enigmaEnc);
 	}
 	
@@ -170,6 +176,9 @@ class EncryptionService {
 		var msg = txt.value ? txt.value.replace((inbox ? key : salt)+ "=", "") : txt.replace((inbox ? key : salt)+ "=", "");
 		//console.log(msg)
 		var desAes = this.decryptAES(msg, key);
+		if(desAes.includes(";base64,")) {
+			return desAes;
+		}
 		
 		console.log(desAes.substring(0,100));
 		var enigmaConf = desAes.split("//");

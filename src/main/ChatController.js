@@ -663,7 +663,7 @@ async function showAndStoreMessages() {
 function showMessage(message) {
     var msgToBeShown;
     if (message.messagetext.includes("data:image")) {
-        msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "'" + "/>";
+        msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "' />";
     } else if (message.messagetext.includes("data:video")) {
         msgToBeShown = "<video width='200' height='200' controls> <source src= '"
             + message.messagetext + "'> Your browser does not support HTML5 video. </video>";
