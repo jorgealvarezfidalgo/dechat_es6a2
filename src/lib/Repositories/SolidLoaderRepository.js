@@ -155,7 +155,7 @@ class SolidLoaderRepository {
                 });
 
                 result.bindingsStream.on("end", function () {
-					console.log(results);
+					//console.log(results);
                     deferred.resolve(results);
                 });
             });

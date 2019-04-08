@@ -200,15 +200,18 @@ describe("Services", function () {
 
     it("Message Service tests", async function () {
 		const chat = await loader.loadChatFromUrl("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl", "https://othbak.solid.community/profile/card#me", "https://othbak.solid.community/public/unittest_201903201125.ttl");
-
+		console.log("A");
 		let message = await messageService.getNewMessage(chat.chatUrl, chat.userWebId);
 		//no messages found
+		console.log("A");
 		assert.equal(message, null, "there should not be any new messages: ->" + message);
-
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Only love is with us now", "https://decker.solid.community/profile/card#me", true, null);
 		//No sending
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-09-43", "Something warm and pure", "https://decker.solid.community/profile/card#me", false, null);
 		//Group sending
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Find the beast within ourselves", "Group/Test" , true, ["https://decker.solid.community/profile/card#me", "https://thenothingnessofoursouls.solid.community/profile/card#me"]);
     });
 

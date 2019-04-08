@@ -80,11 +80,11 @@ class JoinChatService extends Service {
 		this.baseService.setEncrypter(this.encrypter);
         var chat = await this.baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
-        console.log(chatUrl);
+        //console.log(chatUrl);
         const recipient = chat.interlocutor;
-        console.log(recipient);
+        //console.log(recipient);
         const ids = chat.agent;
-        console.log("IDS:" + ids);
+        //console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
         this.uploader.deleteFileForUser(fileurl);
         return {

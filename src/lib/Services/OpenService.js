@@ -18,7 +18,7 @@ class OpenService extends Service {
 	this.baseService.writePermission(url);
     const deferred = this.Q.defer();
     const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
-	console.log(rdfjsSource);
+	//console.log(rdfjsSource);
     if (rdfjsSource) {
       const engine = this.newEngine();
       const chatUrls = [];

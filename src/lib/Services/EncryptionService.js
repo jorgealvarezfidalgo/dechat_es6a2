@@ -49,34 +49,43 @@ class EncryptionService {
 		this.rotor2 = config.rotor2;
 		this.rotor3 = config.rotor3;
 		this.reflector = config.reflector;
-		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|'¿0-9 ]+/);
-		//console.log(result);
+		var tx = txt.replace(/([A-Z])/g, "_|$1");
+		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
 		var i;
-		var tx = txt.replace(/([A-Z])/g, "_|$1");
+		var parsedtx = "";
+		
 		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.encode(result[i]));
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
 		}
-		return tx;
+		return parsedtx;
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|'¿0-9 ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
-		console.log(this.code + "-" + this.greek + "-" + this.rotor1 + "-" +  this.rotor2 + "-" +  this.rotor3 + "-" +  this.reflector);
 		var i;
 		var tx = txt;
-		console.log(tx.substring(0,50));
+		var parsedtx = "";
+		
+		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
-			tx = tx.replace(result[i], m4.decode(result[i]).toLowerCase());
-		}	
-		console.log(tx.substring(0,50));
-		return tx.replace(/\_\|([a-z])/g,
+			console.log(tx);
+			console.log(result[i]);
+			tx = tx.replace(result[i], m4.decode(result[i]));
+			console.log(tx);
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length).toLowerCase();
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+		}
+		console.log(parsedtx);
+		return parsedtx.replace(/\_\|([a-z])/g,
 			function(m, m1, p) {
 			  return m1.replace("_|", "").toUpperCase();
 			});
@@ -136,6 +145,7 @@ class EncryptionService {
 		var enigmaConf = this.code[0] + "//" + this.code[1] + "//" + this.code[2] + "//" 
 						+ JSON.stringify(this.plugboard) + "//" + this.greek + "//" 
 						+ this.rotor1 + "//" + this.rotor2 + "//" + this.rotor3 + "//" + this.reflector + "//";
+		//console.log(enigmaConf);
 		var enigmaEnc = enigmaConf + enc;
 		return (inbox ? this.defaultkey : this.salt.toString()) + "=" + this.encryptAES(enigmaEnc);
 	}
