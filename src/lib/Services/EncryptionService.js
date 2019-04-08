@@ -77,14 +77,14 @@ class EncryptionService {
 		
 		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
-			console.log(tx);
-			console.log(result[i]);
+			//console.log(tx);
+			//console.log(result[i]);
 			tx = tx.replace(result[i], m4.decode(result[i]));
 			console.log(tx);
 			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length).toLowerCase();
 			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
 		}
-		console.log(parsedtx);
+		//console.log(parsedtx);
 		return parsedtx.replace(/\_\|([a-z])/g,
 			function(m, m1, p) {
 			  return m1.replace("_|", "").toUpperCase();
@@ -184,7 +184,9 @@ class EncryptionService {
 			this.rotor2 = enigmaConf[6];
 			this.rotor3 = enigmaConf[7];
 			this.reflector = enigmaConf[8];
-			return this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join("//"));
+			var res = this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join("//"));
+			console.log(res);
+			return res;
 		} else {
 			return txt.value ? txt.value : txt;
 		}
