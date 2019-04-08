@@ -4,15 +4,7 @@ const Enigma = require("node-enigma");
 class EncryptionService {
 	
 	constructor() {
-		var config = EncryptionService.randomizeConfiguration();
-		this.code = config.code;
-		this.plugboard = config.plugboard;
-		this.greek = config.greek;
-		this.rotor1 = config.rotor1;
-		this.rotor2 = config.rotor2;
-		this.rotor3 = config.rotor3;
-		this.reflector = config.reflector;
-		this.salt = CryptoJS.lib.WordArray.random(256);
+		this.salt = CryptoJS.lib.WordArray.random(128);
 		this.defaultkey = this.hash("ElquienhasacadodevosotrosestegritodeguerraDiosloquiere" + this.salt);
 	}
 	
@@ -49,6 +41,14 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineCodierung(txt) {
+		var config = EncryptionService.randomizeConfiguration();
+		this.code = config.code;
+		this.plugboard = config.plugboard;
+		this.greek = config.greek;
+		this.rotor1 = config.rotor1;
+		this.rotor2 = config.rotor2;
+		this.rotor3 = config.rotor3;
+		this.reflector = config.reflector;
 		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|'¿0-9 ]+/);
 		//console.log(result);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
@@ -68,13 +68,14 @@ class EncryptionService {
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
+		console.log(this.code + "-" + this.greek + "-" + this.rotor1 + "-" +  this.rotor2 + "-" +  this.rotor3 + "-" +  this.reflector);
 		var i;
 		var tx = txt;
-		//console.log(tx);
+		console.log(tx.substring(0,50));
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.decode(result[i]).toLowerCase());
 		}	
-		//console.log(tx);
+		console.log(tx.substring(0,50));
 		return tx.replace(/\_\|([a-z])/g,
 			function(m, m1, p) {
 			  return m1.replace("_|", "").toUpperCase();
@@ -160,7 +161,7 @@ class EncryptionService {
 		//console.log(msg)
 		var desAes = this.decryptAES(msg, key);
 		
-		//console.log(desAes);
+		console.log(desAes.substring(0,100));
 		var enigmaConf = desAes.split("//");
 		//console.log(enigmaConf);
 		if(enigmaConf.length > 8) {

@@ -93,15 +93,15 @@ class MessageService extends Service {
         var enctx = this.encrypter.encrypt(message, false);
         var messageT;
 
-        if (message.includes("data:image")
-            || message.includes("data:video")
-            || message.includes("data:text")
-        ) {
-            messageT = message;
-        } else {
-            messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
-        }
-        const messageTx = messageT;
+        // if (message.includes("data:image")
+            // || message.includes("data:video")
+            // || message.includes("data:text")
+        // ) {
+            // messageT = message;
+        // } else {
+            // messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
+        // }
+        const messageTx = message;
         /*if( messageTx.includes("data:video")){
             console.log("msg stored in msg service is" + messageTx);
         }*/
