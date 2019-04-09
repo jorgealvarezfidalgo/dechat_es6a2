@@ -1,9 +1,22 @@
 const Service = require("./Service");
+const fileClient = require("solid-file-client");
 
 class BaseService extends Service {
     constructor(fetch) {
         super(fetch);
     }
+	
+	async checkPrivate(webid) {
+		var url = webid.replace("profile/card#me", "private");
+		var priv = fileClient.readFolder(url).then(folder => {
+			console.log(`Read ${folder.name}, it has ${folder.files.length} files.`);
+		}, err => console.log(err) );
+		if(priv === undefined) {
+			fileClient.createFolder(url).then(success => {
+				console.log(`Created folder ${url}.`);
+			}, err => console.log(err) );
+		}
+	}
 
     /**
      * This method returns a formatted name for a WebId.

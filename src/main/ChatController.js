@@ -77,6 +77,8 @@ function afterChatOption() {
 }
 
 async function startChat() {
+	
+	await baseService.checkPrivate(userWebId);
 
     var selfPhoto = await baseService.getPhoto(userWebId);
 
