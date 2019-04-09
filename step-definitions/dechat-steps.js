@@ -99,7 +99,19 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^We enter the our encryption key "([^"]*)"$/, function (arg1, arg2) {
+    this.Then(/^We enter the our encryption key "([^"]*)"$/, function (arg1) {
+      //data encryption information
+      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+          .then(() => {
+            driver.wait(until.elementsLocated(by.name("username")), 10000);
+            driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
+            driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
+            driver.manage().timeouts().implicitlyWait(10);
+            return driver.findElement(by.xpath("//*[@id='enterpwd']")).click()
+                .then(() => {
+                    return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000);
+                })
+          });
     });
 
 
@@ -155,7 +167,19 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^We enter an encryption key "([^"]*)"$/, function (arg1, arg2) {
+    this.Then(/^We enter an encryption key "([^"]*)"$/, function (arg1) {
+      //data encryption information
+      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+          .then(() => {
+            driver.wait(until.elementsLocated(by.name("username")), 10000);
+            driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
+            driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
+            driver.manage().timeouts().implicitlyWait(10);
+            return driver.findElement(by.xpath("//*[@id='enterpwd']")).click()
+                .then(() => {
+                    return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000);
+                })
+          });
     });
 
     this.Then(/^the messages will appear and we an existing conversation$/, () => {
@@ -220,7 +244,19 @@ module.exports = function () {
             })
     });
 
-    this.Then(/^We enter our own encryption key "([^"]*)"$/, function (arg1, arg2) {
+    this.Then(/^We enter our own encryption key "([^"]*)"$/, function (arg1) {
+      //data encryption information
+      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+          .then(() => {
+            driver.wait(until.elementsLocated(by.name("username")), 10000);
+            driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
+            driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
+            driver.manage().timeouts().implicitlyWait(10);
+            return driver.findElement(by.xpath("//*[@id='enterpwd']")).click()
+                .then(() => {
+                    return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000);
+                })
+          });
     });
 
 
