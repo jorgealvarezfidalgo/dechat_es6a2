@@ -8,11 +8,12 @@ class BaseService extends Service {
 	
 	async checkPrivate(webid) {
 		var url = webid.replace("profile/card#me", "private");
-		var priv = fileClient.readFolder(url).then(folder => {
+		var priv = await fileClient.readFolder(url).then(folder => {
 			console.log(`Read ${folder.name}, it has ${folder.files.length} files.`);
 		}, err => console.log(err) );
-		if(priv === undefined) {
-			fileClient.createFolder(url).then(success => {
+		console.log(priv);
+		if(priv === null) {
+			await fileClient.createFolder(url).then(success => {
 				console.log(`Created folder ${url}.`);
 			}, err => console.log(err) );
 		}
