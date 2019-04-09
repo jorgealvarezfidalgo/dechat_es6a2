@@ -101,9 +101,8 @@ module.exports = function () {
 
     this.Then(/^We enter the our encryption key "([^"]*)"$/, function (arg1) {
       //data encryption information
-      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+      return driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000)
           .then(() => {
-            driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 10000);
             driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
             driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
             driver.manage().timeouts().implicitlyWait(10);
@@ -169,9 +168,8 @@ module.exports = function () {
 
     this.Then(/^We enter an encryption key "([^"]*)"$/, function (arg1) {
       //data encryption information
-      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+      return driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000)
           .then(() => {
-            driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 10000);
             driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
             driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
             driver.manage().timeouts().implicitlyWait(10);
@@ -246,9 +244,8 @@ module.exports = function () {
 
     this.Then(/^We enter our own encryption key "([^"]*)"$/, function (arg1) {
       //data encryption information
-      return driver.wait(until.elementsLocated(by.xpath("/html/body/div[1]/div[2]/p[1]")), 20000)
+      return driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000)
           .then(() => {
-            driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 10000);
             driver.findElement(by.xpath("//*[@id='pwd1']")).sendKeys(arg1);
             driver.findElement(by.xpath("//*[@id='pwd2']")).sendKeys(arg1);
             driver.manage().timeouts().implicitlyWait(10);
