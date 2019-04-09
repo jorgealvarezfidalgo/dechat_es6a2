@@ -99,6 +99,10 @@ module.exports = function () {
             })
     });
 
+    this.Then(/^We enter the our encryption key "([^"]*)"$/, function (arg1, arg2) {
+    });
+
+
     this.Then(/^We click and we reach the home page with the messages shown$/, () => {
         //username correct
         return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 10000)
@@ -149,6 +153,9 @@ module.exports = function () {
                             })
                     })
             })
+    });
+
+    this.Then(/^We enter an encryption key "([^"]*)"$/, function (arg1, arg2) {
     });
 
     this.Then(/^the messages will appear and we an existing conversation$/, () => {
@@ -212,6 +219,10 @@ module.exports = function () {
                     })
             })
     });
+
+    this.Then(/^We enter our own encryption key "([^"]*)"$/, function (arg1, arg2) {
+    });
+
 
     this.Then(/^the messages will appear and we select a friend in the friends' section$/, () => {
         //username correct
