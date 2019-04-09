@@ -714,6 +714,7 @@ $("#show-contact-information").click(async () => {
         $(".information").append("<div id='listGroups'><h1>Participants:</h1></div>");
 		console.log(currentChat);
         for (var i = 0; i < currentChat.members.length; i++) {
+			console.log(currentChat.members[i]);
             var memberPhoto = await baseService.getPhoto(currentChat.members[i].id ? currentChat.members[i].id : currentChat.members[i]);
             if (!memberPhoto) {
                 memberPhoto = baseService.getDefaultFriendPhoto();
@@ -1044,7 +1045,12 @@ $("#addcontact").click(async () => {
 
 async function lookForUsername(name, provider) {
 	var contact = "https://" + name + "." + provider + "/profile/card#me";
-	var permission = await baseService.writePermission(contact);
+	var permission;
+	try {
+		permission = await baseService.writePermission(contact);
+	} catch (err) {
+		permission = false;
+	}
 	console.log(permission);
         if (permission) {
 			
