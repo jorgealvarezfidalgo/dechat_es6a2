@@ -712,6 +712,7 @@ $("#show-contact-information").click(async () => {
     $(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
     if (interlocWebId.includes("Group")) {
         $(".information").append("<div id='listGroups'><h1>Participants:</h1></div>");
+		console.log(currentChat);
         for (var i = 0; i < currentChat.members.length; i++) {
             var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
             if (!memberPhoto) {
@@ -1033,7 +1034,16 @@ $("#creategroup").click(async () => {
 $("#addcontact").click(async () => {
 
     if ($(".input-contact").val() != "") {
-        var contact = "https://" + $(".input-contact").val().toLowerCase() + ".solid.community/profile/card#me";
+        await lookForUsername($(".input-contact").val().toLowerCase(), "solid.community");
+		await lookForUsername($(".input-contact").val().toLowerCase(), "inrupt.net");
+    } else {
+        alert("No username specified.");
+    }
+
+});
+
+async function lookForUsername(name, provider) {
+	var contact = "https://" + name + "." + provider + "/profile/card#me";
         if (baseService.writePermission(contact)) {
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
@@ -1048,8 +1058,4 @@ $("#addcontact").click(async () => {
         } else {
             alert("No user found with web id " + contact);
         }
-    } else {
-        alert("No username specified.");
-    }
-
-});
+}
