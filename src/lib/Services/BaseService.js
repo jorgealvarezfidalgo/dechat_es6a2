@@ -12,7 +12,7 @@ class BaseService extends Service {
 			console.log(`Read ${folder.name}, it has ${folder.files.length} files.`);
 		}, err => console.log(err) );
 		console.log(priv);
-		if(priv === null) {
+		if(priv === undefined) {
 			await fileClient.createFolder(url).then(success => {
 				console.log(`Created folder ${url}.`);
 			}, err => console.log(err) );
