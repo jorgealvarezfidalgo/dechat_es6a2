@@ -77,8 +77,6 @@ function afterChatOption() {
 }
 
 async function startChat() {
-	
-	await baseService.checkPrivate(userWebId);
 
     var selfPhoto = await baseService.getPhoto(userWebId);
 
@@ -192,6 +190,7 @@ $("#enterpwd").click(async() => {
 		openService.setEncrypter(encrypter);
 		createService.setEncrypter(encrypter);
 		openChats = [];
+		await baseService.checkPrivate(userWebId);
 		try {
 			const chats = await openService.getChatsToOpen(userWebId);
 			if(chats) {
