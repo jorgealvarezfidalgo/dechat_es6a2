@@ -714,11 +714,11 @@ $("#show-contact-information").click(async () => {
         $(".information").append("<div id='listGroups'><h1>Participants:</h1></div>");
 		console.log(currentChat);
         for (var i = 0; i < currentChat.members.length; i++) {
-            var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
+            var memberPhoto = await baseService.getPhoto(currentChat.members[i].id ? currentChat.members[i].id : currentChat.members[i]);
             if (!memberPhoto) {
                 memberPhoto = baseService.getDefaultFriendPhoto();
             }
-            var memberName = await baseService.getFormattedName(currentChat.members[i].id);
+            var memberName = await baseService.getFormattedName(currentChat.members[i].id ? currentChat.members[i].id : currentChat.members[i]);
             var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
             $("#listGroups").append(html);
 
@@ -1044,7 +1044,10 @@ $("#addcontact").click(async () => {
 
 async function lookForUsername(name, provider) {
 	var contact = "https://" + name + "." + provider + "/profile/card#me";
-        if (baseService.writePermission(contact)) {
+	var permission = await baseService.writePermission(contact);
+	console.log(permission);
+        if (permission) {
+			
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
             if (!friendPhoto) {
