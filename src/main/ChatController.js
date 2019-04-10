@@ -1047,7 +1047,7 @@ async function lookForUsername(name, provider) {
 	var contact = "https://" + name + "." + provider + "/profile/card#me";
 	var permission;
 	try {
-		permission = await baseService.writePermission(contact);
+		permission = await baseService.readPermission(contact);
 	} catch (err) {
 		permission = false;
 	}
