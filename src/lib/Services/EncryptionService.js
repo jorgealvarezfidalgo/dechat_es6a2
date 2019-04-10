@@ -60,8 +60,8 @@ class EncryptionService {
 		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.encode(result[i]));
-			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
-			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
 		}
 		return parsedtx;
 	}
@@ -81,8 +81,8 @@ class EncryptionService {
 			//console.log(result[i]);
 			tx = tx.replace(result[i], m4.decode(result[i]));
 			//console.log(tx);
-			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length).toLowerCase();
-			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length).toLowerCase();
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
 		}
 		//console.log(parsedtx);
 		return parsedtx.replace(/\_\|([a-z])/g,

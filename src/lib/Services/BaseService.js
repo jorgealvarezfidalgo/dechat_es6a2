@@ -23,10 +23,8 @@ class BaseService extends Service {
 		var urlp = url.replace("/card#me", "");
         var perm = false;
 		await fileClient.readFile(url).then(body => {
-			console.log("A");
 			perm = true;
 		}, err => console.log(err) );
-		console.log("B");
 		return perm;
     }
 

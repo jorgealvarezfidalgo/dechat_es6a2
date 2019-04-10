@@ -22,6 +22,7 @@ const encrypter = new Encrypter();
 const loader = new Loader(auth.fetch);
 
 describe("Services", function () {
+	this.timeout(15000);
 	
 	it("Initialization", async function () { 
 		encrypter.setPassword("jkkjdskj834843bub8frb");
