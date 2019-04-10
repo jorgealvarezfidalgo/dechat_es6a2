@@ -146,13 +146,13 @@ async function loadChats() {
         const newmsg = 0;
         if (newmsg == 0) {
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter
-                + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName
+                + "'><img src='" + chat.photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName
                 + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>"
                 + lastMsg
                 + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
             var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo
-                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
                 + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
@@ -303,7 +303,7 @@ async function checkForNotifications() {
                 var index = contactsWithChat.indexOf(authorUrl);
                 $("#chatwindow" + index).remove();
                 var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg"
                     + index + "'>" + parsedmessage
                     + "</p></div></div><div class='contact-time'><p>"
                     + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1)
@@ -398,7 +398,7 @@ async function checkKey(e) {
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
                 + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
                 + parsedmessage + "</p></div></div><div class='contact-time'><p>"
                 + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
@@ -456,7 +456,7 @@ function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 toScrollDown();
 
                 if (!showingContacts) {
-                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
                         + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
@@ -520,7 +520,7 @@ function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, cu
                 toScrollDown();
 
                 if (!showingContacts) {
-                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
                         + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<video width='20' height='20'> <source src= '" + event.target.result + "'> Your browser does not support HTML5 video. </video>"
                         + "</p></div></div><div class='contact-time'><p>"
                         + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
@@ -584,7 +584,7 @@ function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, cur
                 toScrollDown();
 
                 if (!showingContacts) {
-                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
                         + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
                         + $('#join-text').val().split('\\').pop()
                         + "</p></div></div><div class='contact-time'><p>"
@@ -642,7 +642,7 @@ async function showAndStoreMessages() {
             }
             const parsedmessage = msgToShow;
 
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
                 + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage
                 + "</p></div></div><div class='contact-time'><p>"
                 + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
@@ -767,7 +767,7 @@ async function displayContacts(func) {
             }
 
             var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='"
-                + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
                 + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0]
                 + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
@@ -811,7 +811,7 @@ async function showChats() {
         if (newmsg === 0) {
             var html;
             var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo
-                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
                 + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
                 + chatCounter + "'>"
                 + lastMsg
@@ -819,7 +819,7 @@ async function showChats() {
         } else {
             var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow"
                 + chatCounter + "'><img src='" + chat.photo
-                + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
                 + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
                 + lastMsg
                 + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
@@ -884,7 +884,7 @@ async function showInvitations() {
                 friendPhoto = baseService.getDefaultFriendPhoto();
         }
 
-        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
         document.getElementById("join" + chat.url).addEventListener("click", joinChat, false);
     });
@@ -1060,7 +1060,7 @@ async function lookForUsername(name, provider) {
                 friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
-            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("openchatwindow" + contact).addEventListener("click", contactsToOpen ? openContact : markContactForGroup, false);
