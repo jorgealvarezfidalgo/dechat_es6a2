@@ -18,6 +18,15 @@ class BaseService extends Service {
 			}, err => console.log(err) );
 		}
 	}
+	
+	async readPermission(url) {
+		var urlp = url.replace("/card#me", "");
+        var perm = false;
+		await fileClient.readFile(url).then(body => {
+			perm = true;
+		}, err => console.log(err) );
+		return perm;
+    }
 
     /**
      * This method returns a formatted name for a WebId.

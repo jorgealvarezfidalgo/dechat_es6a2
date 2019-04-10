@@ -50,7 +50,7 @@ class EncryptionService {
 		this.rotor3 = config.rotor3;
 		this.reflector = config.reflector;
 		var tx = txt.replace(/([A-Z])/g, "_|$1");
-		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
+		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -60,14 +60,14 @@ class EncryptionService {
 		//console.log(tx);
 		for(i = 0; i < result.length; i++) {
 			tx = tx.replace(result[i], m4.encode(result[i]));
-			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
-			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
 		}
 		return parsedtx;
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -81,8 +81,8 @@ class EncryptionService {
 			//console.log(result[i]);
 			tx = tx.replace(result[i], m4.decode(result[i]));
 			//console.log(tx);
-			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length).toLowerCase();
-			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length - 1) : tx.length);
+			parsedtx += tx.substring(0, i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length).toLowerCase();
+			tx = tx.substring(i+1<result.length ? tx.indexOf(result[i+1], result[i].length) : tx.length);
 		}
 		//console.log(parsedtx);
 		return parsedtx.replace(/\_\|([a-z])/g,

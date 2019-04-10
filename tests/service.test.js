@@ -22,6 +22,7 @@ const encrypter = new Encrypter();
 const loader = new Loader(auth.fetch);
 
 describe("Services", function () {
+	this.timeout(15000);
 	
 	it("Initialization", async function () { 
 		encrypter.setPassword("jkkjdskj834843bub8frb");
@@ -61,8 +62,12 @@ describe("Services", function () {
 		assert.equal(invite.sender, null, "the invitation url is not correct: ->" + invite.sender);
 
 		//Delete a file
-		baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
-		baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
+		await baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
+		await baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
+		
+		assert.equal(await baseService.readPermission("https://takumi.solid.community/profile/card#me"), true, "");
+		assert.equal(await baseService.readPermission("https://thoth.inrupt.net/profile/card#me"), true, "");
+		assert.equal(await baseService.readPermission("https://thoth.inrupt.net/private"), false, "" );
 	});
 
 	it("more base Service tests", async function () {
