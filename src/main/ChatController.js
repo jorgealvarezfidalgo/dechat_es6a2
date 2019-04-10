@@ -287,7 +287,8 @@ async function checkForNotifications() {
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
             } else {
                 nameThroughUrl = message.author.split("/")[1];
-                authorUrl = message.author;
+                authorUrl = message.messageUrl.split("inbox")[0] + "profile/" + message.author.split("/")[0] + "/" + message.author.split("/")[1];
+				console.log(authorUrl);
             }
             //console.log("nombre de authorUrl is:" + nameThroughUrl);
             //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());

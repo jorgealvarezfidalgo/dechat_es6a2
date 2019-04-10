@@ -53,6 +53,7 @@ a.disable {
 /* ------ LEFT SIDE ------ */
 .left {
 	width: 400px;
+	background-color: white;
 }
 .profile {
 	width: 100%;
