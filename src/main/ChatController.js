@@ -697,6 +697,8 @@ function showMessage(message) {
     toScrollDown();
 }
 
+//EMOJIS
+
 $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
     $(".chat-head label").hide();
@@ -1058,7 +1060,7 @@ async function lookForUsername(name, provider) {
 	}
 	console.log(permission);
         if (permission) {
-			
+
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
             if (!friendPhoto) {
