@@ -221,26 +221,21 @@ p[id^=lastMsg] img {
 	background-position-x: center;
 }
 .emojis-menu {
-	width: 60%;
+	width: 100%;
 	position: relative;
 	background: #f7f7f7;
 	display: none;
-	flex-direction: row;
+	flex-direction: row-reverse;
+	flex-wrap: wrap;
 	overflow: auto;
 }
-.emojis-menu div {
-	background: #ffffff;
-	padding: 4px;
-}
+
 .emojis-menu img {
 	width: 20px;
 	height: 30px;
-	margin: 3 px;
-}
-.emojis-menu h1 {
-	color: #009688;
-	font-size: 14px;
-	margin-bottom: 5px;
+	padding: 3 px;
+	flex-grow: 1;
+  	flex-basis: 150px;
 }
 
 .information {
