@@ -228,16 +228,16 @@ p[id^=lastMsg] img {
 	flex-direction: row;
 	overflow: auto;
 }
-.information div {
+.emojis-menu div {
 	background: #ffffff;
 	padding: 4px;
 }
-.information img {
+.emojis-menu img {
 	width: 20px;
 	height: 30px;
 	margin: 3 px;
 }
-.information h1 {
+.emojis-menu h1 {
 	color: #009688;
 	font-size: 14px;
 	margin-bottom: 5px;

@@ -698,6 +698,22 @@ function showMessage(message) {
 }
 
 //EMOJIS
+//________________EMOJIS________________-//
+$("#emoji-icon").click(async () => {
+    $(".emojis-menu").css("display", "flex");
+    $("#close-emoji-menu").show();
+
+    //$(".emojis-menu").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>"
+    //+ currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
+
+    $(".emojis-menu").append("<h1>OKEY:</h1>");
+});
+
+$("#close-contact-information").click(async () => {
+    $("#close-emoji-menu").hide();
+    $(".emojis-menu >").remove();
+    $(".emojis-menu").hide();
+});
 
 $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
