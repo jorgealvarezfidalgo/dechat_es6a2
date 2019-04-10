@@ -758,6 +758,8 @@ async function displayContacts(func) {
     }
 
     if (!showingContacts) {
+		$("#show-contacts").addClass("hidden");
+		$("#create-group").addClass("hidden");
 
         for await (const friend of data[userWebId].friends) {
             let name = await baseService.getFormattedName(friend.value);
@@ -776,6 +778,8 @@ async function displayContacts(func) {
 
         }
         showingContacts = true;
+		$("#show-contacts").removeClass("hidden");
+		$("#create-group").removeClass("hidden");
     } else {
         await showChats();
         showingContacts = false;

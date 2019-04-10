@@ -50,7 +50,7 @@ class EncryptionService {
 		this.rotor3 = config.rotor3;
 		this.reflector = config.reflector;
 		var tx = txt.replace(/([A-Z])/g, "_|$1");
-		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
+		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòùñ ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -67,7 +67,8 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòùñ ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòùñ ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -180,7 +181,7 @@ class EncryptionService {
 			return desAes;
 		}
 		
-		console.log(desAes.substring(0,100));
+		//console.log(desAes.substring(0,100));
 		var enigmaConf = desAes.split("//");
 		//console.log(enigmaConf);
 		if(enigmaConf.length > 8) {
@@ -194,7 +195,7 @@ class EncryptionService {
 			this.rotor3 = enigmaConf[7];
 			this.reflector = enigmaConf[8];
 			var res = this.rotorSchlusselmaschineDekodierung(enigmaConf.slice(9, enigmaConf.length).join("//"));
-			console.log(res);
+			//console.log(res);
 			return res;
 		} else {
 			return txt.value ? txt.value : txt;
