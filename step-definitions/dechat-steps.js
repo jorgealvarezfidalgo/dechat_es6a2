@@ -100,23 +100,23 @@ module.exports = function () {
     });
 
     this.Then(/^We enter the our encryption key "([^"]*)"$/, function (arg1) {
-      driver.manage().timeouts().implicitlyWait(20);
-      driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
-      var element = driver.findElement(by.name('pwd1'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).click();
-      element = driver.findElement(by.id('pwd2'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).clear();
-      //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
-      element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
-      return driver.executeScript("arguments[0].click();", element)
-    //  return driver.findElement(by.id("enterpwd")).click()
-        .then(() => {
-            return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
-      })
+        driver.manage().timeouts().implicitlyWait(20);
+        driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
+        var element = driver.findElement(by.name('pwd1'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).click();
+        element = driver.findElement(by.id('pwd2'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).clear();
+        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
+        element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
+        return driver.executeScript("arguments[0].click();", element)
+        //  return driver.findElement(by.id("enterpwd")).click()
+            .then(() => {
+                return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
+            })
     });
 
 
@@ -173,23 +173,23 @@ module.exports = function () {
     });
 
     this.Then(/^We enter an encryption key "([^"]*)"$/, function (arg1) {
-      driver.manage().timeouts().implicitlyWait(20);
-      driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
-      var element = driver.findElement(by.name('pwd1'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).click();
-      element = driver.findElement(by.id('pwd2'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).clear();
-      //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
-      element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
-      return driver.executeScript("arguments[0].click();", element)
-    //  return driver.findElement(by.id("enterpwd")).click()
-        .then(() => {
-            return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
-      })
+        driver.manage().timeouts().implicitlyWait(20);
+        driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
+        var element = driver.findElement(by.name('pwd1'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).click();
+        element = driver.findElement(by.id('pwd2'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).clear();
+        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
+        element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
+        return driver.executeScript("arguments[0].click();", element)
+        //  return driver.findElement(by.id("enterpwd")).click()
+            .then(() => {
+                return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
+            })
     });
 
     this.Then(/^the messages will appear and we an existing conversation$/, () => {
@@ -255,23 +255,23 @@ module.exports = function () {
     });
 
     this.Then(/^We enter our own encryption key "([^"]*)"$/, function (arg1) {
-      driver.manage().timeouts().implicitlyWait(20);
-      driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
-      var element = driver.findElement(by.name('pwd1'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).click();
-      element = driver.findElement(by.id('pwd2'));
-      driver.executeScript("arguments[0].click();", element);
-      driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-      //driver.findElement(by.css("input[type='password']")).clear();
-      //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
-      element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
-      return driver.executeScript("arguments[0].click();", element)
-    //  return driver.findElement(by.id("enterpwd")).click()
-        .then(() => {
-            return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
-      })
+        driver.manage().timeouts().implicitlyWait(20);
+        driver.wait(until.elementsLocated(by.xpath("//*[@id='pwd1']")), 40000);
+        var element = driver.findElement(by.name('pwd1'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).click();
+        element = driver.findElement(by.id('pwd2'));
+        driver.executeScript("arguments[0].click();", element);
+        driver.executeScript("arguments[0].value='" + arg1 + "';", element);
+        //driver.findElement(by.css("input[type='password']")).clear();
+        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
+        element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
+        return driver.executeScript("arguments[0].click();", element)
+        //  return driver.findElement(by.id("enterpwd")).click()
+            .then(() => {
+                return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
+            })
     });
 
 
