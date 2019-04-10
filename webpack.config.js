@@ -6,16 +6,13 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "src/main/dist")
   },
-  node: {
-    "development",
-  fs: "empty"
-  },
+  mode: "development",
   externals: {
+    'fs': 'empty',
     "node-fetch": "fetch",
     "text-encoding": "TextEncoder",
     "whatwg-url": "window",
     "isomorphic-fetch": "fetch",
     "@trust/webcrypto": "crypto",
-    "fs": "empty"
   }
 };

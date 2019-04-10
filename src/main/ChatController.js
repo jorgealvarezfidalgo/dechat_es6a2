@@ -704,34 +704,6 @@ $("#emoji-icon").click(async () => {
     $("#close-emoji-menu").show();
     //$(".emojis-menu").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>"
     //+ currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
-/*
-    var walk    = require('walk');
-    var files   = [];
-
-    // Walker options
-    var walker  = walk.walk('main/resources/static/img', { followLinks: false });
-
-    walker.on('file', function(root, stat, next) {
-        // Add this file to the list of files
-        files.push(root + '/' + stat.name);
-        next();
-    });
-
-    walker.on('end', function() {
-        console.log(files);
-    });*/
-    const fs = require('fs');
-    var path = "main/resources/static/img/";
-
-    fs.readdir(path, function(err, items) {
-        console.log(items);
-
-        for (var i=0; i<items.length; i++) {
-            console.log(items[i]);
-        }
-    });
-
-    console.log(window.location.pathname);
     //var dir = loc.substring(0, loc.lastIndexOf('/'));
 
     $(".emojis-menu").append("<h1>OKEY:</h1>");
