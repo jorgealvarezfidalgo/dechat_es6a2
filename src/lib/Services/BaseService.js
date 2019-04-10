@@ -73,6 +73,7 @@ class BaseService extends Service {
      * @param url: the url of the resource.
      * @param predicate: the predicate for which to look.
      * @returns {Promise}: a promise that resolves with the object or null if none is found.
+	 * Credits to https://github.com/pheyvaer/solid-chess
      */
     async getObjectFromPredicateForResource(url, predicate) {
         const deferred = this.Q.defer();
@@ -112,6 +113,9 @@ class BaseService extends Service {
         return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
     }
 
+	/**
+	* Credits to https://github.com/pheyvaer/solid-chess
+	**/
     async writePermission(url) {
         const response = await this.uploader.executeSPARQLUpdateForUser(url, "INSERT DATA {}");
         return response.status === 200;
@@ -121,6 +125,9 @@ class BaseService extends Service {
         return "main/resources/static/img/friend_default.jpg";
     }
 
+	/**
+	* Credits to https://github.com/pheyvaer/solid-chess
+	**/
     async generateUniqueUrlForResource(baseurl) {
         let url = baseurl + "#" + this.uniqid();
 
@@ -139,6 +146,7 @@ class BaseService extends Service {
      * @param inboxUrl: the url of the inbox.
      * @returns {Promise}: a promise that resolves with an array containing the urls of all new notifications since the last time
      * this method was called.
+	* Credits to https://github.com/pheyvaer/solid-chess
      */
     async checkUserInboxForUpdates(inboxUrl) {
         const deferred = this.Q.defer();
@@ -172,6 +180,9 @@ class BaseService extends Service {
         return deferred.promise;
     }
 
+	/**
+	* Inspired by https://github.com/pheyvaer/solid-chess
+	**/
     async getInvitation(fileurl) {
         const deferred = this.Q.defer();
         const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);

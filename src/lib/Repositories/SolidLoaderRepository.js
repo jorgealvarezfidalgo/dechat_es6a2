@@ -164,6 +164,7 @@ class SolidLoaderRepository {
 
     /**
      * This method is in charge of returning the RDFjs source from the url
+	 * Credits to https://github.com/pheyvaer/solid-chess
      */
     _getRDFjsSourceFromUrl(url) {
         const deferred = Q.defer();

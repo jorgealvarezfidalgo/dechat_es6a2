@@ -1,6 +1,8 @@
 const N3 = require("n3");
 const Q = require("q");
 
+// Class created by https://github.com/pheyvaer/solid-chess
+
 /**
  * This method returns an RDFJSSource of an url
  * @param {string} url: url of the source
