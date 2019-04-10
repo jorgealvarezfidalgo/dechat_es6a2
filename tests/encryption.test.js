@@ -41,6 +41,12 @@ describe("Encryption", function() {
 	console.log("Desencrypted is " + desenc);
     assert.equal(desenc, "https://rokivulovic/profile/card#me", "The desencryption is not correct:" + desenc);
 	
+	var enc = encrypter.rotorSchlusselmaschineCodierung("Un sinfín de catástrofes acontecéran a los injústós");
+	console.log("Encrypted is " + enc);
+	var desenc = encrypter.rotorSchlusselmaschineDekodierung(enc);
+	console.log("Desencrypted is " + desenc);
+    assert.equal(desenc, "Un sinfín de catástrofes acontecéran a los injústós", "The desencryption is not correct:" + desenc);
+	
   });
   
   it("TRUBIA Encryption Algorithm: private", async function() {

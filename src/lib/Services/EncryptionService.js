@@ -50,7 +50,7 @@ class EncryptionService {
 		this.rotor3 = config.rotor3;
 		this.reflector = config.reflector;
 		var tx = txt.replace(/([A-Z])/g, "_|$1");
-		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
+		var result = tx.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
@@ -67,7 +67,7 @@ class EncryptionService {
 	}
 	
 	rotorSchlusselmaschineDekodierung(txt) {
-		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9 ]+/);
+		var result = txt.split(/[\/\#,:;\?\+\(\)\.\-\_!\|\^'¿0-9áéíóúàèìòù ]+/);
 		const m4 = new Enigma(this.greek, this.rotor1, this.rotor2, this.rotor3, this.reflector);
 		m4.setCode(this.code);
 		m4.setPlugboard(this.plugboard);
