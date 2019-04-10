@@ -22,9 +22,6 @@
     "type": "git",
     "url": "git+https://github.com/Arquisoft/dechat_es6a2"
   },
-  "node": {
-    "fs": "empty"
-  },
   "author": "Jorge Fidalgo <UO258524@uniovi.es>",
   "bugs": {
     "url": "https://github.com/Arquisoft/dechat_es6a2/issues"

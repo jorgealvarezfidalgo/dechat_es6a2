@@ -6,7 +6,10 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "src/main/dist")
   },
-  mode: "development",
+  node: {
+    "development",
+  fs: "empty"
+  },
   externals: {
     "node-fetch": "fetch",
     "text-encoding": "TextEncoder",
