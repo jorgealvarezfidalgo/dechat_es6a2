@@ -121,7 +121,9 @@ async function loadChats() {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
     //await sleep(20000);
-
+	if(semanticChats.length>0) {
+		$(".contact-list").html("");
+	}
     semanticChats.forEach(async chat => {
         contactsWithChat.splice(semanticChats.indexOf(chat), 0, chat.interlocutorWebId);
 
