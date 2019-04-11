@@ -112,8 +112,15 @@
       <div class="wrap-message"> 
          <!--EMOJIS-->
 		<div class = "emojis-menu">
-		</div>
+			<script>
+			  function writeEmoji(arg){
+				  var index = arg.lastIndexOf("/") + 1;
+					var name = arg.substr(index);
+  					document.getElementById("demo").value = ":" + name + ":";
+			  }
+		  </script>
 
+		</div>
 			 <i class="fa fa-smile-o fa-lg" aria-hidden="true" style="color:black; cursor:pointer;" data-toggle="tooltip" title="Emojis" id="emoji-icon"></i> 
 			 <i class="fa fa-times fa-lg" aria-hidden="true" id="close-emoji-menu"  style="cursor: pointer; color:black;" data-toggle="tooltip" title="Close Emoji Menu"></i> 
          <!----> 

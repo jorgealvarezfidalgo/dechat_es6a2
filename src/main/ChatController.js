@@ -697,16 +697,11 @@ function showMessage(message) {
     toScrollDown();
 }
 
-//EMOJIS
 //________________EMOJIS________________-//
 $("#emoji-icon").click(async () => {
     $(".emojis-menu").css("display", "flex");
     $("#close-emoji-menu").show();
-    //$(".emojis-menu").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>"
-    //+ currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
-    //var dir = loc.substring(0, loc.lastIndexOf('/'));
-
-    $(".emojis-menu").append("<h1>OKEY:</h1>");
+    $(".emojis-menu").append("<img src=' main/resources/static/img/aja.gif' onclick='writeEmoji(this.src)' />");
 });
 
 $("#close-emoji-menu").click(async () => {
