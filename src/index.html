@@ -150,7 +150,7 @@
 				  var index = arg.lastIndexOf("/") + 1;
 				  var name = arg.substr(index);
 				  var finalOne = name.substr(0, name.lastIndexOf('.')) || name;
-  				  document.getElementById("write-chat").value = ":" + finalOne + ":";
+  				  document.getElementById("write-chat").value = document.getElementById("write-chat").value + " :" + finalOne + ": ";
 			  }
 		  </script>
 
