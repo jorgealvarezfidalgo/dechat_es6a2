@@ -225,17 +225,20 @@ p[id^=lastMsg] img {
 	position: relative;
 	background: #f7f7f7;
 	display: none;
-	flex-direction: row-reverse;
-	flex-wrap: wrap;
+	flex-direction: column;
 	overflow: auto;
+	box-sizing: border-box;
 }
 
 .emojis-menu img {
-	width: 20px;
-	height: 30px;
-	padding: 3 px;
-	flex-grow: 1;
-  	flex-basis: 150px;
+	width: 25%;
+	height: 25%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .information {
