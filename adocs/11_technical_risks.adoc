@@ -24,9 +24,13 @@ and versions to choose.
 There aren't much libraries to manage **Linked Data** and **RDF** resources and **SPARQL** and it was
 difficult to find them and use them but with time we got used to it.
 
+==== Security and Confidentiality
+We had to make sure all data stored in the user's pod are encrypted.
+Therefore, we had to search an original and secure way to do it.
+
 ==== BDD
 We have never used *Cucumber* and we are new to the *Behavior-Driven Development* world,
 so it took us a few days to learn how to use it with **_Node_** and adapting it to Travis to build our app.
 
 ==== Deployment
-We were gonna use *Docker* to deploy our app, but ,at the end, we decided to use *gh-pages* for simplicity.
+We were originally goint to use *Docker* to deploy our app. Howerver,at the end, we decided to use *gh-pages* for simplicity.
