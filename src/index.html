@@ -114,9 +114,11 @@
 		<div class = "emojis-menu">
 			<script>
 			  function writeEmoji(arg){
+				  console.log(arg);
 				  var index = arg.lastIndexOf("/") + 1;
-					var name = arg.substr(index);
-  					document.getElementById("demo").value = ":" + name + ":";
+				  var name = arg.substr(index);
+				  var finalOne = name.substr(0, name.lastIndexOf('.')) || name;
+  				  document.getElementById("write-chat").value = ":" + finalOne + ":";
 			  }
 		  </script>
 
