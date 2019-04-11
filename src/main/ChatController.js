@@ -34,6 +34,7 @@ let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
 let contactsToOpen = false;
+let showingMemes = false;
 
 $(document).ready(function () {
     $("[data-toggle='tooltip']").tooltip();
@@ -697,50 +698,15 @@ function showMessage(message) {
     toScrollDown();
 }
 
-//________________EMOJIS________________-//
 $("#emoji-icon").click(async () => {
-    $(".emojis-menu").css("display", "flex");
-    $("#close-emoji-menu").show();
-    $('.emojis-menu').append("<div class='row'>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/aja.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/ale.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/angel.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/angry.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/awklaugh.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/broken.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/coffee.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/D.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/dance.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/doubt.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/grazy.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/idk.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/jaja.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/jajano.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/jiji.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/lmao.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/n1.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/npc.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/popcorn.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/remove.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/sadpepe.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/sidra.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/sing.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/smugpepe.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/sniper.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/srsly.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/thumbsup.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/wink.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/worship.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/yesyes2.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/yesyes3.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/youwhat.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("</div>");
-});
-
-$("#close-emoji-menu").click(async () => {
-    $("#close-emoji-menu").hide();
-    $(".emojis-menu >").remove();
-    $(".emojis-menu").hide();
+	if(!showingMemes) {
+		$(".emojis-menu").removeClass("hidden");
+		$(".emojis-menu").css("display", "flex");
+		showingMemes = true;
+	} else {
+		$(".emojis-menu").addClass("hidden");
+		showingMemes = false;
+	}
 });
 
 $("#show-contact-information").click(async () => {
