@@ -63,7 +63,7 @@
 </div>
 
 <!-- Developed from template by https://bootsnipp.com/snippets/gNPj5 -->
-<div id="chatui" class="wrap hidden">
+<div id="chatui" class="wrap">
    <section class="left">
       <div class="profile"> <img id="selfphoto" src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2F1d4chan.org%2Fimages%2Fthumb%2F6%2F6f%2FSturnn.JPG%2F300px-Sturnn.JPG&f=1">
          <div class="icons"> <i class="fas fa-plus-circle" aria-hidden="true" id="create-group" style="cursor: pointer;" data-toggle="tooltip" title="New Group"></i> <i class="fas fa-user-friends" aria-hidden="true" id="show-contacts" style="cursor: pointer;" data-toggle="tooltip" title="Contacts"></i> <i id="showinvs" class="fas fa-envelope" aria-hidden="true" style="cursor: pointer;" data-toggle="tooltip" title="Invitations"></i> </div>
@@ -80,7 +80,25 @@
       <div class="writecontact hidden">
          <input type="text" class="input-contact" placeholder=" New contact -username in SC/Inrupt-">
          <a type="button" id="addcontact"  style="cursor: pointer;">Add</a> </div>
-      <div class="contact-list"></div>
+      <div class="contact-list">
+	  <div class="hint">
+		<h2 style="font-size: 1.5rem;">You have no chats encrypted with such password.</h2>
+		</div>
+		<div class="hint">
+		<h3 style="font-size: 1.3rem;">Hints</h3>
+		</div><div class="hint">
+		<p class="font-online">To <span style="font-weight: bold;">create a chat</span>, click on <i class="fas fa-user-friends" style="display: inline;"></i>, which will list your friends.
+		Clicking one of them will create a chat with the selected user, or open it if it already exists.</p>
+		</div><div class="hint">
+		<p class="font-online">You can <span style="font-weight: bold;">add a friend</span> in a contact list by typing his username -i.e., to add "takumi.solid.community", type "takumi"- which will check on Inrupt and Solid Community profiles. <span style="font-style: italic;">Warning: this will NOT add a friend to your SOLID profile; it will add a friend to the current list of contacts, so that you can create a chat/group with someone you haven't befriended. Upon closing of the list, the contact will be removed. Whatever chats you have created will persist, though.</span></p>
+		</div><div class="hint">
+		<p class="font-online">To <span style="font-weight: bold;">create a group</span>, click on <i class="fas fa-plus-circle" style="display: inline;"></i> which will list your friends. You may select the participants by clicking on them. After selecting them and choosing a name, "Create" is to be clicked.</p>
+		</div><div class="hint">
+		<p class="font-online"><span style="font-weight: bold;">If someone invites you</span>, an alert will appear and the button <i class="fas fa-envelope" style="display: inline;"></i> shall be shown. It will list all the invites available, which may be accepted by clicking them.</p>
+		</div><div class="hint">
+		<p class="font-online"> <span style="font-style: italic;"> If you do have chats already, but this text is showing, please check that the password you input to decrypt is correct. A wrong password will fail to decrypt the information stored, so none will appear.</span></p>
+		</div>
+	  </div>
    </section>
    <section class="right">
       <div class="chat-head"> <img id="interlocutorphoto" src="">
@@ -150,7 +168,7 @@
 				  var index = arg.lastIndexOf("/") + 1;
 				  var name = arg.substr(index);
 				  var finalOne = name.substr(0, name.lastIndexOf('.')) || name;
-  				  document.getElementById("write-chat").value = ":" + finalOne + ":";
+  				  document.getElementById("write-chat").value = document.getElementById("write-chat").value + " :" + finalOne + ": ";
 			  }
 		  </script>
 

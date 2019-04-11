@@ -217,6 +217,10 @@ p[id^=lastMsg] img {
 	display: flex;
 }
 
+.hint {
+	margin: 20px;
+}
+
 .chat {
 	background-color: #e5ddd5;
 	background-image: url("../img/background.jpg");
