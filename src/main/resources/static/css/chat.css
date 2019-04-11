@@ -227,19 +227,22 @@ p[id^=lastMsg] img {
 	display: none;
 	flex-direction: column;
 	overflow: auto;
-	box-sizing: border-box;
 }
 
-.emojis-menu img {
-	width: 25%;
-	height: 25%;
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 50%;
 }
 
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 25%;
+  flex: 1;
 }
+
 
 .information {
 	width: 100%;

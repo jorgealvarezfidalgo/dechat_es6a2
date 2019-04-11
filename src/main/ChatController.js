@@ -701,7 +701,7 @@ function showMessage(message) {
 $("#emoji-icon").click(async () => {
     $(".emojis-menu").css("display", "flex");
     $("#close-emoji-menu").show();
-      $('.emojis-menu').append();
+    $('.emojis-menu').append("<div class='row'>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/aja.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/ale.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/angel.gif' onclick='writeEmoji(this.src)' /> </div>");
@@ -712,10 +712,7 @@ $("#emoji-icon").click(async () => {
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/D.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/dance.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/doubt.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/friend_default.jpg' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/grazy.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/group.jpg' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/icon.png' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/idk.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/jaja.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/jajano.gif' onclick='writeEmoji(this.src)' /> </div>");
@@ -734,10 +731,10 @@ $("#emoji-icon").click(async () => {
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/thumbsup.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/wink.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/worship.gif' onclick='writeEmoji(this.src)' /> </div>");
-    $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/yesyes1.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/yesyes2.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/yesyes3.gif' onclick='writeEmoji(this.src)' /> </div>");
     $('.emojis-menu').append("<div class='column'> <img src=' main/resources/static/img/youwhat.gif' onclick='writeEmoji(this.src)' /> </div>");
+    $('.emojis-menu').append("</div>");
 });
 
 $("#close-emoji-menu").click(async () => {
