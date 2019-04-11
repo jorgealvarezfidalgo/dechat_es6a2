@@ -18,6 +18,8 @@ In this document, you can find the important requirements of our project, qualit
 | Decentralized architecture | The application will be **separated** from the **data storage**, which means all the data including messages, images will be stored in their own link:https://solid.inrupt.com/how-it-works[PODs].
 | Data | the data sent _**for the moment**_ only includes **text** messages, **emojis** and **gifs** .
 | Chats | Users can create a new conversation and be asked to join one by their friends-
+| Files Sent | Users can send images, videos and files.
+| Security | Users don't have to worry about their account being stolen because all of their data is encrypted.
 | Group chats | Users can create or asked to join a group chat by their friends.
 | Notifications | Whenever there's a new invitation, the users will be notified and it's their choice to accept it or reject it.
 |===
