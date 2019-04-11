@@ -213,7 +213,7 @@ p[id^=lastMsg] img {
 }
 
 .wrap-chat-memes {
-	height: calc(100% - 243px);
+	height: calc(100% - 300px);
 	display: flex;
 }
 
@@ -241,6 +241,7 @@ p[id^=lastMsg] img {
 .row {
   display: flex;
   flex-direction: row;
+  margin-left: 1px;
 }
 
 .column {
