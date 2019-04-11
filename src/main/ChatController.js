@@ -340,6 +340,7 @@ async function checkForNotifications() {
 
 async function loadMessages(id) {
     $(".chat").html("");
+	$( "#write-chat").prop( "disabled", false );
     $("#nm" + id).remove();
     currentChat = semanticChats[id];
     userDataUrl = currentChat.url;
@@ -702,9 +703,13 @@ $("#emoji-icon").click(async () => {
 	if(!showingMemes) {
 		$(".emojis-menu").removeClass("hidden");
 		$(".emojis-menu").css("display", "flex");
+		$("#wrap-chat").removeClass("wrap-chat");
+		$("#wrap-chat").addClass("wrap-chat-memes");
 		showingMemes = true;
 	} else {
 		$(".emojis-menu").addClass("hidden");
+		$("#wrap-chat").addClass("wrap-chat");
+		$("#wrap-chat").removeClass("wrap-chat-memes");
 		showingMemes = false;
 	}
 });

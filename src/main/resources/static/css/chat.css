@@ -211,6 +211,12 @@ p[id^=lastMsg] img {
 	height: calc(100% - 120px);
 	display: flex;
 }
+
+.wrap-chat-memes {
+	height: calc(100% - 243px);
+	display: flex;
+}
+
 .chat {
 	background-color: #e5ddd5;
 	background-image: url("../img/background.jpg");
@@ -220,6 +226,7 @@ p[id^=lastMsg] img {
 	overflow-y: auto;
 	background-position-x: center;
 }
+
 .emojis-menu {
 	width: 100%;
 	position: relative;
@@ -227,20 +234,18 @@ p[id^=lastMsg] img {
 	display: none;
 	flex-direction: column;
 	overflow: auto;
+	padding: 10px;
+    border-style: double;
 }
 
 .row {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  width: 50%;
 }
 
 .column {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 25%;
-  flex: 1;
+    padding: 5px;
+	flex: 1;
 }
 
 
@@ -342,6 +347,7 @@ p[id^=lastMsg] img {
 	height: 60px;
 	background: #f1f1f1;
 	display: flex;
+	border-style: double;
 }
 .message {
 	width: 100%;
