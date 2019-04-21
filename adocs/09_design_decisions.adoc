@@ -10,8 +10,35 @@ image:https://raw.githubusercontent.com/Arquisoft/dechat_es6a2/master/docs/image
 
 === Design Decisions Detailed
 
+==== Chat Storage
+Firstly, a decision had to be taken about the approach to data storage; two options were available for us.
+
+Either we stored chat data at one of the interlocutors' POD (chat creator, presumably) or we stored the data at both sides.
+
+The former required of some permission system to allow other users to access the host's private folder, but reduced work volume by limiting storage to one user, instead of 2+.
+
+However, we opted for the latter, since we consider that data being in custody of all participants was both a fairer deal for the parts involved as well as preferable to data integrity and fault-tolerance.
+This requires some more resources to proceed with the operations, but it doesn't affect the user experience since the visual showing is done independently.
+
+=== Encryption
+We decided to encrypt all data stored at a POD, for we learned that they might not be as secure as one would like. 
+
+Hence, we created a simple encryption system which, actually, is nothing more than the combination of two popular ones: Enigma -which nowadays does not provide much, but serves as a signature of our work- and AES, which provides true security to the system.
+
+We thought about making the encryption process invisible to the user, by autogenerating a password and storing it at the POD. However, this does not solve much, in the end, since if an attacker gains access to the container he'd have no trouble accessing the data.
+Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably. 
+
+Salt is added to every field encrypted, so that two identical texts -commonly, users- are not revealed. Such salt is stored along the encrypted info, as it is conventional.-
+
+Whereas every information stored at a private folder is locked by the chosen password, a decision had to be made about the data sent by one interlocutor and received by the others at the inbox, since they would need to agree a common password to work with it.
+To avoid making the system harder to use -a password would have to be established for every chat-, it is handled automatically and without affecting the user, by appending the key to the message.
+
+Obviously, this makes it decryptable, if someone really wishes to do so. Since it is a temporal operation, it is a window of insecurity within the system. However, there is no time to implement a more complex system; its purpose is that of making it unintelligible for the casual, non-desirable visitor.
+
+It'd be fine to improve it for the far future, though.
+
 ==== Front End
-to design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
+To design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
 and _**Bootstrap**_ in addition to _jQuery_.
 
 ==== Back End

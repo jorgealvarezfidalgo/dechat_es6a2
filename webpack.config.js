@@ -8,11 +8,11 @@ module.exports = {
   },
   mode: "development",
   externals: {
-    'fs': 'empty',
     "node-fetch": "fetch",
     "text-encoding": "TextEncoder",
     "whatwg-url": "window",
     "isomorphic-fetch": "fetch",
     "@trust/webcrypto": "crypto",
+    "fs": "empty"
   }
 };

@@ -10,12 +10,11 @@ class JoinChatService extends Service {
     }
 
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
-		this.createService.setEncrypter(this.encrypter);
         var recipient = interlocutorWebId;
         var participants = [];
         //console.log("A");
         if (interlocutorWebId.includes("Group")) {
-            recipient = userWebId.split("card")[0] + "Group/" + name;
+            recipient = userWebId.split("card")[0] + "Group/" + name.replace(/ /g, "U+0020");
             participants = members;
         } else {
             participants.push(recipient);
@@ -26,21 +25,16 @@ class JoinChatService extends Service {
             var invitation = await this.createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
             //console.log(invitation);
             try {
-                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation.forprivate}}`);
+                await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation}}`);
             } catch (e) {
                 logger.error("Could not add chat to WebId.");
             }
         });
         //console.log(recipient);
-		
-		var encuser = this.encrypter.encrypt(userWebId, false);
-		var encrec = this.encrypter.encrypt(recipient, false);
-		var encdata = this.encrypter.encrypt(userDataUrl, false);
-		
         try {
-            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${encuser}>;
-    			<${this.namespaces.schema}recipient> <${encrec}>;
-    			<${this.namespaces.storage}storeIn> <${encdata}>.}`);
+            await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${userWebId}>;
+    			<${this.namespaces.schema}recipient> <${recipient}>;
+    			<${this.namespaces.storage}storeIn> <${userDataUrl}>.}`);
         } catch (e) {
             logger.error("Could not add chat to WebId.");
         }
@@ -77,7 +71,6 @@ class JoinChatService extends Service {
     }
     async getJoinRequest(fileurl, userWebId) {
         //console.log(fileurl);
-		this.baseService.setEncrypter(this.encrypter);
         var chat = await this.baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
         //console.log(chatUrl);

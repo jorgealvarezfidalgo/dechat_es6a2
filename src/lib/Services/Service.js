@@ -49,10 +49,6 @@ class Service {
 		this.loader = new Loader(auth.fetch);
     }
 	
-	setEncrypter(encrypter) {
-		this.encrypter = encrypter;
-	}
-	
 }
 
 

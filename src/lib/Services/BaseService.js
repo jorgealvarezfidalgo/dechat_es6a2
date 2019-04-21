@@ -1,31 +1,8 @@
 const Service = require("./Service");
-const fileClient = require("solid-file-client");
 
 class BaseService extends Service {
     constructor(fetch) {
         super(fetch);
-    }
-	
-	async checkPrivate(webid) {
-		var url = webid.replace("profile/card#me", "private");
-		var priv = await fileClient.readFolder(url).then(folder => {
-			console.log(`Read ${folder.name}, it has ${folder.files.length} files.`);
-		}, err => console.log(err) );
-		console.log(priv);
-		if(priv === undefined) {
-			await fileClient.createFolder(url).then(success => {
-				console.log(`Created folder ${url}.`);
-			}, err => console.log(err) );
-		}
-	}
-	
-	async readPermission(url) {
-		var urlp = url.replace("/card#me", "");
-        var perm = false;
-		await fileClient.readFile(url).then(body => {
-			perm = true;
-		}, err => console.log(err) );
-		return perm;
     }
 
     /**
@@ -73,7 +50,6 @@ class BaseService extends Service {
      * @param url: the url of the resource.
      * @param predicate: the predicate for which to look.
      * @returns {Promise}: a promise that resolves with the object or null if none is found.
-	 * Credits to https://github.com/pheyvaer/solid-chess
      */
     async getObjectFromPredicateForResource(url, predicate) {
         const deferred = this.Q.defer();
@@ -113,9 +89,6 @@ class BaseService extends Service {
         return `${parsedWebId.scheme}://${parsedWebId.host}/private/dechat_${today}.ttl`;
     }
 
-	/**
-	* Credits to https://github.com/pheyvaer/solid-chess
-	**/
     async writePermission(url) {
         const response = await this.uploader.executeSPARQLUpdateForUser(url, "INSERT DATA {}");
         return response.status === 200;
@@ -125,9 +98,6 @@ class BaseService extends Service {
         return "main/resources/static/img/friend_default.jpg";
     }
 
-	/**
-	* Credits to https://github.com/pheyvaer/solid-chess
-	**/
     async generateUniqueUrlForResource(baseurl) {
         let url = baseurl + "#" + this.uniqid();
 
@@ -146,7 +116,6 @@ class BaseService extends Service {
      * @param inboxUrl: the url of the inbox.
      * @returns {Promise}: a promise that resolves with an array containing the urls of all new notifications since the last time
      * this method was called.
-	* Credits to https://github.com/pheyvaer/solid-chess
      */
     async checkUserInboxForUpdates(inboxUrl) {
         const deferred = this.Q.defer();
@@ -180,9 +149,6 @@ class BaseService extends Service {
         return deferred.promise;
     }
 
-	/**
-	* Inspired by https://github.com/pheyvaer/solid-chess
-	**/
     async getInvitation(fileurl) {
         const deferred = this.Q.defer();
         const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);
@@ -190,26 +156,13 @@ class BaseService extends Service {
             const engine = this.newEngine();
             let invitationFound = false;
             const self = this;
-			var sselect = `SELECT * {
-				?invitation a <${this.namespaces.schema}InviteAction>; 
-					<${this.namespaces.schema}agent> ?sender; 
-					<${this.namespaces.schema}event> ?chaturl;
-					<${this.namespaces.schema}recipient> ?interlocutor.}`;
+			var sselect = `SELECT * {?invitation a <${this.namespaces.schema}InviteAction>; <${this.namespaces.schema}agent> ?sender; <${this.namespaces.schema}event> ?chaturl;<${this.namespaces.schema}recipient> ?interlocutor.}`;
             engine.query(sselect, { sources: [{ type: "rdfjsSource", value: rdfjsSource }]
             }).then(function (result) {
                     result.bindingsStream.on("data", async function (result) {
                         invitationFound = true;
                         result = result.toObject();
-						console.log(result);
-						var inFields = result["?interlocutor"].value.split("/");
-						var agFields = result["?sender"].value.split("/");
-						var ieFields = result["?chaturl"].value.split("/");
-                        deferred.resolve({
-							interlocutor: self.encrypter.decrypt(inFields.splice(4, inFields.length).join("/"), true), 
-							url: self.encrypter.decrypt(result["?invitation"].value, true), 
-							agent: self.encrypter.decrypt(agFields.splice(4, agFields.length).join("/"), true), 
-							ievent: self.encrypter.decrypt(ieFields.splice(4, ieFields.length).join("/"), true)
-							});
+                        deferred.resolve({interlocutor: result["?interlocutor"].value, url: result["?invitation"].value, agent: result["?sender"].value, ievent: result["?chaturl"].value});
 						});
                     result.bindingsStream.on("end", function () {
                         if (!invitationFound) {

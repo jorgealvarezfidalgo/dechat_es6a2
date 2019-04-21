@@ -18,7 +18,6 @@ class OpenService extends Service {
 	this.baseService.writePermission(url);
     const deferred = this.Q.defer();
     const rdfjsSource = await this.rdfjsSourceFromUrl(url, this.fetch);
-	//console.log(rdfjsSource);
     if (rdfjsSource) {
       const engine = this.newEngine();
       const chatUrls = [];
@@ -26,7 +25,7 @@ class OpenService extends Service {
 	  const self = this;
 
       engine.query(`SELECT ?chat ?int ?url {
-  			 ?chat <${self.namespaces.schema}contributor> ?id;
+  			 ?chat <${self.namespaces.schema}contributor> <${webid}>;
   				<${self.namespaces.schema}recipient> ?int;
   				<${self.namespaces.storage}storeIn> ?url.
   		  }`, {
@@ -42,15 +41,15 @@ class OpenService extends Service {
             data = data.toObject();
             chatUrls.push({
               chatUrl: data["?chat"].value,
-              storeUrl: self.encrypter.decrypt(data["?url"].value.split("private/").pop(), false),
-              interlocutor: self.encrypter.decrypt(data["?int"].value.split("private/").pop(), false)
+              storeUrl: data["?url"].value,
+              interlocutor: data["?int"].value
             });
             deferred.resolve();
           });
 
           result.bindingsStream.on("end", function() {
             self.Q.all(promises).then(() => {
-              console.log(chatUrls);
+              ////console.log(chatUrls);
               deferred.resolve(chatUrls);
             });
           });
@@ -58,12 +57,11 @@ class OpenService extends Service {
     } else {
       deferred.resolve(null);
     }
-	
+
     return deferred.promise;
   }
 
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
-	this.loader.setEncrypter(this.encrypter);
 	if(interloc.includes("Group")) {
 		return await this.loader.loadGroupFromUrl(url, userWebId, userDataUrl);
 	} else {
