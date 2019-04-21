@@ -8,6 +8,7 @@ const BaseService = require("../src/lib/Services/BaseService");
 const CreateService = require("../src/lib/Services/CreateService");
 const MessageService = require("../src/lib/Services/MessageService");
 const JoinService = require("../src/lib/Services/JoinService");
+const Encrypter = require("../src/lib/Services/EncryptionService");
 
 const namespaces = require("../src/lib/namespaces");
 const auth = require("solid-auth-client");
@@ -16,10 +17,22 @@ const baseService = new BaseService(auth.fetch);
 const joinService = new JoinService(auth.fetch);
 const messageService = new MessageService(auth.fetch);
 const createService = new CreateService(auth.fetch);
+const encrypter = new Encrypter();
 
 const loader = new Loader(auth.fetch);
 
 describe("Services", function () {
+	this.timeout(15000);
+	
+	it("Initialization", async function () { 
+		encrypter.setPassword("jkkjdskj834843bub8frb");
+		baseService.setEncrypter(encrypter);
+		joinService.setEncrypter(encrypter);
+		messageService.setEncrypter(encrypter);
+		openService.setEncrypter(encrypter);
+		createService.setEncrypter(encrypter);
+		loader.setEncrypter(encrypter);
+	});
 
 	it("base Service tests", async function () {
 		const chat = await loader.loadChatFromUrl("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl", "https://othbak.solid.community/profile/card#me", "https://othbak.solid.community/public/unittest_201903201125.ttl");
@@ -49,8 +62,12 @@ describe("Services", function () {
 		assert.equal(invite.sender, null, "the invitation url is not correct: ->" + invite.sender);
 
 		//Delete a file
-		baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
-		baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
+		await baseService.writePermission("https://othbak.solid.community/public/fileToDelete.ttl");
+		await baseService.deleteFileForUser("https://othbak.solid.community/public/fileToDelete.ttl");
+		
+		assert.equal(await baseService.readPermission("https://takumi.solid.community/profile/card#me"), true, "");
+		assert.equal(await baseService.readPermission("https://thoth.inrupt.net/profile/card#me"), true, "");
+		assert.equal(await baseService.readPermission("https://thoth.inrupt.net/private"), false, "" );
 	});
 
 	it("more base Service tests", async function () {
@@ -188,15 +205,18 @@ describe("Services", function () {
 
     it("Message Service tests", async function () {
 		const chat = await loader.loadChatFromUrl("https://othbak.solid.community/public/unittest_201903201125.ttl#jth2a2sl", "https://othbak.solid.community/profile/card#me", "https://othbak.solid.community/public/unittest_201903201125.ttl");
-
+		console.log("A");
 		let message = await messageService.getNewMessage(chat.chatUrl, chat.userWebId);
 		//no messages found
+		console.log("A");
 		assert.equal(message, null, "there should not be any new messages: ->" + message);
-
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Only love is with us now", "https://decker.solid.community/profile/card#me", true, null);
 		//No sending
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-09-43", "Something warm and pure", "https://decker.solid.community/profile/card#me", false, null);
 		//Group sending
+		console.log("A");
 		messageService.storeMessage("https://morningstar.solid.community/private/dechat_201903190808.ttl", "Luci", "https://morningstar.solid.community/profile/card#me", "2119-03-22T22-08-59", "Find the beast within ourselves", "Group/Test" , true, ["https://decker.solid.community/profile/card#me", "https://thenothingnessofoursouls.solid.community/profile/card#me"]);
     });
 
@@ -237,9 +257,23 @@ describe("Services", function () {
     });
 
 	it("Get Invitation test", async function () {
-		const invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
+		var invite = await baseService.getInvitation("https://morningstar.solid.community/public/dechat_201903160752.ttl");
 		//console.log(invite);
 		assert.notEqual(invite, null, "the invitation url is not correct: ->" + invite);
+		//Encrypted
+		var invite = await baseService.getInvitation("https://rokivulovic.solid.community/public/dechat_201903161213.ttl");
+		//console.log(invite);
+		assert.equal(invite.interlocutor, "https://rokivulovic.solid.community/profile/card#me", "the interlocutor is not correct: ->" + invite.interlocutor);
+		assert.equal(invite.url, "https://takumi.solid.community/private/dechat_201904050438.ttl#ju46by2l", "the url is not correct: ->" + invite.url);
+		assert.equal(invite.agent, "https://takumi.solid.community/profile/card#me", "the agent is not correct: ->" + invite.agent);
+		assert.equal(invite.ievent, "https://takumi.solid.community/private/dechat_201904050438.ttl#ju46bxwz", "the ievent is not correct: ->" + invite.ievent);
+		
+		//Invite along with message
+		var message = await messageService.getNewMessage("https://rokivulovic.solid.community/public/dechat_201903150728.ttl");
+		console.log(message);
+		assert.equal(message.messagetext, "Eyyy roki que hay", "the text is not correct: ->" + message.messagetext);
+		assert.equal(message.author, "Takumi", "the author is not correct: ->" + message.author);
+		assert.equal(message.time, "2119-04-05T16-38-15", "the time is not correct: ->" + message.time);
     });
 
 	it("Process chat to join", async function () {

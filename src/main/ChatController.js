@@ -11,8 +11,9 @@ const {
     default: data
 } = require("@solid/query-ldflex");
 const namespaces = require("../lib/namespaces");
+const Encrypter = require("../lib/Services/EncryptionService");
 
-
+let encrypter = new Encrypter();
 let baseService = new BaseService(auth.fetch);
 let joinService = new JoinService(auth.fetch);
 let messageService = new MessageService(auth.fetch);
@@ -33,9 +34,11 @@ let chatCounter = 0;
 let currentChat;
 let showingContacts = false;
 let contactsToOpen = false;
+let showingMemes = false;
 
 $(document).ready(function () {
     $("[data-toggle='tooltip']").tooltip();
+	randomPhrase();
 });
 
 /**
@@ -52,7 +55,7 @@ $(".login-btn").click(() => {
  */
 $("#logout-btn").click(() => {
     auth.logout();
-	location.reload(true);
+    location.reload(true);
     $(".contact-list").html("");
     $(".chat").html("");
     $("#showinvs").hide();
@@ -65,7 +68,6 @@ $("#logout-btn").click(() => {
     $(".wrap").addClass("hidden");
     $(".mustlogin").removeClass("hidden");
     $("#interlocutorw-name").text("");
-    $("#interlocutorphoto").attr("src", "");
 });
 
 /**
@@ -119,7 +121,9 @@ async function loadChats() {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
     //await sleep(20000);
-
+	if(semanticChats.length>0) {
+		$(".contact-list").html("");
+	}
     semanticChats.forEach(async chat => {
         contactsWithChat.splice(semanticChats.indexOf(chat), 0, chat.interlocutorWebId);
 
@@ -128,24 +132,39 @@ async function loadChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded'  src = '" + lastMsg + "'" + "/>";
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
+            } else if (lastMsg.includes("data:text")) {
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                    + "Text File</a>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             //console.log(chat.getNumberOfMsgs() - 1);
             lastHr = chat.getHourOfMessage(chat.getNumberOfMsgs() - 1);
         }
 
         const newmsg = 0;
         if (newmsg == 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter
+                + "'><img src='" + chat.photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName
+                + "</h1><p class=font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div class='contact new-message-contact' id='" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
         chatCounter += 1;
     });
 
-    ////console.log(semanticChats);
-    ////console.log(contactsWithChat);
+    console.log(semanticChats);
+    console.log(contactsWithChat);
 }
 
 async function loadMessagesToWindow() {
@@ -157,6 +176,49 @@ async function loadMessagesToWindow() {
     await showAndStoreMessages();
     //console.log(userDataUrl);
 }
+
+$("#enterpwd").click(async() => {
+
+    const pwd1 = encrypter.hash($("#pwd1").val());
+	const pwd2 = encrypter.hash($("#pwd2").val());
+	$("#pwd1").val("");
+	$("#pwd2").val("");
+	if(pwd1!== "" && pwd1===pwd2) {
+		encrypter.setPassword(pwd1);
+		$(".unblockage").addClass("hidden");
+		$(".loading").removeClass("hidden");
+		baseService.setEncrypter(encrypter);
+		joinService.setEncrypter(encrypter);
+		messageService.setEncrypter(encrypter);
+		openService.setEncrypter(encrypter);
+		createService.setEncrypter(encrypter);
+		openChats = [];
+		await baseService.checkPrivate(userWebId);
+		try {
+			const chats = await openService.getChatsToOpen(userWebId);
+			if(chats) {
+				chats.forEach(async (chat) => {
+					openChats.push(chat);
+				});
+			}
+		} catch(e) {
+			console.log(e);
+		}
+
+        await startChat();
+		await sleep(4000);
+        await loadChats();
+        checkForNotifications();
+        $(".wrap").removeClass("hidden");
+        $(".loading").addClass("hidden");
+		$("#interlocutorphoto").attr("src", "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Cross-Jerusalem-Potent-Heraldry.svg/800px-Cross-Jerusalem-Potent-Heraldry.svg.png");
+        // refresh every 3sec
+        refreshIntervalId = setInterval(checkForNotifications, 3000);
+
+	} else {
+		$("#pwderror").text("Las contraseñas no coinciden.");
+	}
+});
 
 /**
  *    This method is in charge of the user"s login
@@ -170,8 +232,6 @@ auth.trackSession(async (session) => {
         $("#nav-login-btn").addClass("hidden");
         $("#login-required").modal("hide");
         $(".mustlogin").addClass("hidden");
-        $(".loading").removeClass("hidden");
-
 
         userWebId = session.webId;
         const name = await baseService.getFormattedName(userWebId);
@@ -180,22 +240,9 @@ auth.trackSession(async (session) => {
             $("#user-name").removeClass("hidden");
             $("#user-name").text(name);
         }
-        openChats = [];
-        const chats = await openService.getChatsToOpen(userWebId);
-		if(chats) {
-        chats.forEach(async (chat) => {
-            openChats.push(chat);
-        });
-		}
 
-        await startChat();
-        await sleep(8000);
-        await loadChats();
-        checkForNotifications();
-        $(".wrap").removeClass("hidden");
-        $(".loading").addClass("hidden");
-        // refresh every 3sec
-        refreshIntervalId = setInterval(checkForNotifications, 3000);
+		$(".unblockage").removeClass("hidden");
+
     } else {
         //alert("you"re not logged in");
         $("#nav-login-btn").removeClass("hidden");
@@ -237,12 +284,14 @@ async function checkForNotifications() {
             newMessageFound = true;
             var nameThroughUrl;
             var authorUrl;
+			console.log(message);
             if (!message.author.includes("Group")) {
                 nameThroughUrl = message.author.split("/").pop();
                 authorUrl = message.messageUrl.split("priv")[0] + "profile/card#me";
             } else {
-                nameThroughUrl = message.author.split("/")[5].replace(/U\+0020/g, " ");
-                authorUrl = message.author.replace("inbox", "profile").replace("/" + message.author.split("/").pop(), "").replace(/ /g, "U+0020");
+                nameThroughUrl = message.author.split("/")[1];
+                authorUrl = message.inboxUrl.split("inbox")[0] + "profile/" + message.author.split("/")[0] + "/" + message.author.split("/")[1];
+				console.log(authorUrl);
             }
             //console.log("nombre de authorUrl is:" + nameThroughUrl);
             //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
@@ -258,7 +307,11 @@ async function checkForNotifications() {
                 var index = contactsWithChat.indexOf(authorUrl);
                 $("#chatwindow" + index).remove();
                 var parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
+                var html = $("<div class='contact new-message-contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                    + index + "'>" + parsedmessage
+                    + "</p></div></div><div class='contact-time'><p>"
+                    + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1)
+                    + "</p><div class='new-message' id='nm" + index + "'><p>" + "1" + "</p></div></div></div>");
                 $(".contact-list").prepend(html);
                 document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
                 interlocutorMessages.push(message);
@@ -287,9 +340,9 @@ async function checkForNotifications() {
 }
 
 
-
 async function loadMessages(id) {
     $(".chat").html("");
+	$( "#write-chat").prop( "disabled", false );
     $("#nm" + id).remove();
     currentChat = semanticChats[id];
     userDataUrl = currentChat.url;
@@ -304,7 +357,6 @@ async function loadMessages(id) {
     $("#interlocutorw-name").append(currentChat.interlocutorName.replace(/U\+0020/g, " "));
 
     currentChat.getMessages().forEach(async (message) => {
-
         showMessage(message);
 
     });
@@ -328,11 +380,12 @@ async function checkKey(e) {
             await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, message, interlocWebId, true, currentChat.members);
         else
             await messageService.storeMessage(userDataUrl, username, userWebId, ttime, message, interlocWebId, true, null);
+
         $("#write-chat").val("");
         var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
-		if(index==-1)
-			index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
-		//console.log("Index es " + index);
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+        //console.log("Index es " + index);
         $("#chatwindow" + index).remove();
 
         semanticChats[index].loadMessage({
@@ -343,22 +396,215 @@ async function checkKey(e) {
         });
 
         const parsedmessage = message.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+            + parsedmessage + "</div><div class='time'>" +
             ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
 
         toScrollDown();
 
         if (!showingContacts) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
-            +
-                "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                + parsedmessage + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+            +"</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
         }
     }
-
 }
+
+//_____________________________IMAGE_UPLOADS__________________//
+
+$('#join-media').on('change', function () {
+    const username = $("#user-name").text();
+    var toSend = this;
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the image stored in it, it's because you have low storage capacity.");
+    imagesToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function imagesToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var img = "<img alt = 'uploaded'  style='height:200px; width:200px;' src = '" + event.target.result + "'" + "/>";
+                //SENDING MESSAGE
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + img + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<img alt = 'uploaded' src = '" + event.target.result + "'" + "/>"
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+//__________________________________________-_______________//
+
+
+//_____________________________VIDEO_UPLOADS__________________//
+
+$('#join-video').on('change', function () {
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the video stored in it, it's because you have low storage capacity.");
+    const username = $("#user-name").text();
+    //videosPreview(this, $z);
+    var toSend = this;
+    videosToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function videosToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var video = "<video width='200' height='200' controls> <source src= '" + event.target.result
+                    + "'> Your browser does not support HTML5 video. </video>";
+                //SENDING MESSAGE
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + video + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + "<video width='20' height='20'> <source src= '" + event.target.result + "'> Your browser does not support HTML5 video. </video>"
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+//_________________________________________________________________//
+
+
+//_____________________________TEXT_UPLOADS__________________//
+$('#join-text').on('change', function () {
+    const username = $("#user-name").text();
+    var toSend = this;
+    alert("This feature only works if you have enough storage in your pod."
+        + "So if you don't find the text file stored in it, it's because you have low storage capacity.");
+    textsToSend(toSend, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats);
+});
+
+function textsToSend(input, userDataUrl, username, userWebId, interlocWebId, currentChat, semanticChats) {
+    if (input.files) {
+        var filesAmount = input.files.length;
+        var i = 0;
+        var index = contactsWithChat.indexOf(currentChat.interlocutorWebId.replace("Group/", ""));
+        if (index == -1)
+            index = contactsWithChat.indexOf(currentChat.interlocutorWebId);
+
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = async function (event) {
+                var now = new Date();
+                var dateFormat = require("date-fns");
+                const ttime = "21" + dateFormat.format(now, "yy-MM-dd") + "T" + dateFormat.format(now, "HH-mm-ss");
+                var lnk = "<a target='_blank' href='" + event.target.result
+                    + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+                    + $('#join-text').val().split('\\').pop() + "</a>";                //SENDING MESSAGE
+
+                if (currentChat.interlocutorWebId.includes("Group"))
+                    await messageService.storeMessage(userDataUrl, currentChat.interlocutorWebId.split("profile/").pop() + "/" + username, userWebId, ttime, event.target.result, interlocWebId, true, currentChat.members);
+                else
+                    await messageService.storeMessage(userDataUrl, username, userWebId, ttime, event.target.result, interlocWebId, true, null);
+
+                $("#chatwindow" + index).remove();
+
+                semanticChats[index].loadMessage({
+                    messagetext: event.target.result,
+                    url: null,
+                    author: username,
+                    time: ttime
+                });
+
+                $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+                    + lnk + "</div><div class='time'>" +
+                    ttime.substring(11, 16).replace("\-", "\:") + "</div></div>");
+
+                toScrollDown();
+
+                if (!showingContacts) {
+                    var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                        + "</h1><p class='font-preview' id='lastMsg" + index + "'>"
+                        + $('#join-text').val().split('\\').pop()
+                        + "</p></div></div><div class='contact-time'><p>"
+                        + semanticChats[index].getHourOfMessage(semanticChats[index].getNumberOfMsgs() - 1);
+                    +"</p></div></div>";
+                    $(".contact-list").prepend(html);
+                    document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
+                }
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+};
+
+//_____________________________________________//
 
 async function showAndStoreMessages() {
     var i = 0;
@@ -367,18 +613,19 @@ async function showAndStoreMessages() {
     while (i < interlocutorMessages.length) {
         ////console.log("interloc author is: " + interlocutorMessages[i].author); //...../Deker //Yarrick is better
         var nameThroughUrl;
+		console.log(interlocutorMessages[i].author);
         if (!interlocutorMessages[i].author.includes("Group"))
             nameThroughUrl = interlocutorMessages[i].author.split("/").pop();
         else
-            nameThroughUrl = interlocutorMessages[i].author.split("/")[5].replace(/U\+0020/g, " ");
+            nameThroughUrl = interlocutorMessages[i].author.split("/")[1];
         //console.log("nombre de authorUrl is:" + nameThroughUrl);
         //console.log("original interlocutorName is:" + $("#interlocutorw-name").text());
         if (nameThroughUrl === $("#interlocutorw-name").text()) {
             showMessage(interlocutorMessages[i]);
             await messageService.storeMessage(userDataUrl, interlocutorMessages[i].author.split("/").pop(), userWebId, interlocutorMessages[i].time, interlocutorMessages[i].messagetext, interlocWebId, false);
             var index = contactsWithChat.indexOf(interlocWebId);
-			if(index==-1)
-				index = contactsWithChat.indexOf(interlocWebId.replace("Group/", ""));
+            if (index == -1)
+                index = contactsWithChat.indexOf(interlocWebId.replace("Group/", ""));
             semanticChats[index].loadMessage({
                 messagetext: interlocutorMessages[i].messagetext,
                 url: null,
@@ -387,8 +634,23 @@ async function showAndStoreMessages() {
             });
             baseService.deleteFileForUser(interlocutorMessages[i].inboxUrl);
             $("#chatwindow" + index).remove();
-            const parsedmessage = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage + "</p></div></div><div class='contact-time'><p>" + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
+
+            var msgToShow;
+            if (interlocutorMessages[i].messagetext.includes("data:image")) {
+                msgToShow = "<img alt = 'uploaded' src = '" + interlocutorMessages[i].messagetext + "'" + "/>";
+            } else if (interlocutorMessages[i].messagetext.includes("data:video")) {
+                msgToShow = "<video controls> <source src= '" + interlocutorMessages[i].messagetext + "'> Your browser does not support HTML5 video. </video>";
+            } else if (interlocutorMessages[i].messagetext.includes("data:text")) {
+                msgToShow = "<a class='disable' href='" + interlocutorMessages[i].messagetext + "'>" + "Click to view text file</a>";
+            } else {
+                msgToShow = interlocutorMessages[i].messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
+            const parsedmessage = msgToShow;
+
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + index + "'><img src='" + semanticChats[index].photo + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + semanticChats[index].interlocutorName
+                + "</h1><p class='font-preview' id='lastMsg" + index + "'>" + parsedmessage
+                + "</p></div></div><div class='contact-time'><p>"
+                + semanticChats[index].getHourOfMessage(semanticChats[index].numberOfMessages - 1) + "</p></div></div>";
             $(".contact-list").prepend(html);
             document.getElementById("chatwindow" + index).addEventListener("click", loadMessagesToWindow, false);
             interlocutorMessages[i] = "D";
@@ -405,45 +667,79 @@ async function showAndStoreMessages() {
 }
 
 function showMessage(message) {
-    const parsedmessage = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+    var msgToBeShown;
+    if (message.messagetext.includes("data:image")) {
+        msgToBeShown = "<img alt = 'uploaded' style='height:200px; width:200px;' src = '" + message.messagetext + "' />";
+    } else if (message.messagetext.includes("data:video")) {
+        msgToBeShown = "<video width='200' height='200' controls> <source src= '"
+            + message.messagetext + "'> Your browser does not support HTML5 video. </video>";
+    } else if (message.messagetext.includes("data:text")) {
+        msgToBeShown = "<a target='_blank' href='" + message.messagetext
+            + "' style='padding: 10px;margin : 5px;background-color: darkgrey;color : white;  border-radius: 15px;' >"
+            + "Click to view text file</a>";
+    } else {
+        msgToBeShown = message.messagetext.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+    }
+    console.log(msgToBeShown);
     if (message.author.split("/").pop().replace(/U\+0020/g, " ") === $("#user-name").text()) {
-        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+        $(".chat").append("<div class='chat-bubble me'><div class='my-mouth'></div><div class='content'>"
+            + msgToBeShown + "</div><div class='time'>" +
             message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
     } else {
         if (currentChat.interlocutorWebId.includes("Group")) {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>" + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><h4>"
+                + message.author.split("/").pop().replace(/U\+0020/g, " ") + "</h4><div class='content'>"
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         } else {
-            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>" + parsedmessage + "</div><div class='time'>" +
+            $(".chat").append("<div class='chat-bubble you'><div class='your-mouth'></div><div class='content'>"
+                + msgToBeShown + "</div><div class='time'>" +
                 message.time.substring(11, 16).replace("\-", "\:") + "</div></div>");
         }
     }
     $(".fa fa-bars fa-lg").removeClass("hidden");
-    ;
     toScrollDown();
 }
 
+$("#emoji-icon").click(async () => {
+	if(!showingMemes) {
+		$(".emojis-menu").removeClass("hidden");
+		$(".emojis-menu").css("display", "flex");
+		$("#wrap-chat").removeClass("wrap-chat");
+		$("#wrap-chat").addClass("wrap-chat-memes");
+		showingMemes = true;
+	} else {
+		$(".emojis-menu").addClass("hidden");
+		$("#wrap-chat").addClass("wrap-chat");
+		$("#wrap-chat").removeClass("wrap-chat-memes");
+		showingMemes = false;
+	}
+});
+
 $("#show-contact-information").click(async () => {
     $(".chat-head i").hide();
+    $(".chat-head label").hide();
     $(".information").css("display", "flex");
     $("#close-contact-information").show();
     //console.log(currentChat);
     var note;
     if (!interlocWebId.includes("Group")) {
         note = await baseService.getNote(interlocWebId);
-	}
+    }
     if (!note) {
         note = "Nothing to see here";
     }
     $(".information").append("<img src='" + currentChat.photo + "'><div><h1>Name:</h1><p>" + currentChat.interlocutorName + "</p><h1>Status:</h1><p>" + note + "</p></div>");
     if (interlocWebId.includes("Group")) {
         $(".information").append("<div id='listGroups'><h1>Participants:</h1></div>");
+		console.log(currentChat);
         for (var i = 0; i < currentChat.members.length; i++) {
-            var memberPhoto = await baseService.getPhoto(currentChat.members[i].id);
+			console.log(currentChat.members[i]);
+            var memberPhoto = await baseService.getPhoto(currentChat.members[i].id ? currentChat.members[i].id : currentChat.members[i]);
             if (!memberPhoto) {
                 memberPhoto = baseService.getDefaultFriendPhoto();
             }
-            var memberName = await baseService.getFormattedName(currentChat.members[i].id);
+            var memberName = await baseService.getFormattedName(currentChat.members[i].id ? currentChat.members[i].id : currentChat.members[i]);
             var html = $("<div class='listGroups'><img src='" + memberPhoto + "'><p>" + memberName + "</p></div>");
             $("#listGroups").append(html);
 
@@ -453,17 +749,18 @@ $("#show-contact-information").click(async () => {
 
 $("#close-contact-information").click(async () => {
     $(".chat-head i").show();
+    $(".chat-head label").show();
     $("#close-contact-information").hide();
     $(".information >").remove();
     $(".information").hide();
 });
 
 $("#show-contacts").click(async () => {
-	if(contactsToOpen) {
-		contactsToOpen = false;
-	} else {
-		contactsToOpen = true;
-	}
+    if (contactsToOpen) {
+        contactsToOpen = false;
+    } else {
+        contactsToOpen = true;
+    }
     await displayContacts(openContact);
 });
 
@@ -471,16 +768,18 @@ async function displayContacts(func) {
     $(".contact-list").html("");
     $("#data-url").prop("value", baseService.getDefaultDataUrl(userWebId));
     if (!showingContacts) {
-		$(".search").addClass("hidden");
-		$(".addcontact").removeClass("hidden");
-		$(".writecontact").removeClass("hidden");
+        $(".search").addClass("hidden");
+        $(".addcontact").removeClass("hidden");
+        $(".writecontact").removeClass("hidden");
     } else {
         $(".search").removeClass("hidden");
-		$(".addcontact").addClass("hidden");
-		$(".writecontact").addClass("hidden");
+        $(".addcontact").addClass("hidden");
+        $(".writecontact").addClass("hidden");
     }
 
     if (!showingContacts) {
+		$("#show-contacts").addClass("hidden");
+		$("#create-group").addClass("hidden");
 
         for await (const friend of data[userWebId].friends) {
             let name = await baseService.getFormattedName(friend.value);
@@ -489,13 +788,18 @@ async function displayContacts(func) {
                 friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
-            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + friend.value + "'><img src='"
+                + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + name + "</h1><p class='font-preview' id='ctmsg" + friend.value.split("/")[2].split(".")[0]
+                + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("openchatwindow" + friend.value).addEventListener("click", func, false);
 
         }
         showingContacts = true;
+		$("#show-contacts").removeClass("hidden");
+		$("#create-group").removeClass("hidden");
     } else {
         await showChats();
         showingContacts = false;
@@ -512,15 +816,38 @@ async function showChats() {
         if (!lastMsg) {
             lastMsg = "Sin mensajes";
         } else {
-            lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            if (lastMsg.includes("data:image")) {
+                lastMsg = "<img alt = 'uploaded' src = '" + lastMsg + "'" + "/>";
+            } else if (lastMsg.includes("data:video")) {
+                lastMsg = "<video width='20' height='20'> <source src= '" + lastMsg + "'> Your browser does not support HTML5 video. </video>";
+                //console.log("showChatslastMsg in showChats" + lastMsg);
+            } else if (lastMsg.includes("data:text")) {
+                lastMsg = "<a class='disable' href='" + lastMsg + "'>"
+                    + "Text File</a>";
+            } else {
+                lastMsg = lastMsg.replace(/\:(.*?)\:/g, "<img src='main/resources/static/img/$1.gif' alt='$1'></img>");
+            }
             lastHr = chat.getHourOfMessage(chat.getMessages().length - 1);
         }
 
         const newmsg = 0;
+
         if (newmsg === 0) {
-            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
+            var html;
+            var html = "<div style='cursor: pointer;' class='contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg"
+                + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + lastHr + "</p></div></div>";
         } else {
-            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow" + chatCounter + "'><img src='" + chat.photo + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>" + lastMsg + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm" + lastHr + "'><p>" + "1" + "</p></div></div></div>");
+            var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='chatwindow"
+                + chatCounter + "'><img src='" + chat.photo
+                + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>"
+                + chat.interlocutorName + "</h1><p class='font-preview' id='lastMsg" + chatCounter + "'>"
+                + lastMsg
+                + "</p></div></div><div class='contact-time'><p>" + "?" + "</p><div class='new-message' id='nm"
+                + lastHr + "'><p>" + "1" + "</p></div></div></div>");
         }
         $(".contact-list").prepend(html);
         document.getElementById("chatwindow" + chatCounter).addEventListener("click", loadMessagesToWindow, false);
@@ -581,7 +908,7 @@ async function showInvitations() {
                 friendPhoto = baseService.getDefaultFriendPhoto();
         }
 
-        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
+        var html = $("<div style='cursor: pointer;' class='contact new-message-contact' id='join" + chat.url + "'><img src='" + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + chat.interlocutorName + "</h1><p class='font-preview'>Wants to chat with you</p></div></div><div class='contact-time'><p>" + "</p><div class='new-message' id='nm" + "'><p>" + "1" + "</p></div></div></div>");
         $(".contact-list").prepend(html);
         document.getElementById("join" + chat.url).addEventListener("click", joinChat, false);
     });
@@ -627,6 +954,37 @@ async function joinChat() {
     await showAndStoreMessages();
 }
 
+function randomPhrase() {
+	const phrases = [
+		"For those who seek perfection there can be no rest on this side of the grave.",
+		"Success is commemorated; Failure merely remembered.",
+		"Even a man who has nothing can still offer his time.",
+		"It is better to code for the Emperor than to live for yourself.",
+		"True Happiness stems only from Duty.",
+		"Without Javascript there is nothing.",
+		"Victory needs no explanation, defeat allows none.",
+		"Walk softly, and make an intricate encryption.",
+		"The Emperor guides my resolve.",
+		"He who stands with JS shall be my brother.",
+		"Duty earns salvation.",
+		"Heresy grows from idleness.",
+		"A suspicious mind is a healthy mind.",
+		"Foolish are those who fear nothing, yet claim to know everything.",
+		"We win this day or we die trying! There is no retreat!",
+		"To each of us falls a task, and all the Emperor requires of us Engineers is that we stand the line.",
+		"We are all pawns of something even greater: memes, the DNA of the soul.",
+		"Nanomachines, Son. They harden in response to physical trauma.",
+		"Every lone spirit doubts his strength.",
+		"Excuses are the refuge of the weak.",
+		"Facts are chains that bind perception and fetter truth. For a man can remake the world if he has a dream and no facts to cloud his mind.",
+		"Hard work conquers everything.",
+		"He who lives for nothing is nothing.",
+		"Honor is what a pure mind knows about itself.",
+		"Hope is the first step on the road to disappointment."
+	];
+	$(".phrase").text(phrases[Encrypter.randomNumber(phrases.length)]);
+}
+
 function toScrollDown() {
     var elem = document.getElementById("chatdiv");
     elem.scrollTop = elem.scrollHeight;
@@ -636,16 +994,16 @@ $("#create-group").click(async () => {
     if (!showingContacts) {
         $(".search").addClass("hidden");
         $(".creategroup").removeClass("hidden");
-		$(".writegroup").removeClass("hidden");
-		$(".addcontact").removeClass("hidden");
-		$(".writecontact").removeClass("hidden");
-		contactsToOpen = false;
+        $(".writegroup").removeClass("hidden");
+        $(".addcontact").removeClass("hidden");
+        $(".writecontact").removeClass("hidden");
+        contactsToOpen = false;
     } else {
         $(".search").removeClass("hidden");
         $(".creategroup").addClass("hidden");
-		$(".writegroup").addClass("hidden");
-		$(".addcontact").addClass("hidden");
-		$(".writecontact").addClass("hidden");
+        $(".writegroup").addClass("hidden");
+        $(".addcontact").addClass("hidden");
+        $(".writecontact").addClass("hidden");
     }
     await displayContacts(markContactForGroup);
 });
@@ -686,7 +1044,7 @@ $("#creategroup").click(async () => {
             await showChats();
             showingContacts = false;
             $(".creategroup").addClass("hidden");
-			$(".writegroup").addClass("hidden");
+            $(".writegroup").addClass("hidden");
             $(".search").removeClass("hidden");
             contactsForGroup = [];
         } else {
@@ -701,23 +1059,36 @@ $("#creategroup").click(async () => {
 $("#addcontact").click(async () => {
 
     if ($(".input-contact").val() != "") {
-        var contact = "https://" + $(".input-contact").val().toLowerCase() + ".solid.community/profile/card#me";
-        if (baseService.writePermission(contact)) {
+        await lookForUsername($(".input-contact").val().toLowerCase(), "solid.community");
+		await lookForUsername($(".input-contact").val().toLowerCase(), "inrupt.net");
+    } else {
+        alert("No username specified.");
+    }
+
+});
+
+async function lookForUsername(name, provider) {
+	var contact = "https://" + name + "." + provider + "/profile/card#me";
+	var permission;
+	try {
+		permission = await baseService.readPermission(contact);
+	} catch (err) {
+		permission = false;
+	}
+	console.log(permission);
+        if (permission) {
+
             let name = await baseService.getFormattedName(contact);
             var friendPhoto = await baseService.getPhoto(contact);
             if (!friendPhoto) {
                 friendPhoto = baseService.getDefaultFriendPhoto();
             }
 
-            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='profilpicture'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
+            var html = "<div style='cursor: pointer;' class='contact' id='openchatwindow" + contact + "'><img src='" + friendPhoto + "' alt='!' onerror='this.onerror=null;this.src='http://www.philosophica.info/voces/aquino/Aquino.jpg';'><div class='contact-preview'><div class='contact-text'><h1 class='font-name'>" + name + "</h1><p class='font-preview' id='ctmsg" + contact.split("/")[2].split(".")[0] + "'></p></div></div><div class='contact-time'><p>" + "</p></div></div>";
 
             $(".contact-list").prepend(html);
             document.getElementById("openchatwindow" + contact).addEventListener("click", contactsToOpen ? openContact : markContactForGroup, false);
         } else {
             alert("No user found with web id " + contact);
         }
-    } else {
-        alert("No username specified.");
-    }
-
-});
+}

@@ -3,4 +3,4 @@
 echo --------------------
 echo Running the app and Starting server...
 echo --------------------
-npm run build:web & http-server
+npm run build:web & http-server & COPY "src\main\dist\main.js" "docs\main\dist\main.js"
