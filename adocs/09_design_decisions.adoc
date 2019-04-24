@@ -20,7 +20,7 @@ The former required of some permission system to allow other users to access the
 However, we opted for the latter, since we consider that data being in custody of all participants was both a fairer deal for the parts involved as well as preferable to data integrity and fault-tolerance.
 This requires some more resources to proceed with the operations, but it doesn't affect the user experience since the visual showing is done independently.
 
-=== Encryption
+==== Encryption
 We decided to encrypt all data stored at a POD, for we learned that they might not be as secure as one would like. 
 
 Hence, we created a simple encryption system which, actually, is nothing more than the combination of two popular ones: Enigma -which nowadays does not provide much, but serves as a signature of our work- and AES, which provides true security to the system.
@@ -39,11 +39,15 @@ It'd be fine to improve it for the far future, though.
 
 ==== Front End
 To design the UI and offer the best UX possible, we are using _**HTML**_ and _**CSS**_
-and _**Bootstrap**_ in addition to _jQuery_.
+and _**Bootstrap**_ in addition to _jQuery_. 
+
+We chose to mix a popular chat UI style -in order to make it familiar and intuitive to new users- with a retrowave feel for a more unique touch. A set of random, slightly inspirational phrases is shown while chat is loading, so that the user is somewhat entertained for the duration of the process.
 
 ==== Back End
 Moving to the functionality part, we are using basically *_JavaScript_* and *_Node.JS_*
 to manage dependencies and libraries such as *n3* and *Q* to work with _RDF_ and _Linked Data_.
+
+Code was organized into sets of classes such as Services and Repositories to improve its clearance of purpose and maintenance ease. Such estructure has already been detailed at previous chapters, so we shall not explain it any further.
 
 For the testing part, we are using *mocha* and *nyc* for unit tests,
 and *cucumber-selenium* for **link:https://en.wikipedia.org/wiki/Behavior-driven_development:[BDD]** tests.
@@ -52,7 +56,7 @@ and *cucumber-selenium* for **link:https://en.wikipedia.org/wiki/Behavior-driven
 Following *Solid* specifications, all the data shared between users are *private* and stored in their respective POD.
 
 ==== Continuous Integration
-we are using **link:https://travis-ci.org/Arquisoft/dechat_es6a2:[Travis]**
+We are using **link:https://travis-ci.org/Arquisoft/dechat_es6a2:[Travis]**
 for running the tests and checking the correct build of our app,
 **link:https://coveralls.io/github/Arquisoft/dechat_es6a2?branch=master:[Coveralls]**
 for code coverage to make sure of not forgetting any part of app
