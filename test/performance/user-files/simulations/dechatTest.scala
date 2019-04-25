@@ -31,7 +31,7 @@ class TestFirstDechat extends Simulation {
 		.exec(http("request_1")
 			.get("/dechat_es4a/videos")
 			.resources(http("request_2")
-			.check(status.is(404)))
+			.check(status.is(404))))
 		.pause(40)
 
 		.exec(http("request_2")
