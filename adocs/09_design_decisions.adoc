@@ -26,7 +26,7 @@ We decided to encrypt all data stored at a POD, for we learned that they might n
 Hence, we created a simple encryption system which, actually, is nothing more than the combination of two popular ones: Enigma -which nowadays does not provide much, but serves as a signature of our work- and AES, which provides true security to the system.
 
 We thought about making the encryption process invisible to the user, by autogenerating a password and storing it at the POD. However, this does not solve much, in the end, since if an attacker gains access to the container he'd have no trouble accessing the data.
-Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably. 
+Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably. Besides, it allows for multiple encryptions at one POD, which work independently.
 
 Salt is added to every field encrypted, so that two identical texts -commonly, users- are not revealed. Such salt is stored along the encrypted info, as it is conventional.-
 
