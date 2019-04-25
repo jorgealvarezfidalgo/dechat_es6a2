@@ -51,13 +51,14 @@ It will show some IP addresses where the application will be available.
 == Testing
 
 There are unit tests using mocha at
- https://github.com/Arquisoft/dechat_es6a2/tree/master/test[test].
+ https://github.com/Arquisoft/dechat_es6a2/tree/master/tests[tests].
 
 There are also some https://cucumber.io/[Cucumber based tests] defined at
  https://github.com/Arquisoft/dechat_es6a2/tree/master/step-definitions[step-definitions].
 
  And finally some https://gatling.io[Gatling performance tests] defined at
-  https://github.com/Arquisoft/dechat_es6a2/tree/master/test/performance/user-files/simulations[simulations].
+  https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/user-files/simulations/computerdatabase[simulations]
+  and the https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/results[results].
 
 To run tests, execute:
 
