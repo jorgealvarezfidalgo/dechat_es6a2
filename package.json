@@ -46,6 +46,7 @@
     "eslint": "^5.x",
     "faker": "^4.1.0",
     "file-system": "^2.2.2",
+    "gatlingjs": "0.0.7",
     "gulp": "^4.0.0",
     "gulp-cli": "^2.0.1",
     "gulp-exec": "^3.0.2",
