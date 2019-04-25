@@ -70,4 +70,4 @@ node_modules
 .nyc_output/
 reports/
 coverage/
-*.lcov
+coverage.lcov
