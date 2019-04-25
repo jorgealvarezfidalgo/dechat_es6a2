@@ -2,6 +2,11 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 const CryptoJS = require("crypto-js");
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 class MessageService extends Service {
 
     constructor(fetch) {
@@ -9,7 +14,11 @@ class MessageService extends Service {
         this.baseService = new BaseService(this.auth.fetch);
     }
 
-
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async getNewMessage(fileurl, userWebId) {
         const deferred = this.Q.defer();
         const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);
@@ -84,6 +93,11 @@ class MessageService extends Service {
         return deferred.promise;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
         //const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
         //const psUsername = username.replace(/ /g, "U+0020");

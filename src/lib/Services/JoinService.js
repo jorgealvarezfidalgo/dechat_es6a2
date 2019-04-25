@@ -2,6 +2,11 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 const CreateService = require("./CreateService");
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 class JoinChatService extends Service {
     constructor(fetch) {
         super(fetch);
@@ -9,6 +14,11 @@ class JoinChatService extends Service {
 		this.createService = new CreateService(this.auth.fetch);
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
 		this.createService.setEncrypter(this.encrypter);
         var recipient = interlocutorWebId;
@@ -46,6 +56,11 @@ class JoinChatService extends Service {
         }
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
         //console.log("Info to join:");
         //console.log(chat);
@@ -75,6 +90,12 @@ class JoinChatService extends Service {
         //console.log(chatJoined);
         return chatJoined;
     }
+	
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async getJoinRequest(fileurl, userWebId) {
         //console.log(fileurl);
 		this.baseService.setEncrypter(this.encrypter);

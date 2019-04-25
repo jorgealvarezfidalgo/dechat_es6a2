@@ -1,3 +1,8 @@
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 class SemanticChat {
 
     constructor(options) {
@@ -14,28 +19,57 @@ class SemanticChat {
 
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getUrl() {
         return this.url;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getInterlocutorWebId() {
         return this.interlocutorWebId;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     loadMessage(message) {
         this.messages[this.numberOfMessages] = message;
         this.numberOfMessages += 1;
     }
 
-
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getMessages() {
         return this.messages;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getNumberOfMsgs() {
         return this.numberOfMessages;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getLastMessage() {
         if (this.numberOfMessages > 0) {
             return this.messages[this.numberOfMessages - 1];
@@ -46,6 +80,11 @@ class SemanticChat {
         }
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     getHourOfMessage(msg) {
         if (this.numberOfMessages > 0) {
             return this.messages[msg].time.substring(11, 16).replace("\-", "\:");
