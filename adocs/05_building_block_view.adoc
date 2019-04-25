@@ -39,6 +39,7 @@ Those being the following:
 * JoinService. Processes invitations to create a replica of the chat in invited user's POD.
 * OpenService. Loads all information about stored chats and any messages it contains-.
 * MessageService. Looks for new messages in inbox to store them if necessary, as well as stores new messages created at current session and sends them to any participants' inboxes.
+* EncryptionService. Encrypts and decrypts data with TRUBIA algorithm.
 
 Since there were common imports to all of them, sharing constructor as well, we abstracted a Service superclass to avoid duplicating code.
 
