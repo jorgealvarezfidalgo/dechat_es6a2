@@ -1,10 +1,9 @@
 const expect = require("chai").expect;
 var webdriver = require("selenium-webdriver");
-/*global by*/
 
 module.exports = function () {
 
-    //________________________ FIRST CUCUMBER GOOGLE SEARCH _______________________//
+    /* ________________________ CHECK CUCUMBER _______________________ */
 
     this.When(/^I search Google for "([^"]*)"$/, (text) => {
         return helpers.loadPage("https://google.com")
@@ -17,7 +16,7 @@ module.exports = function () {
         return driver.wait(until.elementsLocated(by.partialLinkText(keywords)), 10000);
     });
 
-    //_______________________ DECHAT - TESTS - ES6A - II ___________________________//
+    /* _______________________ DECHAT - TESTS - ES6A - II ___________________________ */
 
     this.Given(/^We visit the "([^"]*)"$/, function (arg1) {
         return helpers.loadPage(arg1)
@@ -29,7 +28,7 @@ module.exports = function () {
             })
     });
 
-    //______________________________ FIRST SCENARIO __ BAD LOGIN __________________________________//
+    /* ______________________________ FIRST SCENARIO __ BAD LOGIN __________________________________ */
 
     this.Given(/^We put the bad credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
         var parent = driver.getWindowHandle();
@@ -66,7 +65,7 @@ module.exports = function () {
             })
     });
 
-    //______________________________ SECOND SCENARIO __ CORRECT LOGIN __________________________________//
+    /* ______________________________ SECOND SCENARIO __ CORRECT LOGIN __________________________________ */
 
     this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)"$/, function (arg1, arg2) {
         var parent = driver.getWindowHandle();
@@ -105,15 +104,11 @@ module.exports = function () {
         var element = driver.findElement(by.name('pwd1'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).click();
         element = driver.findElement(by.id('pwd2'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).clear();
-        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
         element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
         return driver.executeScript("arguments[0].click();", element)
-        //  return driver.findElement(by.id("enterpwd")).click()
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
             })
@@ -121,15 +116,15 @@ module.exports = function () {
 
 
     this.Then(/^We click and we reach the home page with the messages shown$/, () => {
-        //username correct
+        //Username correct
         return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 10000)
             .then(() => {
-                //selfphoto default is present
+                //Selfphoto by default is present
                 return driver.findElement(by.xpath("//*[@id='selfphoto']"))
                     .then(() => {
-                        //the user has only one conversion with Othmane Bakhtaoui
+                        //The user has only one conversion with Othmane Bakhtaoui
                         driver.wait(until.elementsLocated(by.xpath("//*[@id='chatwindow0']/div[1]/div/h1")), 20000);
-                        //click on the friend
+                        //Click on the friend
                         return driver.findElement(by.xpath("//*[@id='chatwindow0']/div[1]/div/h1")).click()
                             .then(() => {
                                 //"hello" should appear
@@ -139,7 +134,7 @@ module.exports = function () {
             });
     });
 
-    //______________________________ THIRD SCENARIO __ SENDING MESSAGE TO AN EXISTING CONVERSATION ________________________//
+    /* ______________________________ THIRD SCENARIO __ SENDING MESSAGE TO AN EXISTING CONVERSATION ________________________ */
 
     this.Given(/^We put the good credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3) {
         var parent = driver.getWindowHandle();
@@ -178,28 +173,24 @@ module.exports = function () {
         var element = driver.findElement(by.name('pwd1'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).click();
         element = driver.findElement(by.id('pwd2'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).clear();
-        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
         element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
         return driver.executeScript("arguments[0].click();", element)
-        //  return driver.findElement(by.id("enterpwd")).click()
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
             })
     });
 
     this.Then(/^the messages will appear and we an existing conversation$/, () => {
-        //username correct
+        //Username is correct
         return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000)
             .then(() => {
-                //selfphoto default is present
+                //Selfphoto by default is present
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='selfphoto']")), 20000)
                     .then(() => {
-                        //the user has only one conversion with Othmane Bakhtaoui
+                        //The user has only one conversion with Othmane Bakhtaoui
                         return driver.wait(until.elementsLocated(by.xpath("//*[@id='chatwindow0']/div[1]/div/h1")), 20000);
                     })
             });
@@ -214,14 +205,14 @@ module.exports = function () {
                         driver.findElement(by.xpath("//*[@id='write-chat']")).sendKeys(arg1)
                         return driver.findElement(by.xpath("//*[@id='write-chat']")).sendKeys(webdriver.Key.ENTER)
                             .then(() => {
-                                //new message should appear
+                                //New message should appear
                                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='chatdiv']/div/div[3]")), 20000);
                             })
                     })
             })
     });
 
-    //______________________________ FOURTH SCENARIO __ controlling the app apearance ____________________________//
+    /* ______________________________ FOURTH SCENARIO __ controlling the app apearance ____________________________ */
 
     this.Given(/^We put the credentials username "([^"]*)" and password "([^"]*)" and click on "([^"]*)"$/, function (arg1, arg2, arg3) {
         var parent = driver.getWindowHandle();
@@ -260,15 +251,11 @@ module.exports = function () {
         var element = driver.findElement(by.name('pwd1'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).click();
         element = driver.findElement(by.id('pwd2'));
         driver.executeScript("arguments[0].click();", element);
         driver.executeScript("arguments[0].value='" + arg1 + "';", element);
-        //driver.findElement(by.css("input[type='password']")).clear();
-        //driver.findElement(by.css("input[type='password']")).sendKeys(arg1);
         element = driver.findElement(by.xpath('//*[@id="enterpwd"]'));
         return driver.executeScript("arguments[0].click();", element)
-        //  return driver.findElement(by.id("enterpwd")).click()
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 50000);
             })
@@ -276,13 +263,13 @@ module.exports = function () {
 
 
     this.Then(/^the messages will appear and we select a friend in the friends' section$/, () => {
-        //username correct
+        //Username correct
         return driver.wait(until.elementsLocated(by.xpath("//*[@id='user-name']")), 20000)
             .then(() => {
-                //selfphoto default is present
+                //Selfphoto by default is present
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='selfphoto']")), 20000)
                     .then(() => {
-                        //the user has only one conversion with Othmane Bakhtaoui
+                        //The user has only one conversion with Othmane Bakhtaoui
                         return driver.wait(until.elementsLocated(by.xpath("//*[@id='show-contacts']")), 20000);
                     })
             });
@@ -294,11 +281,11 @@ module.exports = function () {
             .then(() => {
                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='create-group']")), 25000)
                     .then(() => {
-                        //see only one conversation with Othmane Bakhtaoui
+                        //See only one conversation with Othmane Bakhtaoui
                         return driver.wait(until.elementsLocated(by.xpath("//*[@id='chatwindow0']/div[1]/div/h1")), 20000)
                             .then(() => {
                                 return driver.wait(until.elementsLocated(by.xpath("//*[@id='interlocutorw-name']")), 20000)
-                                //show contact information
+                                //Show contact information
                                     .then(() => {
                                         return driver.wait(until.elementsLocated(by.xpath("//*[@id='show-contact-information']")), 20000);
                                     })

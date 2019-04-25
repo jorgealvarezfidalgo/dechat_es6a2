@@ -9,7 +9,8 @@ const baseService = new BaseService(auth.fetch);
 
 
 describe("Semantic Chat Testing", function() {
-  it("testing a generic semantic chat", async function() {
+	
+  it("Testing a generic semantic chat", async function() {
     const chat = new SemanticChat({
       url: "http://example.org/myChat",
       userWebId: "http://example.org/#me",
@@ -21,7 +22,7 @@ describe("Semantic Chat Testing", function() {
     assert.equal(chat.interlocutorWebId, "http://example.org/#other", "The friend web id is not correct.");
   });
 
-  it("creating a new semantic chat", async function() {
+  it("Creating a new semantic chat", async function() {
     const chat = new SemanticChat({
       url: "http://example.org/myChat",
       userWebId: "https://morningstar.solid.community/profile/card#me",
