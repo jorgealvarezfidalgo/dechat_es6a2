@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class TestFirstDechat extends Simulation {
+class DechatTest extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("https://arquisoft.github.io")
@@ -31,7 +31,7 @@ class TestFirstDechat extends Simulation {
 		.exec(http("request_1")
 			.get("/dechat_es4a/videos")
 			.resources(http("request_2")
-			.check(status.is(404)))
+			.check(status.is(404))))
 		.pause(40)
 
 		.exec(http("request_2")
