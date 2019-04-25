@@ -1,7 +1,7 @@
 const URI = require("uri-js");
 
 /**
- * A class with helper methods for read and write of Solid PODs.
+ * A class with helper methods for reading and writing of Solid PODs.
  * Heavily inspired by https://github.com/pheyvaer/solid-chess
  */
 class SolidUploaderRepository {

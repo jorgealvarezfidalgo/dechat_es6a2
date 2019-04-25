@@ -2,51 +2,48 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 const CreateService = require("./CreateService");
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+/**
+ * Encapsulates all functionality related with joining a chat.
+ */
 class JoinChatService extends Service {
     constructor(fetch) {
         super(fetch);
-		this.baseService = new BaseService(this.auth.fetch);
-		this.createService = new CreateService(this.auth.fetch);
+        this.baseService = new BaseService(this.auth.fetch);
+        this.createService = new CreateService(this.auth.fetch);
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Joins a chat by storing all info recovered from the invitation in current user's POD.
+     * @param {string} userDataUrl: storage URL.
+     * @param {string} interlocutorWebId: WebId of the interlocutor.
+     * @param {string} userWebId: WebId of current user.
+     * @param {string} urlChat: chat URL
+     * @param {string} name: Group name, if Group.
+     * @param {string[]} members: Group members, if group.
+     */
     async joinExistingChat(userDataUrl, interlocutorWebId, userWebId, urlChat, name, members) {
-		this.createService.setEncrypter(this.encrypter);
+        this.createService.setEncrypter(this.encrypter);
         var recipient = interlocutorWebId;
         var participants = [];
-        //console.log("A");
         if (interlocutorWebId.includes("Group")) {
             recipient = userWebId.split("card")[0] + "Group/" + name;
             participants = members;
         } else {
             participants.push(recipient);
         }
-        //console.log("B");
         participants.forEach(async (mem) => {
-            //console.log("Guardando en POD B a: " + mem);
             var invitation = await this.createService.generateInvitation(userDataUrl, urlChat, userWebId, mem);
-            //console.log(invitation);
             try {
                 await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA{${invitation.forprivate}}`);
             } catch (e) {
                 logger.error("Could not add chat to WebId.");
             }
         });
-        //console.log(recipient);
-		
-		var encuser = this.encrypter.encrypt(userWebId, false);
-		var encrec = this.encrypter.encrypt(recipient, false);
-		var encdata = this.encrypter.encrypt(userDataUrl, false);
-		
+
+        var encuser = this.encrypter.encrypt(userWebId, false);
+        var encrec = this.encrypter.encrypt(recipient, false);
+        var encdata = this.encrypter.encrypt(userDataUrl, false);
+
         try {
             await this.uploader.executeSPARQLUpdateForUser(userWebId.replace("profile/card#me", "private/chatsStorage.ttl"), `INSERT DATA { <${urlChat}> <${this.namespaces.schema}contributor> <${encuser}>;
     			<${this.namespaces.schema}recipient> <${encrec}>;
@@ -56,14 +53,15 @@ class JoinChatService extends Service {
         }
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Processes data loaded from invitation.
+     * @param {Object} chat: recovered data.
+     * @param {string} fileurl: URL of file which contained the data.
+     * @param {string} userWebId: WebId of current user.
+     * @param {string} userDataUrl: URL of storage.
+     * @return {SemanticChat}: Processed data into a SemanticChat instance.
+     */
     async processChatToJoin(chat, fileurl, userWebId, userDataUrl) {
-        //console.log("Info to join:");
-        //console.log(chat);
         var chatJoined = null;
         if (chat.friendIds[0].includes("Group")) {
             var name = chat.friendIds[0].split("/").pop();
@@ -86,26 +84,21 @@ class JoinChatService extends Service {
                 interlocutorName: await this.baseService.getFormattedName(chat.friendIds[0])
             });
         }
-        //console.log("Chat processed");
-        //console.log(chatJoined);
         return chatJoined;
     }
-	
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+
+    /**
+     * Loads invitation data.
+     * @param {string} fileurl: URL of file which contains the data.
+     * @param {string} userWebId: WebId of current user.
+     * @return {Object}: Loaded data.
+     */
     async getJoinRequest(fileurl, userWebId) {
-        //console.log(fileurl);
-		this.baseService.setEncrypter(this.encrypter);
+        this.baseService.setEncrypter(this.encrypter);
         var chat = await this.baseService.getInvitation(fileurl);
         var chatUrl = chat.ievent;
-        //console.log(chatUrl);
         const recipient = chat.interlocutor;
-        //console.log(recipient);
         const ids = chat.agent;
-        //console.log("IDS:" + ids);
         const friendIds = ids.replace("----" + userWebId, "").split("----");
         this.uploader.deleteFileForUser(fileurl);
         return {
