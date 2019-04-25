@@ -1,6 +1,11 @@
 const Service = require("./Service");
 const BaseService = require("./BaseService");
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 class OpenService extends Service {
     constructor(fetch) {
         super(fetch);
@@ -62,6 +67,11 @@ class OpenService extends Service {
     return deferred.promise;
   }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
   async loadChatFromUrl(url, userWebId, userDataUrl, interloc) {
 	this.loader.setEncrypter(this.encrypter);
 	if(interloc.includes("Group")) {

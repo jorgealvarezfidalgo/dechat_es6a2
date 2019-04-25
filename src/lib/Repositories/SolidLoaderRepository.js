@@ -20,6 +20,11 @@ class SolidLoaderRepository {
         this.fetch = fetch;
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
         const chat = new SemanticChat({
             url: chatUrl,
@@ -29,6 +34,11 @@ class SolidLoaderRepository {
         return await this.loadFromUrl(chat, chatUrl);
     }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
 
         //console.log("Interlocutor group");
@@ -200,7 +210,12 @@ class SolidLoaderRepository {
 
         return deferred.promise;
     }
-
+	
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
     setEncrypter(encrypter) {
         this.encrypter = encrypter;
     }

@@ -15,6 +15,11 @@ const Loader = require("../Repositories/SolidLoaderRepository");
 const SemanticChat = require("../semanticchat");
 const Group = require("../Group");
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 class Service {
     constructor(fetch) {
         this.inboxUrls = {};
@@ -49,6 +54,11 @@ class Service {
 		this.loader = new Loader(auth.fetch);
     }
 	
+		/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 	setEncrypter(encrypter) {
 		this.encrypter = encrypter;
 	}

@@ -77,6 +77,11 @@ function afterChatOption() {
     $("#chat-options").addClass("hidden");
 }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 async function startChat() {
 
     var selfPhoto = await baseService.getPhoto(userWebId);
@@ -113,6 +118,11 @@ async function startChat() {
     openChat = true;
 }
 
+	/**
+	 * This method returns an RDFJSSource of an url
+	 * @param {string} url: url of the source
+	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 */
 async function loadChats() {
     //console.log(semanticChats);
     semanticChats.sort(function (a, b) {
