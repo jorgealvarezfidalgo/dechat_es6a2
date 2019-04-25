@@ -1326,17 +1326,65 @@ in his private pod and no one will see it except him.</p>
 <div class="sect2">
 <h3 id="_design_decisions_detailed">9.2. Design Decisions Detailed</h3>
 <div class="sect3">
-<h4 id="_front_end">9.2.1. Front End</h4>
+<h4 id="_chat_storage">9.2.1. Chat Storage</h4>
 <div class="paragraph">
-<p>to design the UI and offer the best UX possible, we are using <em><strong>HTML</strong></em> and <em><strong>CSS</strong></em>
-and <em><strong>Bootstrap</strong></em> in addition to <em>jQuery</em>.</p>
+<p>Firstly, a decision had to be taken about the approach to data storage; two options were available for us.</p>
+</div>
+<div class="paragraph">
+<p>Either we stored chat data at one of the interlocutors' POD (chat creator, presumably) or we stored the data at both sides.</p>
+</div>
+<div class="paragraph">
+<p>The former required of some permission system to allow other users to access the host&#8217;s private folder, but reduced work volume by limiting storage to one user, instead of 2+.</p>
+</div>
+<div class="paragraph">
+<p>However, we opted for the latter, since we consider that data being in custody of all participants was both a fairer deal for the parts involved as well as preferable to data integrity and fault-tolerance.
+This requires some more resources to proceed with the operations, but it doesn&#8217;t affect the user experience since the visual showing is done independently.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_back_end">9.2.2. Back End</h4>
+<h4 id="_encryption">9.2.2. Encryption</h4>
+<div class="paragraph">
+<p>We decided to encrypt all data stored at a POD, for we learned that they might not be as secure as one would like.</p>
+</div>
+<div class="paragraph">
+<p>Hence, we created a simple encryption system which, actually, is nothing more than the combination of two popular ones: Enigma -which nowadays does not provide much, but serves as a signature of our work- and AES, which provides true security to the system.</p>
+</div>
+<div class="paragraph">
+<p>We thought about making the encryption process invisible to the user, by autogenerating a password and storing it at the POD. However, this does not solve much, in the end, since if an attacker gains access to the container he&#8217;d have no trouble accessing the data.
+Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably.</p>
+</div>
+<div class="paragraph">
+<p>Salt is added to every field encrypted, so that two identical texts -commonly, users- are not revealed. Such salt is stored along the encrypted info, as it is conventional.-</p>
+</div>
+<div class="paragraph">
+<p>Whereas every information stored at a private folder is locked by the chosen password, a decision had to be made about the data sent by one interlocutor and received by the others at the inbox, since they would need to agree a common password to work with it.
+To avoid making the system harder to use -a password would have to be established for every chat-, it is handled automatically and without affecting the user, by appending the key to the message.</p>
+</div>
+<div class="paragraph">
+<p>Obviously, this makes it decryptable, if someone really wishes to do so. Since it is a temporal operation, it is a window of insecurity within the system. However, there is no time to implement a more complex system; its purpose is that of making it unintelligible for the casual, non-desirable visitor.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;d be fine to improve it for the far future, though.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_front_end">9.2.3. Front End</h4>
+<div class="paragraph">
+<p>To design the UI and offer the best UX possible, we are using <em><strong>HTML</strong></em> and <em><strong>CSS</strong></em>
+and <em><strong>Bootstrap</strong></em> in addition to <em>jQuery</em>.</p>
+</div>
+<div class="paragraph">
+<p>We chose to mix a popular chat UI style -in order to make it familiar and intuitive to new users- with a retrowave feel for a more unique touch. A set of random, slightly inspirational phrases is shown while chat is loading, so that the user is somewhat entertained for the duration of the process.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_back_end">9.2.4. Back End</h4>
 <div class="paragraph">
 <p>Moving to the functionality part, we are using basically <strong><em>JavaScript</em></strong> and <strong><em>Node.JS</em></strong>
 to manage dependencies and libraries such as <strong>n3</strong> and <strong>Q</strong> to work with <em>RDF</em> and <em>Linked Data</em>.</p>
+</div>
+<div class="paragraph">
+<p>Code was organized into sets of classes such as Services and Repositories to improve its clearance of purpose and maintenance ease. Such estructure has already been detailed at previous chapters, so we shall not explain it any further.</p>
 </div>
 <div class="paragraph">
 <p>For the testing part, we are using <strong>mocha</strong> and <strong>nyc</strong> for unit tests,
@@ -1344,15 +1392,15 @@ and <strong>cucumber-selenium</strong> for <strong><a href="https://en.wikipedia
 </div>
 </div>
 <div class="sect3">
-<h4 id="_persistence_and_data_storage">9.2.3. Persistence and Data Storage</h4>
+<h4 id="_persistence_and_data_storage">9.2.5. Persistence and Data Storage</h4>
 <div class="paragraph">
 <p>Following <strong>Solid</strong> specifications, all the data shared between users are <strong>private</strong> and stored in their respective POD.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_continuous_integration">9.2.4. Continuous Integration</h4>
+<h4 id="_continuous_integration">9.2.6. Continuous Integration</h4>
 <div class="paragraph">
-<p>we are using <strong><a href="https://travis-ci.org/Arquisoft/dechat_es6a2:">Travis</a></strong>
+<p>We are using <strong><a href="https://travis-ci.org/Arquisoft/dechat_es6a2:">Travis</a></strong>
 for running the tests and checking the correct build of our app,
 <strong><a href="https://coveralls.io/github/Arquisoft/dechat_es6a2?branch=master:">Coveralls</a></strong>
 for code coverage to make sure of not forgetting any part of app
