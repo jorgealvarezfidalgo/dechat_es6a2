@@ -1,8 +1,6 @@
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+/**
+ * Logic representation of a Individual Chat
+ */
 class SemanticChat {
 
     constructor(options) {
@@ -20,27 +18,24 @@ class SemanticChat {
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns its URL.
+	 * @returns {string}: chat URL.
 	 */
     getUrl() {
         return this.url;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns the interlocutor ID.
+	 * @returns {string}: WebId of the interlocutor.
 	 */
     getInterlocutorWebId() {
         return this.interlocutorWebId;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * Loads messages to the chat.
+	 * @param {Object} message: message to load.
 	 */
     loadMessage(message) {
         this.messages[this.numberOfMessages] = message;
@@ -48,27 +43,24 @@ class SemanticChat {
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns a list of messages.
+	 * @returns {string[]}: a list of the messages of the Chat.
 	 */
     getMessages() {
         return this.messages;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns a number of messages.
+	 * @returns {int}: number of messages of the Chat.
 	 */
     getNumberOfMsgs() {
         return this.numberOfMessages;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns the last message.
+	 * @returns {string[]}: a list of the members of the Group.
 	 */
     getLastMessage() {
         if (this.numberOfMessages > 0) {
@@ -81,9 +73,8 @@ class SemanticChat {
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns the hour of a certain message
+	 * @returns {string}: hour of the message.
 	 */
     getHourOfMessage(msg) {
         if (this.numberOfMessages > 0) {

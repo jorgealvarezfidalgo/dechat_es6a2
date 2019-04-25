@@ -1,10 +1,8 @@
 const SemanticChat = require("./semanticchat");
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+/**
+ * Logic representation of a Group Chat
+ */
 class Group extends SemanticChat {
 
     constructor(options) {
@@ -14,9 +12,8 @@ class Group extends SemanticChat {
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * Adds a member to the Group
+	 * @param {string} member: WebId of the new member.
 	 */
     saveMember(member) {
         this.members[this.numberOfMembers] = member;
@@ -24,27 +21,24 @@ class Group extends SemanticChat {
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * Sets members of the Group
+	 * @param {string[]} member: WebIds of the members.
 	 */
     setMembers(membs) {
         this.members = membs;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns a list of members.
+	 * @returns {string[]}: a list of the members of the Group.
 	 */
     getMembers() {
         return this.members;
     }
 
 	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
+	 * This method returns a number of members.
+	 * @returns {int}: number of the members of the Group.
 	 */
     getNumberOfMembers() {
         return this.numberOfMembers;
