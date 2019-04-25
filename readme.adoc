@@ -61,3 +61,9 @@ To run tests, execute:
 ----
 npm test
 ----
+
+== Performance
+
+To test the performance of our app, we used https://gatling.io[Gatling performance tests]
+and the tests are defined at https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/user-files/simulations/computerdatabase[simulations]
+and the full https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/results[results].

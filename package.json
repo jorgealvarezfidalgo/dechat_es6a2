@@ -7,7 +7,7 @@
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "test": "nyc ./node_modules/mocha/bin/_mocha \"./tests/*test.js\" --report lcovonly -- -R spec && node ./node_modules/selenium-cucumber-js/index.js -b firefox -s ./tests/cucumber/step-definitions -x 50000",
+    "test": "nyc ./node_modules/mocha/bin/_mocha \"./tests/*test.js\" --report lcovonly -- -R spec && node ./node_modules/selenium-cucumber-js/index.js -b firefox -s ./step-definitions -x 50000",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build:web": "webpack --config webpack.config.js",
@@ -23,6 +23,10 @@
     "url": "git+https://github.com/Arquisoft/dechat_es6a2"
   },
   "author": "Jorge Fidalgo <UO258524@uniovi.es>",
+  "contributors": [
+    "Othmane Bakhtaoui <uo259323@uniovi.es> (https://github.com/othub)",
+    "Jorge Fidalgo <UO258524@uniovi.es> (https://github.com/jorgealvarezfidalgo)"
+  ],
   "bugs": {
     "url": "https://github.com/Arquisoft/dechat_es6a2/issues"
   },
