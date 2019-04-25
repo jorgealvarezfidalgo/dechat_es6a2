@@ -7,8 +7,8 @@
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "test": "node ./node_modules/gatlingjs/dist/index.js && nyc ./node_modules/mocha/bin/_mocha \"./test/*test.js\" --report lcovonly -- -R spec && node ./node_modules/selenium-cucumber-js/index.js -b firefox -s ./step-definitions -x 50000",
-    "perf": "node ./node_modules/gatlingjs/dist/index.js",
+    "test": "node ./node_modules/gatlingjs/dist/index.js -m && nyc ./node_modules/mocha/bin/_mocha \"./test/*test.js\" --report lcovonly -- -R spec && node ./node_modules/selenium-cucumber-js/index.js -b firefox -s ./step-definitions -x 50000",
+    "perf": "node ./node_modules/gatlingjs/dist/index.js -m",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build:web": "webpack --config webpack.config.js",
