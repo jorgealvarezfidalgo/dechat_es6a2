@@ -2,11 +2,9 @@ const Service = require("./Service");
 const BaseService = require("./BaseService");
 const CryptoJS = require("crypto-js");
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+/**
+ * Encapsulates all messaging functionality.
+ */
 class MessageService extends Service {
 
     constructor(fetch) {
@@ -14,11 +12,12 @@ class MessageService extends Service {
         this.baseService = new BaseService(this.auth.fetch);
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Gets a message from a given URL. (presumably from inbox, hence 'new')
+     * @param {string} fileurl: url of the file to check.
+     * @param {string} userWebId: WebId of current user.
+     * @returns {Promise}: a promise that resolves with the message stored, or null.
+     */
     async getNewMessage(fileurl, userWebId) {
         const deferred = this.Q.defer();
         const rdfjsSource = await this.rdfjsSourceFromUrl(fileurl, this.fetch);
@@ -33,28 +32,24 @@ class MessageService extends Service {
   					<${self.namespaces.schema}givenName> ?username;
   					<${self.namespaces.schema}text> ?msgtext.
   			}`, {
-                sources: [{
-                    type: "rdfjsSource",
-                    value: rdfjsSource
-                }]
-            })
-                .then(function (result) {
-                    result.bindingsStream.on("data", async function (result) {
-
-                        //.replace(/U\+0020/g, " ").replace(/U\+003A/g, ":") for text
+                    sources: [{
+                        type: "rdfjsSource",
+                        value: rdfjsSource
+                    }]
+                })
+                .then(function(result) {
+                    result.bindingsStream.on("data", async function(result) {
                         messageFound = true;
                         result = result.toObject();
 
                         const messageUrl = result["?message"].value;
                         var messageT;
-                        //const author = result["?username"].value.replace(/U\+0020/g, " ");
-                        //const time = result["?time"].value.split("/")[4];
                         var txFields = result["?msgtext"].value.split("/");
                         var auFields = result["?username"].value.split("/");
 
-                        if (result["?msgtext"].value.includes("data:image")
-                            || result["?msgtext"].value.includes("data:video")
-                            || result["?msgtext"].value.includes("data:text")
+                        if (result["?msgtext"].value.includes("data:image") ||
+                            result["?msgtext"].value.includes("data:video") ||
+                            result["?msgtext"].value.includes("data:text")
                         ) {
                             messageT = result["?msgtext"].value;
                         } else {
@@ -80,7 +75,7 @@ class MessageService extends Service {
                         });
                     });
 
-                    result.bindingsStream.on("end", function () {
+                    result.bindingsStream.on("end", function() {
                         if (!messageFound) {
                             deferred.resolve(null);
                         }
@@ -93,33 +88,24 @@ class MessageService extends Service {
         return deferred.promise;
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Stores a message at a given URL, with the possibility of sending.
+     * @param {string} userDataUrl: url to store.
+     * @param {string} username: message author.
+     * @param {string} userWebId: WebId of current user.
+     * @param {string} time: time of message.
+     * @param {string} message: text of message.
+     * @param {string} interlocutorWebId: target user.
+     * @param {bool} toSend: If true, it is also sent to interlocutor inbox.
+     * @param {string[]} members: WebIds of interlocutors.
+     */
     async storeMessage(userDataUrl, username, userWebId, time, message, interlocutorWebId, toSend, members) {
-        //const messageTx = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
-        //const psUsername = username.replace(/ /g, "U+0020");
-
         var enctime = this.encrypter.encrypt(time, false);
         var encuser = this.encrypter.encrypt(username, false);
         var enctx = this.encrypter.encrypt(message, false);
         var messageT;
 
-        // if (message.includes("data:image")
-            // || message.includes("data:video")
-            // || message.includes("data:text")
-        // ) {
-            // messageT = message;
-        // } else {
-            // messageT = message.replace(/ /g, "U+0020").replace(/:/g, "U+003A");
-        // }
         const messageTx = message;
-        /*if( messageTx.includes("data:video")){
-            console.log("msg stored in msg service is" + messageTx);
-        }*/
-        //const psUsername = username.replace(/ /g, "U+0020");
         const messageUrl = await this.baseService.generateUniqueUrlForResource(userDataUrl);
 
         const forpriv = `
@@ -151,7 +137,6 @@ class MessageService extends Service {
             } else {
                 ids.push(interlocutorWebId);
             }
-            //console.log(ids);
             if (ids.length < 2) {
                 await this.uploader.sendToInterlocutorInbox(await this.baseService.getInboxUrl(ids[0]), forinbox);
             } else {

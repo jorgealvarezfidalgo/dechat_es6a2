@@ -15,11 +15,9 @@ const Loader = require("../Repositories/SolidLoaderRepository");
 const SemanticChat = require("../semanticchat");
 const Group = require("../Group");
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+/**
+ * Parent Service which includes all packages required as well as the encrypter.
+ */
 class Service {
     constructor(fetch) {
         this.inboxUrls = {};
@@ -39,30 +37,29 @@ class Service {
             ],
             format: winston.format.cli()
         });
-		this.auth = auth;
-		this.N3 = N3;
-		this.Q = Q;
-		this.format = format;
-		this.newEngine = newEngine;
-		this.namespaces = namespaces;
-		this.uniqid = uniqid;
-		this.URI = URI;
-		this.rdfjsSourceFromUrl = rdfjsSourceFromUrl;
-		this.SemanticChat = SemanticChat;
-		this.Group = Group;
-		this.uploader = new Uploader(auth.fetch);
-		this.loader = new Loader(auth.fetch);
+        this.auth = auth;
+        this.N3 = N3;
+        this.Q = Q;
+        this.format = format;
+        this.newEngine = newEngine;
+        this.namespaces = namespaces;
+        this.uniqid = uniqid;
+        this.URI = URI;
+        this.rdfjsSourceFromUrl = rdfjsSourceFromUrl;
+        this.SemanticChat = SemanticChat;
+        this.Group = Group;
+        this.uploader = new Uploader(auth.fetch);
+        this.loader = new Loader(auth.fetch);
     }
-	
-		/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
-	setEncrypter(encrypter) {
-		this.encrypter = encrypter;
-	}
-	
+
+    /**
+     * Sets Encrypter to be used by the Service.
+     * @param {EncryptionService} encrypter: Encrypter
+     */
+    setEncrypter(encrypter) {
+        this.encrypter = encrypter;
+    }
+
 }
 
 
