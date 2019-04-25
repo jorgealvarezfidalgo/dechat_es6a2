@@ -20,11 +20,13 @@ class SolidLoaderRepository {
         this.fetch = fetch;
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Creates a SemanticChat and redirects to loadFromUrl to load its data.
+     * @param {string} chatUrl: chat URL.
+     * @param {string} userWebId: WebId from the requesting user.
+     * @param {string} chatBaseUrl: base URL of the Chat.
+     * @returns {Promise}: a promise that resolves with the SemanticChat loaded from the POD.
+     */
     async loadChatFromUrl(chatUrl, userWebId, chatBaseUrl) {
         const chat = new SemanticChat({
             url: chatUrl,
@@ -34,14 +36,15 @@ class SolidLoaderRepository {
         return await this.loadFromUrl(chat, chatUrl);
     }
 
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+    /**
+     * Creates a Group and redirects to loadFromUrl to load its data.
+     * @param {string} chatUrl: chat URL.
+     * @param {string} userWebId: WebId from the requesting user.
+     * @param {string} chatBaseUrl: base URL of the Chat.
+     * @returns {Promise}: a promise that resolves with the Group loaded from the POD.
+     */
     async loadGroupFromUrl(chatUrl, userWebId, chatBaseUrl) {
 
-        //console.log("Interlocutor group");
         var ids = await this.findWebIdOfInterlocutor(chatUrl, userWebId);
 
         const chat = new Group({
@@ -51,12 +54,14 @@ class SolidLoaderRepository {
             members: ids
         });
 
-        //console.log(chat);
         return await this.loadFromUrl(chat, chatUrl);
     }
 
     /**
-     * This method loads the messages from the url passed through the parameter
+     * Finds all messages contained within chat URL and loads them into the SemanticChat/Group.
+     * @param {string} chatUrl: chat URL.
+     * @param {string} chat: instance of SemanticChat.
+     * @returns {SemanticChat}: an instance of SemanticChat with messages loaded.
      */
     async loadFromUrl(chat, chatUrl) {
 
@@ -71,7 +76,9 @@ class SolidLoaderRepository {
     }
 
     /**
-     * This method is in charge of finding the message through the message url
+     * Finds all Messages in a URL.
+     * @param {string} messageUrl: URL to inspect.
+     * @returns {Promise}: a promise that resolves with an array of all messages found.
      */
     async _findMessage(messageUrl) {
         const deferred = Q.defer();
@@ -85,19 +92,19 @@ class SolidLoaderRepository {
 		<${namespaces.schema}dateSent> ?time;
 		<${namespaces.schema}givenName> ?username;
 		<${namespaces.schema}text> ?msgtext. }`, {
-            sources: [{
-                type: "rdfjsSource",
-                value: rdfjsSource
-            }]
-        })
-            .then(function (result) {
+                sources: [{
+                    type: "rdfjsSource",
+                    value: rdfjsSource
+                }]
+            })
+            .then(function(result) {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
 
                     if (data["?msgtext"]) {
-                        if (data["?msgtext"].value.includes("data:image")
-                            || data["?msgtext"].value.includes("data:video")
-                            || data["?msgtext"].value.includes("data:text")
+                        if (data["?msgtext"].value.includes("data:image") ||
+                            data["?msgtext"].value.includes("data:video") ||
+                            data["?msgtext"].value.includes("data:text")
                         ) {
                             var messageText = data["?msgtext"].value;
                             var author = data["?username"].value.split("/").pop();
@@ -108,9 +115,6 @@ class SolidLoaderRepository {
                                 time: data["?time"].value.split("/")[4]
                             });
                         } else {
-                            //var messageText = data["?msgtext"].value.split("/")[4];
-                            //var author = data["?username"].value.split("/").pop();
-                            //  if (data["?msgtext"]) {
                             var txFields = data["?msgtext"].value.split("/");
                             var auFields = data["?username"].value.split("/");
                             var tmFields = data["?time"].value.split("/");
@@ -127,7 +131,7 @@ class SolidLoaderRepository {
                     }
                 });
 
-                result.bindingsStream.on("end", function () {
+                result.bindingsStream.on("end", function() {
                     deferred.resolve(results);
                 });
             });
@@ -136,9 +140,11 @@ class SolidLoaderRepository {
     }
 
     /**
-     * This method is in charge of finding the webId of the user"s friend
+     * Finds all interlocutors WebIds by looking for Invitations sent.
+     * @param {string} chatUrl: URL to inspect.
+     * @returns {Promise}: a promise that resolves with an array of all interlocutors found.
      */
-    async findWebIdOfInterlocutor(chatUrl, userWebId) {
+    async findWebIdOfInterlocutor(chatUrl) {
         const deferred = Q.defer();
         let results = [];
         const rdfjsSource = await this._getRDFjsSourceFromUrl(chatUrl);
@@ -150,22 +156,21 @@ class SolidLoaderRepository {
 			<${namespaces.schema}agent> ?agent;
 			<${namespaces.schema}recipient> ?recipient.
     }`, {
-            sources: [{
-                type: "rdfjsSource",
-                value: rdfjsSource
-            }]
-        })
-            .then(function (result) {
+                sources: [{
+                    type: "rdfjsSource",
+                    value: rdfjsSource
+                }]
+            })
+            .then(function(result) {
                 result.bindingsStream.on("data", (data) => {
                     data = data.toObject();
                     if (data["?recipient"]) {
-						var rFields = data["?recipient"].value.split("/");
+                        var rFields = data["?recipient"].value.split("/");
                         results.push(self.encrypter.decrypt(rFields.splice(4, rFields.length).join("/"), false));
                     }
                 });
 
-                result.bindingsStream.on("end", function () {
-					//console.log(results);
+                result.bindingsStream.on("end", function() {
                     deferred.resolve(results);
                 });
             });
@@ -173,8 +178,10 @@ class SolidLoaderRepository {
     }
 
     /**
-     * This method is in charge of returning the RDFjs source from the url
-	 * Credits to https://github.com/pheyvaer/solid-chess
+     * This method is in charge of returning the RDFjs source from the url.
+     * @param {string} url: URL to inspect.
+     * @returns {Promise}: promise that resolves with the RDFJSource.
+     * Credits to https://github.com/pheyvaer/solid-chess
      */
     _getRDFjsSourceFromUrl(url) {
         const deferred = Q.defer();
@@ -197,7 +204,7 @@ class SolidLoaderRepository {
                             store.addQuad(quad);
                         } else {
                             const source = {
-                                match: function (s, p, o, g) {
+                                match: function(s, p, o, g) {
                                     return streamify(store.getQuads(s, p, o, g));
                                 }
                             };
@@ -210,12 +217,11 @@ class SolidLoaderRepository {
 
         return deferred.promise;
     }
-	
-	/**
-	 * This method returns an RDFJSSource of an url
-	 * @param {string} url: url of the source
-	 * @returns {Promise}: a promise that resolve with the corresponding RDFJSSource
-	 */
+
+    /**
+     * Sets current encrypter to perform operations.
+     * @param {EncryptionService} encrypter: Encrypter instance.
+     */
     setEncrypter(encrypter) {
         this.encrypter = encrypter;
     }
