@@ -23,7 +23,7 @@ class DechatTestSimulation extends Simulation {
 	val scn = scenario("DeChat-ES-6A-II-test")
 
 		.exec(http("request_1")
-			.get("/dechat_es6a2/unexistent")).check(status.is(404))
+			.get("/dechat_es6a2/unexistent").check(status.is(404)))
 
 		.exec(http("request_2")
 			.get("/dechat_es6a2"))
