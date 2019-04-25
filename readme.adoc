@@ -24,7 +24,7 @@ In order to run the app locally, you have to https://github.com/Arquisoft/dechat
 You can checkout our project's documentation https://arquisoft.github.io/dechat_es6a2/documentation.html[here].
 
 The documentation is done in http://asciidoc.org/[adoc] format
-using the https://arc42.org/[arc42] templates and transformed into html using https://asciidoctor.org/docs/install-toolchain/asciiDoctor[AsciiDoctor]. 
+using the https://arc42.org/[arc42] templates and transformed into html using https://asciidoctor.org/docs/install-toolchain/asciiDoctor[AsciiDoctor].
 
 To generate the documentation from the https://github.com/Arquisoft/dechat_es6a2/tree/master/adocs[adocs] folder, just run the following command :
 
@@ -51,10 +51,13 @@ It will show some IP addresses where the application will be available.
 == Testing
 
 There are unit tests using mocha at
- https://github.com/Arquisoft/dechat_es6a2/tree/master/tests[tests].
+ https://github.com/Arquisoft/dechat_es6a2/tree/master/test[test].
 
 There are also some https://cucumber.io/[Cucumber based tests] defined at
  https://github.com/Arquisoft/dechat_es6a2/tree/master/step-definitions[step-definitions].
+
+ And finally some https://gatling.io[Gatling performance tests] defined at
+  https://github.com/Arquisoft/dechat_es6a2/tree/master/test/performance/user-files/simulations[simulations].
 
 To run tests, execute:
 
