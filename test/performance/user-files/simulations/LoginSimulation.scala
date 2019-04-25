@@ -7,7 +7,7 @@ import scala.concurrent.duration._
 class LoginSimulation extends Simulation {
 
   val httpConf = http
-    .baseURL("http://localhost:3000") // Here is the root for all relative URLs
+    .baseURL("https://arquisoft.github.io/dechat_es6a2")
 
   val loginScenario = scenario("Login") // A scenario is a chain of requests and pauses
 

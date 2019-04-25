@@ -959,6 +959,9 @@ Those being the following:</p>
 <li>
 <p>MessageService. Looks for new messages in inbox to store them if necessary, as well as stores new messages created at current session and sends them to any participants' inboxes.</p>
 </li>
+<li>
+<p>EncryptionService. Encrypts and decrypts data with TRUBIA algorithm.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -1351,7 +1354,7 @@ This requires some more resources to proceed with the operations, but it doesn&#
 </div>
 <div class="paragraph">
 <p>We thought about making the encryption process invisible to the user, by autogenerating a password and storing it at the POD. However, this does not solve much, in the end, since if an attacker gains access to the container he&#8217;d have no trouble accessing the data.
-Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably.</p>
+Therefore, we opted for a password input by the user after logging in, which is less conspicuous, but improves its security considerably. Besides, it allows for multiple encryptions at one POD, which work independently.</p>
 </div>
 <div class="paragraph">
 <p>Salt is added to every field encrypted, so that two identical texts -commonly, users- are not revealed. Such salt is stored along the encrypted info, as it is conventional.-</p>
