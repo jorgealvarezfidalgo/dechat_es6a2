@@ -6,10 +6,10 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class DechatTest extends Simulation {
+class DechatTestSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseUrl("https://arquisoft.github.io")
+    .baseURL("https://arquisoft.github.io")
 		.inferHtmlResources(BlackList(""".*\.css""", """.*\.js""", """.*\.ico"""), WhiteList())
 		.acceptHeader("image/webp,image/apng,image/*,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
@@ -21,18 +21,9 @@ class DechatTest extends Simulation {
 		"Upgrade-Insecure-Requests" -> "1")
 
 	val scn = scenario("DeChat-ES-6A-II-test")
-		// Inicio
-		.exec(http("request_0")
-			.get("/dechat_es6a2/images")
-			.headers(headers_0)
-			.check(status.is(404)))
-		.pause(1)
 
 		.exec(http("request_1")
-			.get("/dechat_es4a/videos")
-			.resources(http("request_2")
-			.check(status.is(404))))
-		.pause(40)
+			.get("/dechat_es6a2/unexistent")).check(status.is(404))
 
 		.exec(http("request_2")
 			.get("/dechat_es6a2"))
@@ -42,5 +33,5 @@ class DechatTest extends Simulation {
 			.get("/dechat_es6a2/documentation")
 			.headers(headers_0))
 
-	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn.inject(atOnceUsers(1)).protocols(httpProtocol))
 }
