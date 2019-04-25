@@ -10,7 +10,7 @@ const baseService = new BaseService(auth.fetch);
 
 describe("Semantic Group Chat Testing", function() {
 
-  it("creating a new semantic chat", async function() {
+  it("Creating a new semantic chat", async function() {
     const group = new Group({
       url: "http://example.org/myChat",
       userWebId: "https://morningstar.solid.community/profile/card#me",
@@ -45,7 +45,7 @@ describe("Semantic Group Chat Testing", function() {
     assert.equal(group.getNumberOfMembers(), 0 , "we should not have any members");
     assert.equal(group.getMembers(), null , "we should not have any members");
 
-    //setting two members
+    //Setting two members
     const members = ["https://morningstar.solid.community/profile/card#me", "https://helbrecht.solid.community/profile/card#me"];
     group.setMembers(members);
 
@@ -53,7 +53,7 @@ describe("Semantic Group Chat Testing", function() {
     assert.equal(group.getMembers()[1], "https://helbrecht.solid.community/profile/card#me", "the second member is not correct");
     assert.equal(group.getMembers()[2], null, "we should not have a third member for the moment");
 
-    //adding a new member to be saved in the first position
+    //Adding a new member to be saved in the first position
     const member = "https://othbak.solid.community/profile/card#me";
     group.saveMember(member);
 
