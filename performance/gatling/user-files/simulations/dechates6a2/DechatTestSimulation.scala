@@ -42,5 +42,5 @@ class DechatTestSimulation extends Simulation {
 			.headers(headers_0)
 			.check(status.not(404)))
 
-	setUp(scn.inject(atOnceUsers(100)).protocols(httpProtocol))
+	setUp(scn.inject(atOnceUsers(8)).protocols(httpProtocol))
 }
