@@ -1,0 +1,10 @@
+{
+  "simulation": "dechates6a2.DechatTestSimulation",
+  "simulationId": "dechattestsimulation",
+  "start": 1556216953890,
+  "description": "",
+  "scenarios": ["DeChat-ES-6A-II-Performance-Test"],
+  "assertions": [
+
+  ]
+}

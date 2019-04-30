@@ -51,16 +51,31 @@ It will show some IP addresses where the application will be available.
 == Testing
 
 There are unit tests using mocha at
- https://github.com/Arquisoft/dechat_es6a2/tree/master/test[test].
+ https://github.com/Arquisoft/dechat_es6a2/tree/master/tests[tests].
 
 There are also some https://cucumber.io/[Cucumber based tests] defined at
  https://github.com/Arquisoft/dechat_es6a2/tree/master/step-definitions[step-definitions].
-
- And finally some https://gatling.io[Gatling performance tests] defined at
-  https://github.com/Arquisoft/dechat_es6a2/tree/master/test/performance/user-files/simulations[simulations].
 
 To run tests, execute:
 
 ----
 npm test
 ----
+
+== Performance
+
+To test the performance of our app, we used https://gatling.io[Gatling performance tests].
+You can found them at https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/user-files/simulations/computerdatabase[simulations]
+and their https://github.com/Arquisoft/dechat_es6a2/tree/master/performance/gatling/results[results].
+
+
+To run performance tests, execute the following commands:
+
+----
+  cd performance/gatling/bin
+----
+----
+  gatling
+----
+
+then, select the test you want the execute in the command terminal.
