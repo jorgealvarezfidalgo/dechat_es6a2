@@ -42,6 +42,9 @@ The project is developed using the following :
 |cucumber-selenium
 |To ensure Behaviour-Driven Development, we'll be using **link:https://cucumber.io[cucumber]** and **link:https://www.seleniumhq.org[Selenium]** which are JavaScript browser automation frameworks.
 
+|Gatling
+|To measure the performance of our web application.
+
 |===
 
 .Continuous Integration Platforms
