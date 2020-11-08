@@ -6,6 +6,8 @@ image:https://api.codacy.com/project/badge/Grade/fc7dc1da60ee4e9fb67ccff78262579
 image:https://img.shields.io/badge/documentation-AsciiDoc-FF69A4.svg[link="https://arquisoft.github.io/dechat_es6a2/documentation.html"]
 image:https://img.shields.io/badge/version-1.1.0-green.svg[link="https://arquisoft.github.io/dechat_es6a2/"]
 
+Copia del proyecto en el que tomé parte en la asignatura de ASW del curso 2018-2019, vencedor del Solid Chat Challenge, que conservo aquí por motivos de divulgación histórica.
+
 == App Webpage
 You can give it a try at https://arquisoft.github.io/dechat_es6a2/ (WIP)
 
